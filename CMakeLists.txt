@@ -7,12 +7,9 @@ include_directories(.)
 
 add_executable(chess
         Board.cpp
-        Board.h
         main.cpp
         Piece.cpp
-        Piece.h
-        Player.cpp
-        Player.h)
+        Player.cpp)
 
 set(SFML_INCLUDE_DIR "./SFML/include")
 set(SFML_LIBRARY_DIR "./SFML/build/lib")
