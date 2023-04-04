@@ -3,8 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
 
-class Player
-{
+class Player {
 public:
 	Player(int color = 0);
 	void Player_mov(std::vector<Piece*>* board);
@@ -12,7 +11,6 @@ public:
 	void Delete_Piece(Piece* p);
 	int State();
 private:
-	int player_color;
 	std::vector<Piece> piece;
 	int nb_move;
 	bool chess;

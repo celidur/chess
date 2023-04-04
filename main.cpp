@@ -17,17 +17,14 @@ int main()
     window.setVerticalSyncEnabled(true);
     while (window.isOpen())
     {
-        Event event;
-        while (window.pollEvent(event))
-        {
-            switch (event.type)
-            {
+        Event event{};
+        while (window.pollEvent(event)) {
+            switch (event.type) {
             case Event::Closed:
                 window.close();
                 break;
             case Event::MouseButtonPressed:
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
+                if (event.mouseButton.button == sf::Mouse::Left) {
                     board.Selection_Case(event.mouseButton.x/72*72, event.mouseButton.y/72*72);
                 }
 
@@ -35,7 +32,7 @@ int main()
                 break;
             }
         }
-        window.clear(Color::Black);
+        window.clear(sf::Color::Black);
         board.Update();
         window.draw(board);
         window.display();

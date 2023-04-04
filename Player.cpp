@@ -1,20 +1,19 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(int color)
+Player::Player()
 {
 	nb_move = 0;
 	player_color = color;
-	for (int i = 0; i < 16; i++)
-	{
+	for (int i = 0; i < 16; i++){
 		if (i < 8)
-			piece.push_back(Piece(0 + 6 * color, i, 1 + 5 * color));
+			piece.push_back(Piece<Type::pawn, color>({i, 1 + 5 * color}));
 		else if (i == 8 or i == 15)
-			piece.push_back(Piece(1 + 6 * color, i % 8, 7 * color));
+			piece.push_back(Piece<Type::tower, color>({i % 8, 7 * color}));
 		else if (i == 9 or i == 14)
-			piece.push_back(Piece(2 + 6 * color, i % 8, 7 * color));
+			piece.push_back(Piece<Type::bishop, color>({i % 8, 7 * color}));
 		else if (i == 10 or i == 13)
-			piece.push_back(Piece(3 + 6 * color, i % 8, 7 * color));
+			piece.push_back(Piece(i % 8, 7 * color));
 		else if (i == 11)
 			piece.push_back(Piece(4 + 6 * color, i % 8, 7 * color));
 		else
