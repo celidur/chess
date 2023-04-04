@@ -1,11 +1,13 @@
 #ifndef BOARD
 #define	BOARD
 #include "Player.h"
+#include <SFML/Graphics.hpp>
+
 class Board : public sf::Drawable, public sf::Transformable
 {
 public:
-	Board(sf::Vector2f tileSize);
-	~Board();
+	explicit Board(sf::Vector2f tileSize);
+	~Board() override;
 	int Load(std::string* s);
 	void Board_game();
 	void Update();
@@ -13,7 +15,7 @@ public:
 
 private:
 	void Update_Move();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const ;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override ;
 	sf::Texture chess;
 	sf::VertexArray layer1;
 	sf::VertexArray layer2;
@@ -23,8 +25,8 @@ private:
 	sf::Sprite box2;
 	sf::Vector2f tile_size;
 	std::vector<Player> player;
-	std::vector<Piece*> board_game;
-	int player_round = 1;
+	TypePiece board_game[8][8];
+	Colour player_round = Colour::white;
 };
 
 #endif // !BOARD

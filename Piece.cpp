@@ -2,22 +2,60 @@
 
 Piece::Piece(const Coord &pos, Colour color) : pos_(pos), color_(color) {}
 
-bool Piece::move(const std::vector<Piece *> &board, const Coord &pos) {
-    if (isLegalMove(board, pos)) {
+bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
+    if (std::find(possibleMoves_.begin(), possibleMoves_.end(), pos) != possibleMoves_.end()) {
         pos_ = pos;
+        if (board[pos_.x][pos_.y].type != Type::none) {
+            board[pos_.x][pos_.y].piece->kill();
+        }
         return true;
     }
     return false;
 }
 
-Tower::Tower(const Coord &pos, Colour color) : Piece(pos, color) {}
+void Piece::update(const TypePiece board[8][8]) {
+    possibleMoves_.clear();
+    for (const auto &move: legalMoves_) {
+        Coord pos = pos_ + move;
+        if (isLegalMove(board, pos)) {
+            TypePiece boardCopy[8][8];
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    boardCopy[i][j] = board[i][j];
+                }
+            }
+            boardCopy[pos.x][pos.y] = boardCopy[pos_.x][pos_.y];
+            boardCopy[pos_.x][pos_.y] = TypePiece{Colour::none, Type::none, nullptr, 0};
 
-bool Tower::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+            if (color_ == Colour::white) {
+                if (!whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
+                    continue;
+                }
+            } else {
+                if (!blackKing->isLegalMove(boardCopy, blackKing->pos_)) {
+                    continue;
+                }
+            }
+            possibleMoves_.push_back(pos);
+        }
+    }
+}
+
+Tower::Tower(const Coord &pos, Colour color) : Piece(pos, color) {
+    for (int i = 0; i < 8; i++) {
+        legalMoves_.emplace_back(Coord{i, 0});
+        legalMoves_.emplace_back(Coord{0, i});
+        legalMoves_.emplace_back(Coord{-i, 0});
+        legalMoves_.emplace_back(Coord{0, -i});
+    }
+}
+
+bool Tower::isLegalMove(const TypePiece board[8][8], Coord pos) {
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
-    Piece *piece = board[pos.y * 8 + pos.x];
-    if (piece != nullptr && piece->getColor() == color_) {
+    auto piece = board[pos.x][pos.y];
+    if (piece.type != Type::none && piece.color == color_) {
         return false;
     }
     if (pos.x == pos_.x && pos.y == pos_.y) {
@@ -31,11 +69,11 @@ bool Tower::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
     int i = 1;
     while (i < abs(x) + abs(y)) {
         if (x != 0) {
-            if (board[pos_.y * 8 + pos_.x + i * x / abs(x)] != nullptr) {
+            if (board[pos_.x + i * x / abs(x)][pos.y].type != Type::none) {
                 return false;
             }
         } else {
-            if (board[(pos_.y + i * y / abs(y)) * 8 + pos_.x] != nullptr) {
+            if (board[pos_.x][pos_.y + i * y / abs(y)].type != Type::none) {
                 return false;
             }
         }
@@ -48,22 +86,32 @@ bool Tower::getFirst() const {
     return first_;
 }
 
-bool Tower::move(const std::vector<Piece *> &board, const Coord &pos) {
-    if (Piece::move(board, pos)) {
+bool Tower::move(const TypePiece board[8][8], const Coord &pos) {
+    bool res = Piece::move(board, pos);
+    if (res)
         first_ = false;
-        return true;
-    }
-    return false;
+    return res;
 }
 
-Bishop::Bishop(const Coord &pos, Colour color) : Piece(pos, color) {}
+TypePiece Tower::getType() {
+    return {color_, Type::tower, this, first_};
+}
 
-bool Bishop::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+Bishop::Bishop(const Coord &pos, Colour color) : Piece(pos, color) {
+    for (int i = 0; i < 8; i++) {
+        legalMoves_.emplace_back(Coord{i, i});
+        legalMoves_.emplace_back(Coord{-i, i});
+        legalMoves_.emplace_back(Coord{i, -i});
+        legalMoves_.emplace_back(Coord{-i, -i});
+    }
+}
+
+bool Bishop::isLegalMove(const TypePiece board[8][8], Coord pos) {
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
-    Piece *piece = board[pos.y * 8 + pos.x];
-    if (piece != nullptr && piece->getColor() == color_) {
+    auto piece = board[pos.x][pos.y];
+    if (piece.type != Type::none && piece.color == color_) {
         return false;
     }
     if (pos.x == pos_.x && pos.y == pos_.y) {
@@ -76,7 +124,7 @@ bool Bishop::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
     int y = pos.y - pos_.y;
     int i = 1;
     while (i < abs(x)) {
-        if (board[(pos_.y + i * y / abs(y)) * 8 + pos_.x + i * x / abs(x)] != nullptr) {
+        if (board[pos_.x + i * x / abs(x)][pos_.y + i * y / abs(y)].type != Type::none) {
             return false;
         }
         i++;
@@ -84,30 +132,47 @@ bool Bishop::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
     return true;
 }
 
+TypePiece Bishop::getType() {
+    return {color_, Type::bishop, this};
+}
+
 Queen::Queen(const Coord &pos, Colour color) : Piece(pos, color), Tower(pos, color), Bishop(pos, color) {}
 
-bool Queen::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+bool Queen::isLegalMove(const TypePiece board[8][8], Coord pos) {
     return Tower::isLegalMove(board, pos) || Bishop::isLegalMove(board, pos);
+}
+
+TypePiece Queen::getType() {
+    return {color_, Type::queen, this};
 }
 
 King::King(const Coord &pos, Colour color) : Piece(pos, color) {
     if (color == Colour::white) {
-        if (whiteKingPos != nullptr)
+        if (whiteKing != nullptr)
             throw std::runtime_error("White king already exists");
-        whiteKingPos = &pos_;
+        whiteKing = this;
     } else {
-        if (blackKingPos != nullptr)
+        if (blackKing != nullptr)
             throw std::runtime_error("Black king already exists");
-        blackKingPos = &pos_;
+        blackKing = this;
     }
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i == 0 && j == 0)
+                continue;
+            legalMoves_.emplace_back(Coord{i, j});
+        }
+    }
+    legalMoves_.emplace_back(Coord{2, 0});
+    legalMoves_.emplace_back(Coord{-2, 0});
 }
 
-bool King::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
-    Piece *piece = board[pos.y * 8 + pos.x];
-    if (piece != nullptr && piece->getColor() == color_) {
+    auto piece = board[pos.x][pos.y];
+    if (piece.type != Type::none && piece.color == color_) {
         return false;
     }
     if (pos.x == pos_.x && pos.y == pos_.y) {
@@ -116,78 +181,116 @@ bool King::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
     if (pos.x - pos_.x > 1 || pos.x - pos_.x < -1 || pos.y - pos_.y > 1 || pos.y - pos_.y < -1) {
         return false;
     }
-    if ((piece != nullptr || board[pos.y * 8 + pos.x + 1] == nullptr || first_) && pos.x == pos_.x + 2 &&
+    if ((piece.type == Type::none || board[pos.x - 1][pos.y].type == Type::none || first_) && pos.x == pos_.x + 2 &&
         pos.y == pos_.y) {
-        std::vector<Piece *> boardCopy = board;
-        boardCopy[pos_.y * 8 + pos_.x + 1] = boardCopy[pos_.y * 8 + pos_.x];
-        boardCopy[pos_.y * 8 + pos_.x] = nullptr;
-        if (isCheck(boardCopy)) {
+        TypePiece boardCopy[8][8];
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++)
+                boardCopy[i][j] = board[i][j];
+        boardCopy[pos_.x + 1][pos_.y] = boardCopy[pos_.x][pos_.y];
+        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
+        if (isCheck(boardCopy, Coord{pos_.x + 1, pos_.y})) {
             return false;
         }
-        auto tower = dynamic_cast<Tower *>(board[pos.y * 8 + pos.x + 3]);
-        if (tower == nullptr)
-            return false;
-        if (tower->getColor() != color_ || tower->getFirst())
+        auto tower = board[pos_.x + 3][pos_.y];
+        if (tower.type != Type::tower || tower.color != color_ || tower.first == false)
             return false;
     }
-    if ((piece != nullptr || board[pos.y * 8 + pos.x - 1] == nullptr || first_) && pos.x == pos_.x - 2 &&
+    if ((piece.type == Type::none || board[pos.x + 1][pos.y].type == Type::none || !first_) && pos.x == pos_.x - 2 &&
         pos.y == pos_.y) {
-        auto tower = dynamic_cast<Tower *>(board[pos.y * 8 + pos.x - 4]);
-        if (tower == nullptr)
+        TypePiece boardCopy[8][8];
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++)
+                boardCopy[i][j] = board[i][j];
+        boardCopy[pos_.x - 1][pos_.y] = boardCopy[pos_.y][pos_.x];
+        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
+        if (isCheck(boardCopy, Coord{pos_.x - 1, pos_.y})) {
             return false;
-        if (tower->getColor() != color_ || tower->getFirst())
+        }
+        auto tower = board[pos_.x - 4][pos_.y];
+        if (tower.type != Type::tower || tower.color != color_ || tower.first == false)
             return false;
     }
     return true;
 
 }
 
-bool King::move(const std::vector<Piece *> &board, const Coord &pos) {
-    if (isLegalMove(board, pos)) {
-        if (pos.x == pos_.x + 2 && pos.y == pos_.y) {
-            auto tower = dynamic_cast<Tower *>(board[pos.y * 8 + pos.x + 3]);
-            tower->move(board, {pos.x - 1, pos.y});
-        }
-        if (pos.x == pos_.x - 2 && pos.y == pos_.y) {
-            auto tower = dynamic_cast<Tower *>(board[pos.y * 8 + pos.x - 4]);
-            tower->move(board, {pos.x + 1, pos.y});
-        }
-        pos_ = pos;
-        first_ = false;
-        return true;
+bool King::move(const TypePiece board[8][8], const Coord &pos) {
+    bool res = Piece::move(board, pos);
+    if (!res)
+        return false;
+    if (pos.x == pos_.x + 2 && pos.y == pos_.y) {
+        auto tower = dynamic_cast<Tower *>(board[pos_.x + 3][pos.y].piece);
+        tower->move(board, {pos.x - 1, pos.y});
     }
-    return false;
+    if (pos.x == pos_.x - 2 && pos.y == pos_.y) {
+        auto tower = dynamic_cast<Tower *>(board[pos_.x - 4][pos.y].piece);
+        tower->move(board, {pos.x + 1, pos.y});
+    }
+    pos_ = pos;
+    first_ = false;
+    return true;
 }
 
-bool King::isCheck(const std::vector<Piece *> &board) {
+bool King::isCheck(const TypePiece board[8][8], Coord pos) {
+    if (pos == Coord{-1, -1})
+        pos = pos_;
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++) {
-            if (board[i * 8 + j] == nullptr)
+            if (board[i][j].type == Type::none || board[i][j].color == color_)
                 continue;
-            if (board[i * 8 + j]->isLegalMove(board, pos_) && board[i * 8 + j]->getColor() != color_)
+            if (board[i][j].piece->isLegalMove(board, pos))
                 return true;
         }
     return false;
 }
 
-Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {}
+void King::update(const TypePiece board[8][8]) {
+    possibleMoves_.clear();
+    for (auto &move: legalMoves_) {
+        auto pos = Coord{pos_.x + move.x, pos_.y + move.y};
+        TypePiece boardCopy[8][8];
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++)
+                boardCopy[i][j] = board[i][j];
+        boardCopy[pos.x][pos.y] = boardCopy[pos_.x][pos_.y];
+        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
+        if (isLegalMove(board, pos)) {
+            if (isCheck(boardCopy, pos))
+                continue;
+            possibleMoves_.emplace_back(pos);
+        }
+    }
+}
 
-bool Pawn::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+TypePiece King::getType() {
+    return {color_, Type::king, this, first_};
+}
+
+Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {
+    int direction = color == Colour::white ? 1 : -1;
+    legalMoves_.emplace_back(Coord{0, direction});
+    legalMoves_.emplace_back(Coord{0, direction});
+    legalMoves_.emplace_back(Coord{1, direction});
+    legalMoves_.emplace_back(Coord{-1, direction});
+}
+
+bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
     int direction = color_ == Colour::white ? 1 : -1;
-    Piece *piece = board[pos.y * 8 + pos.x];
+    auto piece = board[pos.x][pos.y];
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
     if (pos.x == pos_.x && pos.y == pos_.y + direction) {
-        return piece == nullptr;
+        return piece.type == Type::none;
     }
     if (pos.x == pos_.x && pos.y == pos_.y + 2 * direction && first_ == 0) {
-        return piece == nullptr && board[(pos.y - direction) * 8 + pos.x] == nullptr;
+        return piece.type == Type::none && board[pos.x][pos.y - direction].type == Type::none;
     }
     if ((pos.x == pos_.x + 1 || pos.x == pos_.x - 1) && pos.y == pos_.y + direction) {
-        if (piece != nullptr)
-            return piece->getColor() != color_; // for eating
-        auto pawn = dynamic_cast<Pawn *>(board[pos_.y * 8 + pos.x]); // en passant
+        if (piece.type != Type::none)
+            return piece.color != color_; // for eating
+        auto pawn = dynamic_cast<Pawn *>(board[pos.x][pos_.y].piece);
         if (pawn == nullptr)
             return false;
         if (pawn->color_ != color_ && pawn->first_ == 1)
@@ -196,32 +299,48 @@ bool Pawn::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
     return false;
 }
 
-bool Pawn::move(const std::vector<Piece *> &board, const Coord &pos) {
-    if (Piece::move(board, pos)) {
-        if (pos.x == pos_.x + 1 || pos.x == pos_.x - 1) {
-            auto pawn = dynamic_cast<Pawn *>(board[pos_.y * 8 + pos.x]);
-            if (pawn != nullptr && board[pos.y * 8 + pos.x] == nullptr) {
-                if (pawn->first_ == 1)
-                    pawn->isAlive_ = false;
-            }
+bool Pawn::move(const TypePiece board[8][8], const Coord &pos) {
+    bool res = Piece::move(board, pos);
+    if (!res)
+        return false;
+    if (pos.x == pos_.x + 1 || pos.x == pos_.x - 1) {
+        if (board[pos.x][pos.y].type == Type::none && board[pos.x][pos_.y].type == Type::pawn) {
+            board[pos.x][pos.y].piece->kill();
         }
-        if (pos.x == pos_.x +2 || pos.x == pos_.x - 2)
-            first_ = 1;
-        first_ = (first_ == 1 | first_ == -1) ? -1 : 0;
-        return true;
     }
-    return false;
+    first_ = (first_ == -1) ? -1 : 0;
+    if (pos.x == pos_.x + 2 || pos.x == pos_.x - 2)
+        first_ = 1;
+    return true;
+}
+
+void Pawn::update(const TypePiece board[8][8]) {
+    Piece::update(board);
+    first_ = (first_ == 1 | first_ == -1) ? -1 : 0;
+}
+
+TypePiece Pawn::getType() {
+    return {color_, Type::pawn, this, first_};
 }
 
 
-Knight::Knight(const Coord &pos, Colour color) : Piece(pos, color) {}
+Knight::Knight(const Coord &pos, Colour color) : Piece(pos, color) {
+    legalMoves_.emplace_back(Coord{2, 1});
+    legalMoves_.emplace_back(Coord{2, -1});
+    legalMoves_.emplace_back(Coord{-2, 1});
+    legalMoves_.emplace_back(Coord{-2, -1});
+    legalMoves_.emplace_back(Coord{1, 2});
+    legalMoves_.emplace_back(Coord{1, -2});
+    legalMoves_.emplace_back(Coord{-1, 2});
+    legalMoves_.emplace_back(Coord{-1, -2});
+}
 
-bool Knight::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
+bool Knight::isLegalMove(const TypePiece board[8][8], Coord pos) {
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
-    Piece *piece = board[pos.y * 8 + pos.x];
-    if (piece != nullptr && piece->getColor() == color_) {
+    auto piece = board[pos.x][pos.y];
+    if (piece.type != Type::none && piece.color == color_) {
         return false;
     }
     if (pos.x == pos_.x && pos.y == pos_.y) {
@@ -234,4 +353,8 @@ bool Knight::isLegalMove(const std::vector<Piece *> &board, Coord pos) {
         return true;
     }
     return false;
+}
+
+TypePiece Knight::getType() {
+    return {color_, Type::knight, this};
 }

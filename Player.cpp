@@ -1,70 +1,55 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player()
-{
-	nb_move = 0;
-	player_color = color;
-	for (int i = 0; i < 16; i++){
-		if (i < 8)
-			piece.push_back(Piece<Type::pawn, color>({i, 1 + 5 * color}));
-		else if (i == 8 or i == 15)
-			piece.push_back(Piece<Type::tower, color>({i % 8, 7 * color}));
-		else if (i == 9 or i == 14)
-			piece.push_back(Piece<Type::bishop, color>({i % 8, 7 * color}));
-		else if (i == 10 or i == 13)
-			piece.push_back(Piece(i % 8, 7 * color));
-		else if (i == 11)
-			piece.push_back(Piece(4 + 6 * color, i % 8, 7 * color));
-		else
-		{
-			piece.push_back(Piece(5 + 6 * color, i % 8, 7 * color));
-		}
-	}
+Player::Player(Colour color) : chess(false), nb_move(0), player_color(color) {
+    int pawnLine = color == Colour::white ? 1 : 6;
+    int kingLine = color == Colour::white ? 0 : 7;
+    for (int i = 0; i < 16; i++) {
+        if (i < 8)
+            pieces.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, player_color));
+        else if (i == 8 or i == 15)
+            pieces.push_back(std::make_unique<Tower>(Coord{i % 8, kingLine}, player_color));
+        else if (i == 9 or i == 14)
+            pieces.push_back(std::make_unique<Knight>(Coord{i % 8, kingLine}, player_color));
+        else if (i == 10 or i == 13)
+            pieces.push_back(std::make_unique<Bishop>(Coord{i % 8, kingLine}, player_color));
+        else if (i == 11)
+            pieces.push_back(std::make_unique<Queen>(Coord{4, kingLine}, player_color));
+        else
+            pieces.push_back(std::make_unique<King>(Coord{3, kingLine}, player_color));
+    }
 }
 
-
-void Player::Player_mov(std::vector<Piece*>* board)
-{
-	nb_move = 0;
-	chess = !piece[0].Check_Chess(board);
-	for (int i = 0; i < piece.size(); i++)
-	{
-		piece[i].Move(board);
-		nb_move += piece[i].get_Move().size();
-	}
+State Player::State() const {
+    if (nb_move == 0 and chess)
+        return State::checkmate;
+    else if (nb_move == 0)
+        return State::stalemate;
+    else if (chess)
+        return State::check;
+    return State::normal;
 }
 
-std::vector<Piece>* Player::Player_Piece()
-{
-	return &piece;
+void Player::update(TypePiece board[8][8]) {
+    nb_move = 0;
+    for (auto &&piece: pieces) {
+        piece->update(board);
+        nb_move += piece->nbMove();
+        auto king = dynamic_cast<King *>(piece.get());
+        if (king != nullptr) {
+            chess = king->isCheck(board);
+        }
+    }
+    std::cout << "nb move: " << nb_move << std::endl;
 }
 
-void Player::Delete_Piece(Piece* p)
-{
-	for (int i = 0; i < piece.size(); i++)
-	{
-		if (&piece[i] == p)
-		{
-			piece.erase(piece.begin() + i);
-			break;
-		}
-	}
-}
-
-int Player::State()
-{
-	if (nb_move == 0 and chess)
-	{
-		return 1;
-	}
-	else if (nb_move == 0)
-	{
-		return 2;
-	}
-	else if (chess)
-	{
-		return 3;
-	}
-	return 0;
+void Player::updateBoard(TypePiece board[8][8]) {
+    for (auto it = pieces.begin(); it != pieces.end(); ++it) {
+        if (!(*it)->isAlive()) {
+            it = pieces.erase(it);
+        } else {
+            auto pos = (*it)->getPos();
+            board[pos.x][pos.y] = (*it)->getType();
+        }
+    }
 }

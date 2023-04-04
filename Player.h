@@ -1,19 +1,33 @@
 #ifndef PLAYER
 #define PLAYER
-#include <SFML/Graphics.hpp>
+
 #include "Piece.h"
+
+enum class State {
+    normal,
+    check,
+    checkmate,
+    stalemate
+};
+
 
 class Player {
 public:
-	Player(int color = 0);
-	void Player_mov(std::vector<Piece*>* board);
-	std::vector<Piece>* Player_Piece();
-	void Delete_Piece(Piece* p);
-	int State();
+    explicit Player(Colour color = Colour::white);
+
+    void update(TypePiece board[8][8]);
+
+    void updateBoard(TypePiece board[8][8]);
+
+    [[nodiscard]] State State() const;
+
+    [[nodiscard]] Colour getColor() const { return player_color; }
+
 private:
-	std::vector<Piece> piece;
-	int nb_move;
-	bool chess;
+    std::vector<std::shared_ptr<Piece>> pieces;
+    size_t nb_move;
+    bool chess;
+    Colour player_color;
 };
 
 #endif // !PLAYER
