@@ -76,7 +76,7 @@ namespace chess {
         }
     }
 
-    void Game::updateBoard(screen::Board &board) {
+    void Game::updateBoard(screen::BoardBase& board) {
         screen::TypePiece boardGame[8][8];
         convertBoard(boardGame, board_);
         std::vector<Coord> movePossible =

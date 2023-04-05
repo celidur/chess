@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "Board-sfml.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -6,8 +6,8 @@ using namespace sf;
 
 namespace screen {
     Board::Board(CoordF tileSize, std::string& s) : layer1(Quads, 8 * 8 * 4),
-                                                      layer2(Quads, 8 * 8 * 4), layer3(Quads, 8 * 8 * 4),
-                                                      tile_size({tileSize.x, tileSize.y}) {
+                                                    layer2(Quads, 8 * 8 * 4), layer3(Quads, 8 * 8 * 4),
+                                                    tile_size({tileSize.x, tileSize.y}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 int tu = 6;
@@ -32,7 +32,7 @@ namespace screen {
             throw std::runtime_error("Error loading image");
     }
 
-    void Board::update(Coord selection[4], TypePiece board_game[8][8], std::vector<Coord> &piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) {
         for (int i = 0; i < 4; ++i) {
             selection_[i] = selection[i];
         }
@@ -65,9 +65,9 @@ namespace screen {
 
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
-                if (board_game[i][j].type != Type::none) {
-                    int tv = (int) board_game[i][j].color;
-                    int tu = (int) board_game[i][j].type;
+                if (boardGame[i][j].type != Type::none) {
+                    int tv = (int) boardGame[i][j].color;
+                    int tu = (int) boardGame[i][j].type;
                     // on récupère un pointeur vers le quad à définir dans le tableau de vertex
                     Vertex *quad = &layer2[(i + j * 8) * 4];
 

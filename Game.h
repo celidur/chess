@@ -6,7 +6,7 @@
 #define CHESS_GAME_H
 
 #include "Player.h"
-#include "Board.h"
+#include "BoardBase.hpp"
 
 namespace chess {
     class Game {
@@ -19,7 +19,7 @@ namespace chess {
 
         void selectionCase(Coord pos);
 
-        void updateBoard(screen::Board &board);
+        void updateBoard(screen::BoardBase& board);
 
     private:
         std::vector<Player> player_;
