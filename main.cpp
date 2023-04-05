@@ -25,7 +25,7 @@ int main()
                 break;
             case Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    board.Selection_Case(event.mouseButton.x/72*72, event.mouseButton.y/72*72);
+                    board.Selection_Case(event.mouseButton.x/72, event.mouseButton.y/72);
                 }
 
             default:

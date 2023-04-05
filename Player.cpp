@@ -30,7 +30,7 @@ State Player::State() const {
     return State::normal;
 }
 
-void Player::update(TypePiece board[8][8]) {
+void Player::update(const TypePiece board[8][8]) {
     nb_move = 0;
     for (auto &&piece: pieces) {
         piece->update(board);
@@ -38,18 +38,19 @@ void Player::update(TypePiece board[8][8]) {
         auto king = dynamic_cast<King *>(piece.get());
         if (king != nullptr) {
             chess = king->isCheck(board);
+            king_pos = king->getPos();
         }
     }
-    std::cout << "nb move: " << nb_move << std::endl;
 }
 
 void Player::updateBoard(TypePiece board[8][8]) {
-    for (auto it = pieces.begin(); it != pieces.end(); ++it) {
+    for (auto it = pieces.begin(); it != pieces.end();) {
         if (!(*it)->isAlive()) {
-            it = pieces.erase(it);
+            pieces.erase(it);
         } else {
             auto pos = (*it)->getPos();
             board[pos.x][pos.y] = (*it)->getType();
+            ++it;
         }
     }
 }

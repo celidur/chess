@@ -20,12 +20,20 @@ struct Coord {
     Coord operator+(const Coord &b) const {
         return Coord{x + b.x, y + b.y};
     }
+
+    Coord operator-(const Coord &b) const {
+        return Coord{x - b.x, y - b.y};
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Coord &coord) {
+        return os << coord.x << " " << coord.y;
+    }
 };
 
 
 enum class Colour {
-    white = 0,
-    black = 1,
+    black = 0,
+    white = 1,
     none = 2
 };
 
@@ -70,7 +78,7 @@ struct TypePiece {
                 os << " ";
                 break;
         }
-        return os << " ";
+        return os;
     }
 };
 
@@ -96,6 +104,8 @@ public:
     [[nodiscard]] size_t nbMove() const { return possibleMoves_.size(); }
 
     [[nodiscard]] Coord getPos() const { return pos_; }
+
+    [[nodiscard]] std::vector<Coord> getPossibleMoves() const { return possibleMoves_; }
 
 protected:
     inline static Piece *whiteKing = nullptr;

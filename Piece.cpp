@@ -1,14 +1,31 @@
 #include "Piece.h"
+#include <iostream>
+
+void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap = Coord{-1, -1},
+               Coord swap2 = Coord{-1, -1}) {
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            boardCopy[i][j] = board[i][j];
+        }
+    }
+    if (swap.x != -1 && swap.y != -1) {
+        boardCopy[swap.x][swap.y] = board[swap2.x][swap2.y];
+        boardCopy[swap2.x][swap2.y] = {};
+    }
+}
+
 
 Piece::Piece(const Coord &pos, Colour color) : pos_(pos), color_(color) {}
 
 bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
-    if (std::find(possibleMoves_.begin(), possibleMoves_.end(), pos) != possibleMoves_.end()) {
-        pos_ = pos;
-        if (board[pos_.x][pos_.y].type != Type::none) {
-            board[pos_.x][pos_.y].piece->kill();
+    for (const auto &move: possibleMoves_) {
+        if (move == pos) {
+            if (board[pos.x][pos.y].type != Type::none) {
+                board[pos.x][pos.y].piece->kill();
+            }
+            pos_ = pos;
+            return true;
         }
-        return true;
     }
     return false;
 }
@@ -19,14 +36,7 @@ void Piece::update(const TypePiece board[8][8]) {
         Coord pos = pos_ + move;
         if (isLegalMove(board, pos)) {
             TypePiece boardCopy[8][8];
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    boardCopy[i][j] = board[i][j];
-                }
-            }
-            boardCopy[pos.x][pos.y] = boardCopy[pos_.x][pos_.y];
-            boardCopy[pos_.x][pos_.y] = TypePiece{Colour::none, Type::none, nullptr, 0};
-
+            copyBoard(board, boardCopy, pos, pos_);
             if (color_ == Colour::white) {
                 if (!whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
                     continue;
@@ -168,6 +178,8 @@ King::King(const Coord &pos, Colour color) : Piece(pos, color) {
 }
 
 bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    if (pos == pos_)
+        return !isCheck(board);
     if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
         return false;
     }
@@ -175,40 +187,20 @@ bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
     if (piece.type != Type::none && piece.color == color_) {
         return false;
     }
-    if (pos.x == pos_.x && pos.y == pos_.y) {
+    if (pos.x - pos_.x > 2 || pos.x - pos_.x < -2 || pos.y - pos_.y > 1 || pos.y - pos_.y < -1) {
         return false;
     }
-    if (pos.x - pos_.x > 1 || pos.x - pos_.x < -1 || pos.y - pos_.y > 1 || pos.y - pos_.y < -1) {
-        return false;
-    }
-    if ((piece.type == Type::none || board[pos.x - 1][pos.y].type == Type::none || first_) && pos.x == pos_.x + 2 &&
-        pos.y == pos_.y) {
-        TypePiece boardCopy[8][8];
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++)
-                boardCopy[i][j] = board[i][j];
-        boardCopy[pos_.x + 1][pos_.y] = boardCopy[pos_.x][pos_.y];
-        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
-        if (isCheck(boardCopy, Coord{pos_.x + 1, pos_.y})) {
+    if (pos.x - pos_.x == 2 || pos.x - pos_.x == -2) {
+        if (!first_ || isCheck(board) || piece.type != Type::none || pos.y != pos_.y)
             return false;
-        }
-        auto tower = board[pos_.x + 3][pos_.y];
-        if (tower.type != Type::tower || tower.color != color_ || tower.first == false)
+        int direction = pos.x - pos_.x == 2 ? -1 : 1;
+        if (board[pos.x + direction][pos.y].type != Type::none)
             return false;
-    }
-    if ((piece.type == Type::none || board[pos.x + 1][pos.y].type == Type::none || !first_) && pos.x == pos_.x - 2 &&
-        pos.y == pos_.y) {
-        TypePiece boardCopy[8][8];
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++)
-                boardCopy[i][j] = board[i][j];
-        boardCopy[pos_.x - 1][pos_.y] = boardCopy[pos_.y][pos_.x];
-        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
-        if (isCheck(boardCopy, Coord{pos_.x - 1, pos_.y})) {
+        if (direction == -1 && board[pos_.x + 2][pos.y].type != Type::none)
             return false;
-        }
-        auto tower = board[pos_.x - 4][pos_.y];
-        if (tower.type != Type::tower || tower.color != color_ || tower.first == false)
+        int xTower = (direction == -1 ? 4 : -3) + pos_.x;
+        auto tower = board[xTower][pos.y];
+        if (tower.type != Type::tower || tower.color != color_ || !tower.first)
             return false;
     }
     return true;
@@ -216,18 +208,18 @@ bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
 }
 
 bool King::move(const TypePiece board[8][8], const Coord &pos) {
+    Coord posCopy = pos_;
     bool res = Piece::move(board, pos);
     if (!res)
         return false;
-    if (pos.x == pos_.x + 2 && pos.y == pos_.y) {
-        auto tower = dynamic_cast<Tower *>(board[pos_.x + 3][pos.y].piece);
+    if (pos.x == posCopy.x + 2 && pos.y == posCopy.y) {
+        auto tower = dynamic_cast<Tower *>(board[posCopy.x + 4][pos.y].piece);
         tower->move(board, {pos.x - 1, pos.y});
     }
-    if (pos.x == pos_.x - 2 && pos.y == pos_.y) {
-        auto tower = dynamic_cast<Tower *>(board[pos_.x - 4][pos.y].piece);
+    if (pos.x == posCopy.x - 2 && pos.y == posCopy.y) {
+        auto tower = dynamic_cast<Tower *>(board[posCopy.x - 3][pos.y].piece);
         tower->move(board, {pos.x + 1, pos.y});
     }
-    pos_ = pos;
     first_ = false;
     return true;
 }
@@ -237,7 +229,7 @@ bool King::isCheck(const TypePiece board[8][8], Coord pos) {
         pos = pos_;
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++) {
-            if (board[i][j].type == Type::none || board[i][j].color == color_)
+            if (board[i][j].type == Type::none || board[i][j].color == color_ || pos == Coord{i, j})
                 continue;
             if (board[i][j].piece->isLegalMove(board, pos))
                 return true;
@@ -249,13 +241,9 @@ void King::update(const TypePiece board[8][8]) {
     possibleMoves_.clear();
     for (auto &move: legalMoves_) {
         auto pos = Coord{pos_.x + move.x, pos_.y + move.y};
-        TypePiece boardCopy[8][8];
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++)
-                boardCopy[i][j] = board[i][j];
-        boardCopy[pos.x][pos.y] = boardCopy[pos_.x][pos_.y];
-        boardCopy[pos_.x][pos_.y] = {Colour::none, Type::none, nullptr};
         if (isLegalMove(board, pos)) {
+            TypePiece boardCopy[8][8];
+            copyBoard(board, boardCopy, pos, pos_);
             if (isCheck(boardCopy, pos))
                 continue;
             possibleMoves_.emplace_back(pos);
@@ -264,13 +252,13 @@ void King::update(const TypePiece board[8][8]) {
 }
 
 TypePiece King::getType() {
-    return {color_, Type::king, this, first_};
+    return {color_, Type::king, this};
 }
 
 Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {
     int direction = color == Colour::white ? 1 : -1;
     legalMoves_.emplace_back(Coord{0, direction});
-    legalMoves_.emplace_back(Coord{0, direction});
+    legalMoves_.emplace_back(Coord{0, direction * 2});
     legalMoves_.emplace_back(Coord{1, direction});
     legalMoves_.emplace_back(Coord{-1, direction});
 }
@@ -300,17 +288,15 @@ bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
 }
 
 bool Pawn::move(const TypePiece board[8][8], const Coord &pos) {
+    Coord posCopy = pos_;
     bool res = Piece::move(board, pos);
     if (!res)
         return false;
-    if (pos.x == pos_.x + 1 || pos.x == pos_.x - 1) {
-        if (board[pos.x][pos.y].type == Type::none && board[pos.x][pos_.y].type == Type::pawn) {
-            board[pos.x][pos.y].piece->kill();
-        }
+    if ((pos.x == posCopy.x + 1 || pos.x == posCopy.x - 1) && board[pos.x][pos.y].type == Type::none) {
+        board[pos.x][posCopy.y].piece->kill();
     }
-    first_ = (first_ == -1) ? -1 : 0;
-    if (pos.x == pos_.x + 2 || pos.x == pos_.x - 2)
-        first_ = 1;
+    int direction = color_ == Colour::white ? 2 : -2;
+    first_ = (posCopy.y + direction == pos.y) ? 1 : -1;
     return true;
 }
 
