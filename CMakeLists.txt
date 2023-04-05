@@ -9,7 +9,7 @@ add_executable(chess
         Board.cpp
         main.cpp
         Piece.cpp
-        Player.cpp)
+        Player.cpp Game.h Game.cpp struct.h)
 
 set(SFML_INCLUDE_DIR "./SFML/include")
 set(SFML_LIBRARY_DIR "./SFML/build/lib")

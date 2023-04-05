@@ -1,18 +1,17 @@
 #include <SFML/Graphics.hpp>
+#include "Game.h"
 #include "Board.h"
 #include <string>
-#include <iostream>
 using namespace sf;
+
+constexpr screen::CoordF tileSize{72, 72};
 
 int main()
 {
     RenderWindow window;
-    Board board(Vector2f(72.f, 72.f));
     std::string s = "res/chess.png";
-    if (!board.Load(&s))
-    {
-        return 1;
-    }
+    screen::Board board(tileSize, s);
+    chess::Game game;
     window.create(VideoMode(72 * 8, 72 * 8), "Jeu");
     window.setVerticalSyncEnabled(true);
     while (window.isOpen())
@@ -25,15 +24,15 @@ int main()
                 break;
             case Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    board.Selection_Case(event.mouseButton.x/72, event.mouseButton.y/72);
+                    Coord pos = {event.mouseButton.x / (int)tileSize.x, event.mouseButton.y / (int)tileSize.y};
+                    game.selectionCase(pos);
                 }
-
             default:
                 break;
             }
         }
         window.clear(sf::Color::Black);
-        board.Update();
+        game.updateBoard(board);
         window.draw(board);
         window.display();
     }
