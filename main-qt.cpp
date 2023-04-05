@@ -5,12 +5,12 @@
 
 constexpr screen::CoordF tileSize{72, 72};
 
-int main(int argc, const char* argv[]) {
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     chess::Game game;
 
 
-    screen::Board board(tileSize, (std::string &) "res/chess.png");
+    screen::Board board(nullptr);
     board.show();
 
     return app.exec();

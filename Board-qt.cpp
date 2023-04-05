@@ -2,7 +2,8 @@
 #include <iostream>
 
 namespace screen {
-    Board::Board(CoordF tileSize, std::string& s) {
+    Board::Board(CoordF windowSize, QWidget* parent) : QMainWindow(parent) {
+        resize((int) windowSize.x, (int) windowSize.y);
 //        for (int i = 0; i < 8; ++i) {
 //            for (int j = 0; j < 8; ++j) {
 //                int tu = 6;
@@ -100,4 +101,20 @@ namespace screen {
 //        target.draw(layer3, states);
 //    }
     }
+
+
+    void Board::setMenu() {
+        // On crée un bouton 'Exit'
+        auto* exit = new QAction(tr("Exit"), this);
+        // On ajoute un raccourci clavier qui simulera l'appui sur ce bouton (Ctrl+Q)
+        exit->setShortcuts(QKeySequence::Quit);
+        // On connecte le clic sur ce bouton avec l'action de clore le programme
+        connect(exit, SIGNAL(triggered()), this, SLOT(close()));
+
+        // On crée un nouveau menu 'File'
+        QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+        // Dans lequel on ajoute notre bouton 'Exit'
+        fileMenu->addAction(exit);
+    }
+
 }
