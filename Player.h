@@ -21,7 +21,7 @@ namespace chess {
 
         void updateBoard(TypePiece board[8][8]);
 
-        [[nodiscard]] State State() const;
+        [[nodiscard]] State getState() const;
 
         [[nodiscard]] Colour getColor() const { return player_color; }
 

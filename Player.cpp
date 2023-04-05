@@ -22,7 +22,7 @@ namespace chess {
         }
     }
 
-    State Player::State() const {
+    State Player::getState() const {
         if (nb_move == 0 and chess)
             return State::checkmate;
         else if (nb_move == 0)

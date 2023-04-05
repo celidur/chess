@@ -59,7 +59,7 @@ namespace chess {
         player_[(int) playerRound_].update(board_);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
-        switch (player_[(int) playerRound_].State()) {
+        switch (player_[(int) playerRound_].getState()) {
             case State::checkmate:
                 std::cout << "Echec et mat" << std::endl;
                 selection_[3] = pos;

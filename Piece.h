@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <ostream>
+#include <memory>
 #include "struct.h"
 
 namespace chess {
