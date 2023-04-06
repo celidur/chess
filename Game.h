@@ -13,6 +13,8 @@ namespace chess {
     public:
         Game();
 
+        explicit Game(const screen::TypePiece board[8][8], Colour color = Colour::white);
+
         ~Game() = default;
 
         void update();

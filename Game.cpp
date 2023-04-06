@@ -7,7 +7,15 @@
 
 namespace chess {
 
-    void convertBoard(screen::TypePiece board[8][8], TypePiece boardGame[8][8]) {
+    void convertBoard(const screen::TypePiece boardGame[8][8], TypePiece board[8][8]) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                board[i][j] = {boardGame[i][j].color, boardGame[i][j].type};
+            }
+        }
+    }
+
+    void convertBoard(const TypePiece boardGame[8][8], screen::TypePiece board[8][8]) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 board[i][j] = {boardGame[i][j].color, boardGame[i][j].type};
@@ -21,6 +29,18 @@ namespace chess {
                                                                                     {-1, -1}} {
         player_.emplace_back(Colour::black);
         player_.emplace_back(Colour::white);
+        update();
+    }
+
+    Game::Game(const screen::TypePiece board[8][8], Colour color) : playerRound_(color), pieceSelected_(nullptr),
+                                                                    selection_{{-1, -1},
+                                                                               {-1, -1},
+                                                                               {-1, -1},
+                                                                               {-1, -1}} {
+        TypePiece boardC[8][8];
+        convertBoard(board, boardC);
+        player_.emplace_back(Colour::black, boardC);
+        player_.emplace_back(Colour::white, boardC);
         update();
     }
 
@@ -78,10 +98,11 @@ namespace chess {
 
     void Game::updateBoard(screen::BoardBase& board) {
         screen::TypePiece boardGame[8][8];
-        convertBoard(boardGame, board_);
+        convertBoard(board_, boardGame);
         std::vector<Coord> movePossible =
                 pieceSelected_ != nullptr ? pieceSelected_->getPossibleMoves() : std::vector<Coord>();
         board.update(selection_, boardGame, movePossible);
     }
+
 
 }

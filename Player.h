@@ -17,6 +17,8 @@ namespace chess {
     public:
         explicit Player(Colour color = Colour::white);
 
+        Player(Colour color, TypePiece board[8][8]);
+
         void update(const TypePiece board[8][8]);
 
         void updateBoard(TypePiece board[8][8]);

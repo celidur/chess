@@ -40,11 +40,11 @@ namespace chess {
                 TypePiece boardCopy[8][8];
                 copyBoard(board, boardCopy, pos, pos_);
                 if (color_ == Colour::white) {
-                    if (!whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
+                    if (whiteKing != nullptr && !whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
                         continue;
                     }
                 } else {
-                    if (!blackKing->isLegalMove(boardCopy, blackKing->pos_)) {
+                    if (blackKing != nullptr && !blackKing->isLegalMove(boardCopy, blackKing->pos_)) {
                         continue;
                     }
                 }
@@ -177,6 +177,8 @@ namespace chess {
         }
         legalMoves_.emplace_back(Coord{2, 0});
         legalMoves_.emplace_back(Coord{-2, 0});
+        int kingLine = color == Colour::white ? 0 : 7;
+        first_ = pos == Coord{3, kingLine};
     }
 
     bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
@@ -258,6 +260,8 @@ namespace chess {
 
     Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {
         int direction = color == Colour::white ? 1 : -1;
+        int pawnLine = color == Colour::white ? 1 : 6;
+        first_ = pos.y == pawnLine ? 0 : -1;
         legalMoves_.emplace_back(Coord{0, direction});
         legalMoves_.emplace_back(Coord{0, direction * 2});
         legalMoves_.emplace_back(Coord{1, direction});

@@ -93,7 +93,7 @@ namespace chess {
         [[nodiscard]] TypePiece getType() override;
 
     private:
-        int first_ = 0;
+        int first_;
     };
 
     class Knight : virtual public Piece {
