@@ -9,6 +9,7 @@
 #ifndef CHESS_BOARDBASE_HPP
 #define CHESS_BOARDBASE_HPP
 
+#include <vector>
 #include "struct.h"
 
 namespace screen {
