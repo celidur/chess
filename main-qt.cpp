@@ -1,17 +1,19 @@
 #include "Game.h"
 #include "Board-qt.h"
-#include <string>
 #include <QApplication>
+#include <QGraphicsView>
 
 constexpr screen::CoordF tileSize{72, 72};
+constexpr screen::CoordF screenSize{tileSize.x*8.1, tileSize.y*8.1};
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     chess::Game game;
 
-
-    screen::Board board(nullptr);
-    board.show();
+    screen::Board board(tileSize, "res/chess.png", nullptr);
+    auto boardView = QGraphicsView(&board);
+    boardView.resize(screenSize.x, screenSize.y);
+    boardView.show();
 
     return app.exec();
 

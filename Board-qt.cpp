@@ -1,9 +1,71 @@
 #include "Board-qt.h"
 #include <iostream>
+#include <QImageReader>
 
 namespace screen {
-    Board::Board(CoordF windowSize, QWidget* parent) : QMainWindow(parent) {
-        resize((int) windowSize.x, (int) windowSize.y);
+    Board::Board(CoordF tileSize, const std::string &resFile, QWidget *parent) : QGraphicsScene(parent),
+                                                                                 boardLayers_() {
+        boardLayers_.push_back(BoardMatrix(64));
+        boardLayers_.push_back(BoardMatrix(64));
+
+        // Cases grises-blanches
+        auto &layer1 = boardLayers_.front();
+        auto greyImg = getPieceImg(
+                {
+                        (int) tileSize.x * 6,
+                        (int) tileSize.y,
+                        (int) tileSize.x,
+                        (int) tileSize.y}, resFile);
+
+        auto whiteImg = getPieceImg(
+                {
+                        (int) tileSize.x * 6,
+                        0,
+                        (int) tileSize.x,
+                        (int) tileSize.y}, resFile);
+
+
+        bool w = false;
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                auto img = w ? whiteImg : greyImg;
+                auto pix = this->addPixmap(QPixmap::fromImage(img));
+                pix->setPos(i * tileSize.x, j * tileSize.y);
+                layer1.push_back(pix);
+                w = !w;
+            }
+            w = !w;
+        }
+
+        // Pions
+        auto &layer2 = boardLayers_[1];
+        auto wPawn = getPieceImg(
+                {
+                        (int) 0,
+                        (int) 0,
+                        (int) tileSize.x,
+                        (int) tileSize.y}, resFile);
+
+        auto bPawn = getPieceImg(
+                {
+                        (int) 0,
+                        (int) tileSize.y,
+                        (int) tileSize.x,
+                        (int) tileSize.y}, resFile);
+
+
+        w = false;
+        auto lines = {1, 6};
+        for (auto &line: lines) {
+            auto img = w ? wPawn : bPawn;
+            for (int i = 0; i < 8; ++i) {
+                auto pix = this->addPixmap(QPixmap::fromImage(img));
+                pix->setPos(i * tileSize.x, line * tileSize.y);
+                layer2.push_back(pix);
+            }
+            w = !w;
+        }
+
 //        for (int i = 0; i < 8; ++i) {
 //            for (int j = 0; j < 8; ++j) {
 //                int tu = 6;
@@ -26,6 +88,14 @@ namespace screen {
 //        }
 //        if (!chess.loadFromFile(s))
 //            throw std::runtime_error("Error loading image");
+    }
+
+    QImage Board::getPieceImg(const QRect &pieceRect, const std::string &resFile) {
+        QImageReader imageReader;
+        auto s = QString::fromStdString(resFile);
+        imageReader.setFileName(s);
+        imageReader.setClipRect(pieceRect);
+        return imageReader.read();
     }
 
     void Board::update(Coord selection[4], TypePiece board_game[8][8], std::vector<Coord> &piecePossibleMove) {
@@ -102,19 +172,12 @@ namespace screen {
 //    }
     }
 
-
-    void Board::setMenu() {
-        // On crée un bouton 'Exit'
-        auto* exit = new QAction(tr("Exit"), this);
-        // On ajoute un raccourci clavier qui simulera l'appui sur ce bouton (Ctrl+Q)
-        exit->setShortcuts(QKeySequence::Quit);
-        // On connecte le clic sur ce bouton avec l'action de clore le programme
-        connect(exit, SIGNAL(triggered()), this, SLOT(close()));
-
-        // On crée un nouveau menu 'File'
-        QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-        // Dans lequel on ajoute notre bouton 'Exit'
-        fileMenu->addAction(exit);
+    void Board::applyToBoard(std::function<void(QGraphicsItem&)> functor) {
+        std::for_each(boardLayers_.begin(), boardLayers_.end(),[&functor](BoardMatrix& b){
+            std::for_each(b.begin(), b.end(),[&functor](QGraphicsItem* item){
+                functor(*item);
+            });
+        });
     }
 
 }
