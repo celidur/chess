@@ -104,5 +104,12 @@ namespace chess {
         board.update(selection_, boardGame, movePossible);
     }
 
+    screen::TypePiece(& Game::getBoard() const) [8][8]{
+        // make with no warning stack reference local variable
+        static screen::TypePiece boardGame[8][8];
+        convertBoard(board_, boardGame);
+        return boardGame;
+    }
+
 
 }

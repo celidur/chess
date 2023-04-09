@@ -3,8 +3,9 @@
 #include <QImageReader>
 
 namespace screen {
-    Board::Board(CoordF tileSize, const std::string &resFile, QWidget *parent) : QGraphicsScene(parent),
-                                                                                 boardLayers_() {
+    Board::Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent) : QGraphicsScene(
+            parent),
+                                                                                                        boardLayers_() {
         boardLayers_.push_back(BoardMatrix(64));
         boardLayers_.push_back(BoardMatrix(64));
 
@@ -25,7 +26,7 @@ namespace screen {
                         (int) tileSize.y}, resFile);
 
 
-        bool w = false;
+        bool w = true;
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 auto img = w ? whiteImg : greyImg;
@@ -39,32 +40,49 @@ namespace screen {
 
         // Pions
         auto &layer2 = boardLayers_[1];
-        auto wPawn = getPieceImg(
-                {
-                        (int) 0,
-                        (int) 0,
-                        (int) tileSize.x,
-                        (int) tileSize.y}, resFile);
-
-        auto bPawn = getPieceImg(
-                {
-                        (int) 0,
-                        (int) tileSize.y,
-                        (int) tileSize.x,
-                        (int) tileSize.y}, resFile);
-
-
-        w = false;
-        auto lines = {1, 6};
-        for (auto &line: lines) {
-            auto img = w ? wPawn : bPawn;
-            for (int i = 0; i < 8; ++i) {
+        for(int i = 0; i < 8; ++i) {
+            for(int j = 0; j < 8; ++j) {
+                if (board[i][j].type == Type::none)
+                    continue;
+                auto img = getPieceImg(
+                        {
+                                (int) tileSize.x * (int) board[i][j].type,
+                                (int) tileSize.y * (int) board[i][j].color,
+                                (int) tileSize.x,
+                                (int) tileSize.y}, resFile);
                 auto pix = this->addPixmap(QPixmap::fromImage(img));
-                pix->setPos(i * tileSize.x, line * tileSize.y);
+                pix->setPos(i * tileSize.x, j * tileSize.y);
                 layer2.push_back(pix);
             }
-            w = !w;
         }
+//
+//
+//        auto wPawn = getPieceImg(
+//                {
+//                        (int) 0,
+//                        (int) 0,
+//                        (int) tileSize.x,
+//                        (int) tileSize.y}, resFile);
+//
+//        auto bPawn = getPieceImg(
+//                {
+//                        (int) 0,
+//                        (int) tileSize.y,
+//                        (int) tileSize.x,
+//                        (int) tileSize.y}, resFile);
+//
+//
+//        w = false;
+//        auto lines = {1, 6};
+//        for (auto &line: lines) {
+//            auto img = w ? wPawn : bPawn;
+//            for (int i = 0; i < 8; ++i) {
+//                auto pix = this->addPixmap(QPixmap::fromImage(img));
+//                pix->setPos(i * tileSize.x, line * tileSize.y);
+//                layer2.push_back(pix);
+//            }
+//            w = !w;
+//        }
 
 //        for (int i = 0; i < 8; ++i) {
 //            for (int j = 0; j < 8; ++j) {
@@ -153,28 +171,9 @@ namespace screen {
 //        }
     }
 
-    void Board::draw() const {
-//        states.transform *= getTransform();
-//        states.texture = &chess;
-//        target.draw(layer1, states);
-//        sf::RectangleShape selection_box;
-//        selection_box.setSize(Vector2f(tile_size.x, tile_size.y));
-//        selection_box.setFillColor(Color(165, 166, 240));
-//        for (auto &i: selection_) {
-//            selection_box.setPosition(i.x * tile_size.x, i.y * tile_size.y);
-//            if (&selection_[3] == &i)
-//                selection_box.setFillColor(Color(224, 78, 74, 200));
-//            if (i.x >= 0)
-//                target.draw(selection_box, states);
-//        }
-//        target.draw(layer2, states);
-//        target.draw(layer3, states);
-//    }
-    }
-
-    void Board::applyToBoard(std::function<void(QGraphicsItem&)> functor) {
-        std::for_each(boardLayers_.begin(), boardLayers_.end(),[&functor](BoardMatrix& b){
-            std::for_each(b.begin(), b.end(),[&functor](QGraphicsItem* item){
+    void Board::applyToBoard(std::function<void(QGraphicsItem &)> functor) {
+        std::for_each(boardLayers_.begin(), boardLayers_.end(), [&functor](BoardMatrix &b) {
+            std::for_each(b.begin(), b.end(), [&functor](QGraphicsItem *item) {
                 functor(*item);
             });
         });

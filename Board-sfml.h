@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "struct.h"
-#include "BoardBase.hpp"
+#include "BoardBase.h"
 
 namespace screen {
 

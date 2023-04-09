@@ -9,12 +9,11 @@ add_executable(chess-sfml
         Board-sfml.cpp
         main-sfml.cpp
         Piece.cpp
-        Player.cpp Game.h Game.cpp struct.h BoardBase.hpp)
+        Player.cpp Game.h Game.cpp struct.h BoardBase.h)
 
 set(SFML_INCLUDE_DIR "./SFML/include")
 set(SFML_LIBRARY_DIR "./SFML/build/lib")
 
-link_directories(SFML_LIBRARY_DIR)
 include_directories(SFML_INCLUDE_DIR)
 
 find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED)
@@ -23,10 +22,11 @@ target_link_libraries (chess-sfml sfml-graphics sfml-window sfml-system)
 
 
 add_executable(chess-qt
-        Board-qt.cpp
         main-qt.cpp
+        Board-qt.h
+        Board-qt.cpp
         Piece.cpp
-        Player.cpp Game.h Game.cpp struct.h BoardBase.hpp)
+        Player.cpp Game.h Game.cpp struct.h BoardBase.h)
 
 #configurer_Qt_auto_tout()                  # Doit être avant le "add_executable".
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).

@@ -4,13 +4,13 @@
 #include <QGraphicsView>
 
 constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x*8.1, tileSize.y*8.1};
+constexpr screen::CoordF screenSize{tileSize.x*8, tileSize.y*8};
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     chess::Game game;
 
-    screen::Board board(tileSize, "res/chess.png", nullptr);
+    screen::Board board(tileSize, "res/chess.png", game.getBoard());
     auto boardView = QGraphicsView(&board);
     boardView.resize(screenSize.x, screenSize.y);
     boardView.show();

@@ -6,8 +6,8 @@
 * Correcteur : -------
 */
 
-#ifndef CHESS_BOARDBASE_HPP
-#define CHESS_BOARDBASE_HPP
+#ifndef CHESS_BOARDBASE_H
+#define CHESS_BOARDBASE_H
 
 #include <vector>
 #include "struct.h"
@@ -31,4 +31,4 @@ namespace screen {
 
 }
 
-#endif //CHESS_BOARDBASE_HPP
+#endif //CHESS_BOARDBASE_H
