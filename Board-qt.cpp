@@ -3,21 +3,24 @@
 #include <QImageReader>
 
 namespace screen {
-    Board::Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent) : QGraphicsScene(
-            parent),
-                                                                                                        boardLayers_() {
+    Board::Board(
+            CoordF tileSize,
+            const std::string &resFile,
+            TypePiece board[8][8],
+            QWidget *parent) : QGraphicsScene(parent), boardLayers_(), textureLoader_() {
         boardLayers_.push_back(BoardMatrix());
         boardLayers_.push_back(BoardMatrix());
         tileSize_ = tileSize;
-        setLayer1(resFile);
-        setLayer2(resFile, board);
+        textureLoader_.setFileName(QString::fromStdString(resFile));
+        setLayer1();
+        setLayer2(board);
     }
 
-    void Board::setLayer2(const std::string &resFile, TypePiece board[8][8]) {
+    void Board::setLayer2(TypePiece board[8][8]) {
         // Pièces
         auto &layer2 = boardLayers_[1];
-        for(int i = 0; i < 8; ++i) {
-            for(int j = 0; j < 8; ++j) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
                 if (board[i][j].type == Type::none)
                     continue;
                 auto img = getPieceImg(
@@ -25,32 +28,36 @@ namespace screen {
                                 (int) tileSize_.x * (int) board[i][j].type,
                                 (int) tileSize_.y * (int) board[i][j].color,
                                 (int) tileSize_.x,
-                                (int) tileSize_.y}, resFile);
+                                (int) tileSize_.y
+                        });
                 auto pix = this->addPixmap(QPixmap::fromImage(img));
                 pix->setPos(
                         (float) i * tileSize_.x,
                         (float) j * tileSize_.y
-                        );
+                );
                 layer2.push_back(pix);
             }
         }
     }
 
-    void Board::setLayer1(const std::string &resFile) {// Cases grises-blanches
+    void Board::setLayer1() {
+        // Cases grises-blanches
         auto &layer1 = boardLayers_.front();
         auto greyImg = getPieceImg(
                 {
                         (int) tileSize_.x * 6,
                         (int) tileSize_.y,
                         (int) tileSize_.x,
-                        (int) tileSize_.y}, resFile);
+                        (int) tileSize_.y
+                });
 
         auto whiteImg = getPieceImg(
                 {
                         (int) tileSize_.x * 6,
                         0,
                         (int) tileSize_.x,
-                        (int) tileSize_.y}, resFile);
+                        (int) tileSize_.y
+                });
 
 
         bool w = true;
@@ -68,15 +75,15 @@ namespace screen {
         }
     }
 
-    QImage Board::getPieceImg(const QRect &pieceRect, const std::string &resFile) {
-        QImageReader imageReader;
-        auto s = QString::fromStdString(resFile);
-        imageReader.setFileName(s);
-        imageReader.setClipRect(pieceRect);
-        return imageReader.read();
+    QImage Board::getPieceImg(const QRect &pieceRect) {
+        if (textureLoader_.device()->isOpen())
+            textureLoader_.device()->seek(0); // Reset the QImageReader
+
+        textureLoader_.setClipRect(pieceRect);
+        return textureLoader_.read();
     }
 
-    void Board::update(Coord selection[4], TypePiece board_game[8][8], std::vector<Coord> &piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) {
         std::cout << "Board.update() called" << std::endl;
 
 

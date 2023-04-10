@@ -41,13 +41,14 @@ namespace screen {
     private:
         void applyToBoard(std::function<void(QGraphicsItem &)> funct);
 
-        static QImage getPieceImg(const QRect& pieceRect, const std::string &resFile) ;
+        QImage getPieceImg(const QRect& pieceRect);
 
-        void setLayer1(const std::string &resFile);
+        void setLayer1();
 
-        void setLayer2(const std::string &resFile, TypePiece board[8][8]);
+        void setLayer2(TypePiece board[8][8]);
 
         QVector<BoardMatrix> boardLayers_;
+        QImageReader textureLoader_;
 
         inline static CoordF tileSize_ = {0,0};
     };

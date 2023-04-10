@@ -1,11 +1,3 @@
-/*
-* Travail : $FOLDER_NAME-Board.hpp
-* Section # : 01
-* Équipe # : 11
-* Auteurs: Charles Khoury, Thomas Tzeng Souvanlasy
-* Correcteur : -------
-*/
-
 #ifndef CHESS_BOARDBASE_H
 #define CHESS_BOARDBASE_H
 
