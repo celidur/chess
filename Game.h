@@ -15,7 +15,7 @@ namespace chess {
 
         explicit Game(const screen::TypePiece board[8][8], Colour color = Colour::white);
 
-        ~Game() = default;
+        virtual ~Game() = default;
 
         void update();
 

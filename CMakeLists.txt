@@ -30,7 +30,13 @@ add_executable(chess-qt
         Board-qt.h
         Board-qt.cpp
         Piece.cpp
-        Player.cpp Game.h Game.cpp struct.h BoardBase.h)
+        Player.cpp
+        Game.h
+        Game.cpp
+        struct.h
+        BoardBase.h
+        QtGame.cpp
+        QtGame.h)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
 target_link_libraries(chess-qt Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.

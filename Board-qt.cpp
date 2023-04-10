@@ -77,7 +77,11 @@ namespace screen {
     }
 
     void Board::update(Coord selection[4], TypePiece board_game[8][8], std::vector<Coord> &piecePossibleMove) {
-//        for (int i = 0; i < 4; ++i) {
+        std::cout << "Board.update() called" << std::endl;
+
+
+
+        //        for (int i = 0; i < 4; ++i) {
 //            selection_[i] = selection[i];
 //        }
 //        layer3.clear();
@@ -137,6 +141,13 @@ namespace screen {
                 functor(*item);
             });
         });
+    }
+
+    void Board::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+        auto item = this->itemAt(event->scenePos(), QTransform());
+        auto itemPos = item->pos();
+        Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
+        emit caseClicked(pos, *this);
     }
 
 }

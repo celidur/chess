@@ -30,8 +30,13 @@ namespace screen {
             applyToBoard(deleteFunction);
         }
 
-        void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) override;
+        void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) override;
 
+        signals:
+        QEvent* caseClicked(Coord coord, screen::Board& board);
+
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     private:
         void applyToBoard(std::function<void(QGraphicsItem &)> funct);
