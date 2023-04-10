@@ -20,6 +20,10 @@ find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED
 
 target_link_libraries (chess-sfml sfml-graphics sfml-window sfml-system)
 
+# Utilise moc pour générer le code des QObjects
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 add_executable(chess-qt
         main-qt.cpp
@@ -28,6 +32,5 @@ add_executable(chess-qt
         Piece.cpp
         Player.cpp Game.h Game.cpp struct.h BoardBase.h)
 
-#configurer_Qt_auto_tout()                  # Doit être avant le "add_executable".
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
 target_link_libraries(chess-qt Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.

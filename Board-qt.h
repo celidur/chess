@@ -6,21 +6,25 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include <QGraphicsSceneMouseEvent>
+#include <QTransform>
+#include <QImageReader>
 #include <qnamespace.h>
 #include <QVector>
 #include <memory>
 
 namespace screen {
 
-    using BoardMatrix = QVector<QGraphicsItem *>;
+    using BoardMatrix = QVector<QGraphicsItem*>;
 
 
-    class Board : public BoardBase, public QGraphicsScene {
+    class Board :  public QGraphicsScene, public BoardBase{
+        Q_OBJECT
     public:
         explicit Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent=nullptr);
 
         ~Board() override {
-            auto deleteFunction = [](QGraphicsItem &item) {
+            auto deleteFunction = [](QGraphicsItem& item){
                 delete &item;
             };
             applyToBoard(deleteFunction);
@@ -28,14 +32,19 @@ namespace screen {
 
         void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) override;
 
-    private:
-        void draw() const;
 
+    private:
         void applyToBoard(std::function<void(QGraphicsItem &)> funct);
+
+        static QImage getPieceImg(const QRect& pieceRect, const std::string &resFile) ;
+
+        void setLayer1(const std::string &resFile);
+
+        void setLayer2(const std::string &resFile, TypePiece board[8][8]);
 
         QVector<BoardMatrix> boardLayers_;
 
-        static QImage getPieceImg(const QRect &pieceRect, const std::string &resFile);
+        inline static CoordF tileSize_ = {0,0};
     };
 
 }
