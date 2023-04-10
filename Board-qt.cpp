@@ -143,10 +143,14 @@ namespace screen {
     }
 
     void Board::applyToBoard(std::function<void(QGraphicsItem &)> functor) {
-        std::for_each(boardLayers_.begin(), boardLayers_.end(), [&functor](BoardMatrix &b) {
-            std::for_each(b.begin(), b.end(), [&functor](QGraphicsItem *item) {
-                functor(*item);
-            });
+        std::for_each(boardLayers_.begin(), boardLayers_.end(), [&functor](BoardMatrix &layer) {
+            Board::applyToLayer(layer, functor);
+        });
+    }
+
+    void Board::applyToLayer(BoardMatrix& layer, std::function<void(QGraphicsItem &)> functor) {
+        std::for_each(layer.begin(), layer.end(), [&functor](QGraphicsItem *item) {
+            functor(*item);
         });
     }
 

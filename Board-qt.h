@@ -39,7 +39,8 @@ namespace screen {
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     private:
-        void applyToBoard(std::function<void(QGraphicsItem &)> funct);
+        void applyToBoard(std::function<void(QGraphicsItem &)> functor);
+        static void applyToLayer(BoardMatrix& layer, std::function<void(QGraphicsItem &)> functor);
 
         QImage getPieceImg(const QRect& pieceRect);
 
