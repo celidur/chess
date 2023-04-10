@@ -6,6 +6,7 @@ namespace chess {
     Player::Player(Colour color) : chess(false), nb_move(0), player_color(color) {
         int pawnLine = color == Colour::white ? 1 : 6;
         int kingLine = color == Colour::white ? 0 : 7;
+        king_pos = {3, kingLine};
         for (int i = 0; i < 16; i++) {
             if (i < 8)
                 pieces.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, player_color));
@@ -19,7 +20,6 @@ namespace chess {
                 pieces.push_back(std::make_unique<Queen>(Coord{4, kingLine}, player_color));
             else
                 pieces.push_back(std::make_unique<King>(Coord{3, kingLine}, player_color));
-            king_pos = {3, kingLine};
         }
     }
 
