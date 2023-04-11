@@ -17,8 +17,6 @@
 
 namespace screen {
 
-    using BoardMatrix = QGraphicsPixmapItem*[8][8];
-
     enum class ZLayer{
         bottom,
         middle,
@@ -30,12 +28,7 @@ namespace screen {
     public:
         explicit Board(CoordF tileSize, const std::string& resFile, TypePiece board[8][8], QWidget *parent=nullptr);
 
-        ~Board() override {
-            auto deleteFunction = [](QGraphicsItem* item){
-                delete item;
-            };
-            applyToBoard(deleteFunction);
-        }
+        ~Board() override = default;
 
         void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) override;
 
@@ -46,9 +39,6 @@ namespace screen {
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     private:
-        void applyToBoard(const std::function<void(QGraphicsItem *)>& functor);
-        static void applyToLayer(BoardMatrix& layer, const std::function<void(QGraphicsItem *)>& functor);
-
         QImage getPieceImg(const QRect& pieceRect);
 
         void setLayer1(Coord sel[4]);
@@ -65,9 +55,6 @@ namespace screen {
 
         void setPossibleMoves(std::vector<Coord>& piecePossibleMove);
 
-        BoardMatrix layer1_{};
-        BoardMatrix layer2_{};
-        BoardMatrix layer3_{};
         QImageReader textureLoader_;
         inline static CoordF tileSize_ = {0,0};
     };

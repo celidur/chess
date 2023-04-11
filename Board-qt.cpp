@@ -33,7 +33,6 @@ namespace screen {
                         (float) i * tileSize_.x,
                         (float) j * tileSize_.y
                 );
-                layer2_[i][j] = pix;
             }
         }
     }
@@ -86,7 +85,6 @@ namespace screen {
                 pix->setPos(
                         (float) i * tileSize_.x,
                         (float) j * tileSize_.y);
-                layer1_[i][j] = pix;
                 w = !w;
             }
             w = !w;
@@ -119,7 +117,6 @@ namespace screen {
         this->clear(); // Clear all items
         setLayer1(selection);
         setLayer2(boardGame);
-
         setPossibleMoves(piecePossibleMove);
     }
 
@@ -134,24 +131,7 @@ namespace screen {
         for (Coord& possibleCoord: piecePossibleMove) {
             auto pix = addPixmap(QPixmap::fromImage(possibleMoveImg));
             pix->setZValue(static_cast<qreal>(ZLayer::top));
-            pix->setPos(
-                    (float) possibleCoord.x * tileSize_.x,
-                    (float) possibleCoord.y * tileSize_.y);
-            layer3_[possibleCoord.x][possibleCoord.y] = pix;
-        }
-    }
-
-    void Board::applyToBoard(const std::function<void(QGraphicsItem *)>& functor) {
-        Board::applyToLayer(layer1_, functor);
-        Board::applyToLayer(layer2_, functor);
-        Board::applyToLayer(layer3_, functor);
-    }
-
-    void Board::applyToLayer(BoardMatrix& layer, const std::function<void(QGraphicsItem*)>& functor) {
-        for (auto&& itemLine : layer) {
-            for (auto&& item : itemLine) {
-                functor(item);
-            }
+            pix->setPos((float) possibleCoord.x * tileSize_.x, (float) possibleCoord.y * tileSize_.y);
         }
     }
 
