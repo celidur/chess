@@ -28,7 +28,7 @@ namespace screen {
     class Board :  public QGraphicsScene, public BoardBase{
         Q_OBJECT
     public:
-        explicit Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent=nullptr);
+        explicit Board(CoordF tileSize, const std::string& resFile, TypePiece board[8][8], QWidget *parent=nullptr);
 
         ~Board() override {
             auto deleteFunction = [](QGraphicsItem* item){
@@ -55,22 +55,21 @@ namespace screen {
 
         void setLayer2(TypePiece board[8][8]);
 
+        void setSpecialCases(
+                const Coord selection[4],
+                const QImage& selectedImg,
+                const QImage& checkImg,
+                int i, int j,
+                QImage& img,
+                bool& imgSet) const;
+
+        void setPossibleMoves(std::vector<Coord>& piecePossibleMove);
 
         BoardMatrix layer1_{};
         BoardMatrix layer2_{};
         BoardMatrix layer3_{};
         QImageReader textureLoader_;
-//        QColorTransform checkColorTransform_;
-
-//        Coord lastClick_ = {0, 0};
         inline static CoordF tileSize_ = {0,0};
-
-        void
-        setSpecialCases(const Coord *selection, const QImage &selectedImg, const QImage &checkImg, int i, int j,
-                        QImage &img,
-                        bool &imgSet) const;
-
-        void setPossibleMoves(std::vector<Coord> &piecePossibleMove);
     };
 
 }

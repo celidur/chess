@@ -16,7 +16,7 @@ namespace chess {
         Piece *piece = nullptr;
         int first = 0;
 
-        friend std::ostream &operator<<(std::ostream &os, const TypePiece &piece) {
+        friend std::ostream& operator<<(std::ostream& os, const TypePiece& piece) {
             switch (piece.type) {
                 case Type::pawn:
                     os << (piece.color == Colour::white ? "p" : "P");
@@ -47,9 +47,9 @@ namespace chess {
 
     class Piece {
     public:
-        Piece(const Coord &pos, Colour color);
+        Piece(const Coord& pos, Colour color);
 
-        virtual bool move(const TypePiece board[8][8], const Coord &pos);
+        virtual bool move(const TypePiece board[8][8], const Coord& pos);
 
         virtual void update(const TypePiece board[8][8]);
 
@@ -82,11 +82,11 @@ namespace chess {
 
     class Pawn : virtual public Piece {
     public:
-        Pawn(const Coord &pos, Colour color);
+        Pawn(const Coord& pos, Colour color);
 
         void update(const TypePiece board[8][8]) override;
 
-        bool move(const TypePiece board[8][8], const Coord &pos) override;
+        bool move(const TypePiece board[8][8], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -98,7 +98,7 @@ namespace chess {
 
     class Knight : virtual public Piece {
     public:
-        Knight(const Coord &pos, Colour color);
+        Knight(const Coord& pos, Colour color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -108,11 +108,11 @@ namespace chess {
 
     class Tower : virtual public Piece {
     public:
-        Tower(const Coord &pos, Colour color);
+        Tower(const Coord& pos, Colour color);
 
         [[nodiscard]] bool getFirst() const;
 
-        bool move(const TypePiece board[8][8], const Coord &pos) override;
+        bool move(const TypePiece board[8][8], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -125,7 +125,7 @@ namespace chess {
 
     class Bishop : virtual public Piece {
     public:
-        Bishop(const Coord &pos, Colour color);
+        Bishop(const Coord& pos, Colour color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -135,7 +135,7 @@ namespace chess {
 
     class Queen : public Tower, Bishop {
     public:
-        Queen(const Coord &pos, Colour color);
+        Queen(const Coord& pos, Colour color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -144,11 +144,11 @@ namespace chess {
 
     class King : virtual public Piece {
     public:
-        King(const Coord &pos, Colour color);
+        King(const Coord& pos, Colour color);
 
         void update(const TypePiece board[8][8]) override;
 
-        bool move(const TypePiece board[8][8], const Coord &pos) override;
+        bool move(const TypePiece board[8][8], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 

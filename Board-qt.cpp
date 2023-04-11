@@ -4,9 +4,9 @@
 namespace screen {
     Board::Board(
             CoordF tileSize,
-            const std::string &resFile,
+            const std::string& resFile,
             TypePiece board[8][8],
-            QWidget *parent) : QGraphicsScene(parent), textureLoader_() {
+            QWidget* parent) : QGraphicsScene(parent), textureLoader_() {
         tileSize_ = tileSize;
         textureLoader_.setFileName(QString::fromStdString(resFile));
         Coord c[4] = {{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
@@ -75,7 +75,7 @@ namespace screen {
                 QImage img;
                 bool imgSet = false;
 
-                // Special images (Check & selected)
+                // Special images (Check&  selected)
                 setSpecialCases(selection, selectedImg, checkImg, i, j, img, imgSet);
 
                 if (!imgSet)
@@ -93,8 +93,8 @@ namespace screen {
         }
     }
 
-    void Board::setSpecialCases(const Coord *selection, const QImage &selectedImg, const QImage &checkImg, int i, int j,
-                                QImage &img, bool &imgSet) const {
+    void Board::setSpecialCases(const Coord selection[4], const QImage& selectedImg, const QImage& checkImg, int i, int j,
+                                QImage& img, bool& imgSet) const {
         for (int k = 0; k < 4; ++k) {
             if(selection[k].x == i && selection[k].y == j){
                 if(k == 3)
@@ -107,7 +107,7 @@ namespace screen {
         }
     }
 
-    QImage Board::getPieceImg(const QRect &pieceRect) {
+    QImage Board::getPieceImg(const QRect& pieceRect) {
         if (textureLoader_.device()->isOpen())
             textureLoader_.device()->seek(0); // Reset the QImageReader
 
@@ -115,7 +115,7 @@ namespace screen {
         return textureLoader_.read();
     }
 
-    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) {
         this->clear(); // Clear all items
         setLayer1(selection);
         setLayer2(boardGame);
@@ -123,7 +123,7 @@ namespace screen {
         setPossibleMoves(piecePossibleMove);
     }
 
-    void Board::setPossibleMoves(std::vector<Coord> &piecePossibleMove) {
+    void Board::setPossibleMoves(std::vector<Coord>& piecePossibleMove) {
         auto possibleMoveImg = getPieceImg(
                 {
                         (int) tileSize_.x * 7,
@@ -131,7 +131,7 @@ namespace screen {
                         (int) tileSize_.x,
                         (int) tileSize_.y
                 });
-        for (Coord &possibleCoord: piecePossibleMove) {
+        for (Coord& possibleCoord: piecePossibleMove) {
             auto pix = addPixmap(QPixmap::fromImage(possibleMoveImg));
             pix->setZValue(static_cast<qreal>(ZLayer::top));
             pix->setPos(
@@ -155,7 +155,7 @@ namespace screen {
         }
     }
 
-    void Board::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    void Board::mousePressEvent(QGraphicsSceneMouseEvent* event) {
         auto item = this->itemAt(event->scenePos(), QTransform());
         auto itemPos = item->pos();
         Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};

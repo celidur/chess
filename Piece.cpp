@@ -1,5 +1,6 @@
 #include "Piece.h"
 #include <iostream>
+#include <algorithm>
 
 namespace chess {
 
@@ -20,7 +21,7 @@ namespace chess {
     Piece::Piece(const Coord &pos, Colour color) : pos_(pos), color_(color) {}
 
     bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
-        for (const auto &move: possibleMoves_) {
+        for (const auto& move: possibleMoves_) {
             if (move == pos) {
                 if (board[pos.x][pos.y].type != Type::none) {
                     board[pos.x][pos.y].piece->kill();
@@ -210,7 +211,7 @@ namespace chess {
         return true;
     }
 
-    bool King::move(const TypePiece board[8][8], const Coord &pos) {
+    bool King::move(const TypePiece board[8][8], const Coord& pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
@@ -258,7 +259,7 @@ namespace chess {
         return {color_, Type::king, this};
     }
 
-    Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {
+    Pawn::Pawn(const Coord& pos, Colour color) : Piece(pos, color) {
         int direction = color == Colour::white ? 1 : -1;
         int pawnLine = color == Colour::white ? 1 : 6;
         first_ = pos.y == pawnLine ? 0 : -1;
@@ -292,7 +293,7 @@ namespace chess {
         return false;
     }
 
-    bool Pawn::move(const TypePiece board[8][8], const Coord &pos) {
+    bool Pawn::move(const TypePiece board[8][8], const Coord& pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
@@ -315,7 +316,7 @@ namespace chess {
     }
 
 
-    Knight::Knight(const Coord &pos, Colour color) : Piece(pos, color) {
+    Knight::Knight(const Coord& pos, Colour color) : Piece(pos, color) {
         legalMoves_.emplace_back(Coord{2, 1});
         legalMoves_.emplace_back(Coord{2, -1});
         legalMoves_.emplace_back(Coord{-2, 1});

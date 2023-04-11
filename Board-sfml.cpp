@@ -32,7 +32,7 @@ namespace screen {
             throw std::runtime_error("Error loading image");
     }
 
-    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) {
         for (int i = 0; i < 4; ++i) {
             selection_[i] = selection[i];
         }
@@ -87,7 +87,7 @@ namespace screen {
         }
     }
 
-    void Board::draw(RenderTarget &target, RenderStates states) const {
+    void Board::draw(RenderTarget& target, RenderStates states) const {
         states.transform *= getTransform();
         states.texture = &chess;
         target.draw(layer1_, states);

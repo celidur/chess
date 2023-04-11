@@ -18,7 +18,7 @@ namespace screen {
 
     private:
 
-        void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
         sf::Texture chess;
         sf::VertexArray layer1_;
