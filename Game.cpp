@@ -74,8 +74,18 @@ namespace chess {
                 j = {Colour::none, Type::none, nullptr};
             }
         }
-        player_[0].updateBoard(board_);
-        player_[1].updateBoard(board_);
+        Coord promotionPos;
+        promotionPos_ = {-1, -1};
+        promotionPos = player_[0].updateBoard(board_);
+        if (promotionPos != Coord{-1, -1}) {
+            promotionPos_ = promotionPos;
+        }
+        promotionPos = player_[1].updateBoard(board_);
+        if (promotionPos != Coord{-1, -1}) {
+            promotionPos_ = promotionPos;
+        }
+        if (promotionPos != Coord{-1, -1})
+            playerRound_ = (playerRound_ == Colour::white ? Colour::black : Colour::white);
         player_[(int) playerRound_].update(board_);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
@@ -96,16 +106,20 @@ namespace chess {
         }
     }
 
-    void Game::updateBoard(screen::BoardBase& board) {
+    void Game::updateBoard(screen::BoardBase &board) {
         screen::TypePiece boardGame[8][8];
         convertBoard(board_, boardGame);
         std::vector<Coord> movePossible =
                 pieceSelected_ != nullptr ? pieceSelected_->getPossibleMoves() : std::vector<Coord>();
-        board.viewBoard(playerRound_);
-        board.update(selection_, boardGame, movePossible);
+        if (rotation_)
+            board.viewBoard(playerRound_);
+        if (promotionPos_ != Coord{-1, -1})
+            board.update(selection_, boardGame, movePossible, playerRound_);
+        else
+            board.update(selection_, boardGame, movePossible);
     }
 
-    screen::TypePiece(& Game::getBoard() const) [8][8]{
+    screen::TypePiece (&Game::getBoard() const )[8][8] {
         // make with no warning stack reference local variable
         static screen::TypePiece boardGame[8][8];
         convertBoard(board_, boardGame);
@@ -114,6 +128,12 @@ namespace chess {
 
     void Game::displayMessage(std::string msg) {
         std::cout << msg << std::endl;
+    }
+
+    void Game::promotion(Type type) {
+        player_[(int) playerRound_].addPiece(type, promotionPos_);
+        playerRound_ = (playerRound_ == Colour::white ? Colour::black : Colour::white);
+        update();
     }
 
 

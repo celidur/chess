@@ -21,7 +21,9 @@ namespace chess {
 
         void update(const TypePiece board[8][8]);
 
-        void updateBoard(TypePiece board[8][8]);
+        void addPiece(Type type, const Coord& pos);
+
+        Coord updateBoard(TypePiece board[8][8]);
 
         [[nodiscard]] State getState() const;
 

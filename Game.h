@@ -28,12 +28,16 @@ namespace chess {
     protected:
         virtual void displayMessage(std::string msg);
 
+        void promotion(Type type);
+
     private:
         std::vector<Player> player_;
         TypePiece board_[8][8];
         Colour playerRound_;
         Piece *pieceSelected_;
         Coord selection_[4];
+        bool rotation_ = false;
+        Coord promotionPos_;
     };
 }
 

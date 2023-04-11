@@ -23,34 +23,13 @@ namespace chess {
         }
     }
 
+
     Player::Player(Colour color, TypePiece board[8][8]) : chess(false), nb_move(0), player_color(color),
                                                           king_pos({-1, -1}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (board[i][j].color == color) {
-                    switch (board[i][j].type) {
-                        case Type::pawn:
-                            pieces.push_back(std::make_unique<Pawn>(Coord{i, j}, player_color));
-                            break;
-                        case Type::tower:
-                            pieces.push_back(std::make_unique<Tower>(Coord{i, j}, player_color));
-                            break;
-                        case Type::knight:
-                            pieces.push_back(std::make_unique<Knight>(Coord{i, j}, player_color));
-                            break;
-                        case Type::bishop:
-                            pieces.push_back(std::make_unique<Bishop>(Coord{i, j}, player_color));
-                            break;
-                        case Type::queen:
-                            pieces.push_back(std::make_unique<Queen>(Coord{i, j}, player_color));
-                            break;
-                        case Type::king:
-                            pieces.push_back(std::make_unique<King>(Coord{i, j}, player_color));
-                            king_pos = {i, j};
-                            break;
-                        case Type::none:
-                            break;
-                    }
+                    addPiece(board[i][j].type, Coord{i, j});
                 }
             }
         }
@@ -79,7 +58,7 @@ namespace chess {
         }
     }
 
-    void Player::updateBoard(TypePiece board[8][8]) {
+    Coord Player::updateBoard(TypePiece board[8][8]) {
         bool promote = false;
         Coord pos = {-1, -1};
         for (auto it = pieces.begin(); it != pieces.end();) {
@@ -88,6 +67,7 @@ namespace chess {
                 pieces.erase(it);
                 promote = true;
                 pos = posPiece;
+                board[posPiece.x][posPiece.y] = (*it)->getType();
             } else if (!(*it)->isAlive()) {
                 pieces.erase(it);
             } else {
@@ -95,10 +75,34 @@ namespace chess {
                 ++it;
             }
         }
-        if (promote) {
-            pieces.push_back(std::make_unique<Queen>(pos, player_color));
-            board[pos.x][pos.y] = pieces[pieces.size() - 1]->getType();
+        return pos;
+    }
+
+    void Player::addPiece(Type type, const Coord &pos) {
+        switch (type) {
+            case Type::pawn:
+                pieces.push_back(std::make_unique<Pawn>(pos, player_color));
+                break;
+            case Type::tower:
+                pieces.push_back(std::make_unique<Tower>(pos, player_color));
+                break;
+            case Type::knight:
+                pieces.push_back(std::make_unique<Knight>(pos, player_color));
+                break;
+            case Type::bishop:
+                pieces.push_back(std::make_unique<Bishop>(pos, player_color));
+                break;
+            case Type::queen:
+                pieces.push_back(std::make_unique<Queen>(pos, player_color));
+                break;
+            case Type::king:
+                pieces.push_back(std::make_unique<King>(pos, player_color));
+                king_pos = pos;
+                break;
+            case Type::none:
+                break;
         }
+
     }
 
 

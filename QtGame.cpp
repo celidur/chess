@@ -12,5 +12,10 @@ namespace chess {
 
     }
 
+    void QtGame::updateGameState(screen::TypePiece promotePiece, screen::Board &board) {
+        promotion(promotePiece.type);
+        updateBoard(board);
+    }
+
     QtGame::~QtGame() = default;
 }
