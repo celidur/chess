@@ -10,13 +10,20 @@
 #include <QTransform>
 #include <QImageReader>
 #include <qnamespace.h>
-#include <QVector>
+#include <QColor>
+#include <QColorTransform>
+#include <QPainter>
 #include <memory>
 
 namespace screen {
 
-    using BoardMatrix = QVector<QGraphicsItem*>;
+    using BoardMatrix = QGraphicsPixmapItem*[8][8];
 
+    enum class ZLayer{
+        bottom,
+        middle,
+        top
+    };
 
     class Board :  public QGraphicsScene, public BoardBase{
         Q_OBJECT
@@ -24,8 +31,8 @@ namespace screen {
         explicit Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent=nullptr);
 
         ~Board() override {
-            auto deleteFunction = [](QGraphicsItem& item){
-                delete &item;
+            auto deleteFunction = [](QGraphicsItem* item){
+                delete item;
             };
             applyToBoard(deleteFunction);
         }
@@ -39,19 +46,31 @@ namespace screen {
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     private:
-        void applyToBoard(std::function<void(QGraphicsItem &)> functor);
-        static void applyToLayer(BoardMatrix& layer, std::function<void(QGraphicsItem &)> functor);
+        void applyToBoard(const std::function<void(QGraphicsItem *)>& functor);
+        static void applyToLayer(BoardMatrix& layer, const std::function<void(QGraphicsItem *)>& functor);
 
         QImage getPieceImg(const QRect& pieceRect);
 
-        void setLayer1();
+        void setLayer1(Coord sel[4]);
 
         void setLayer2(TypePiece board[8][8]);
 
-        QVector<BoardMatrix> boardLayers_;
-        QImageReader textureLoader_;
 
+        BoardMatrix layer1_{};
+        BoardMatrix layer2_{};
+        BoardMatrix layer3_{};
+        QImageReader textureLoader_;
+//        QColorTransform checkColorTransform_;
+
+//        Coord lastClick_ = {0, 0};
         inline static CoordF tileSize_ = {0,0};
+
+        void
+        setSpecialCases(const Coord *selection, const QImage &selectedImg, const QImage &checkImg, int i, int j,
+                        QImage &img,
+                        bool &imgSet) const;
+
+        void setPossibleMoves(std::vector<Coord> &piecePossibleMove);
     };
 
 }

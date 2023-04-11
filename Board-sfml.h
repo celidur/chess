@@ -21,9 +21,9 @@ namespace screen {
         void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
         sf::Texture chess;
-        sf::VertexArray layer1;
-        sf::VertexArray layer2;
-        sf::VertexArray layer3;
+        sf::VertexArray layer1_;
+        sf::VertexArray layer2_;
+        sf::VertexArray layer3_;
         sf::Vector2f tile_size;
         Coord selection_[4];
     };

@@ -5,15 +5,15 @@
 using namespace sf;
 
 namespace screen {
-    Board::Board(CoordF tileSize, std::string& s) : layer1(Quads, 8 * 8 * 4),
-                                                    layer2(Quads, 8 * 8 * 4), layer3(Quads, 8 * 8 * 4),
+    Board::Board(CoordF tileSize, std::string& s) : layer1_(Quads, 8 * 8 * 4),
+                                                    layer2_(Quads, 8 * 8 * 4), layer3_(Quads, 8 * 8 * 4),
                                                     tile_size({tileSize.x, tileSize.y}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 int tu = 6;
                 int tv = (i % 2 + j % 2) % 2;
                 // on récupère un pointeur vers le quad à définir dans le tableau de vertex
-                Vertex *quad = &layer1[(i + j * 8) * 4];
+                Vertex *quad = &layer1_[(i + j * 8) * 4];
 
                 // on définit ses quatre coins
                 quad[0].position = Vector2f(i * tileSize.x, j * tileSize.y);
@@ -36,19 +36,19 @@ namespace screen {
         for (int i = 0; i < 4; ++i) {
             selection_[i] = selection[i];
         }
-        layer3.clear();
-        layer3.setPrimitiveType(Quads);
-        layer3.resize(8 * 8 * 4);
-        layer2.clear();
-        layer2.setPrimitiveType(Quads);
-        layer2.resize(8 * 8 * 4);
+        layer3_.clear();
+        layer3_.setPrimitiveType(Quads);
+        layer3_.resize(8 * 8 * 4);
+        layer2_.clear();
+        layer2_.setPrimitiveType(Quads);
+        layer2_.resize(8 * 8 * 4);
         for (auto &move: piecePossibleMove) {
             int tv = 0;
             int tu = 7;
             // on récupère un pointeur vers le quad à définir dans le tableau de vertex
             int x = move.x;
             int y = move.y;
-            Vertex *quad = &layer3[(x + y * 8) * 4];
+            Vertex *quad = &layer3_[(x + y * 8) * 4];
             // on définit ses quatre coins
             quad[0].position = Vector2f(x * tile_size.x, y * tile_size.y);
             quad[1].position = Vector2f((x + 1) * tile_size.x, y * tile_size.y);
@@ -69,7 +69,7 @@ namespace screen {
                     int tv = (int) boardGame[i][j].color;
                     int tu = (int) boardGame[i][j].type;
                     // on récupère un pointeur vers le quad à définir dans le tableau de vertex
-                    Vertex *quad = &layer2[(i + j * 8) * 4];
+                    Vertex *quad = &layer2_[(i + j * 8) * 4];
 
                     // on définit ses quatre coins
                     quad[0].position = Vector2f(i * tile_size.x, j * tile_size.y);
@@ -90,18 +90,20 @@ namespace screen {
     void Board::draw(RenderTarget &target, RenderStates states) const {
         states.transform *= getTransform();
         states.texture = &chess;
-        target.draw(layer1, states);
+        target.draw(layer1_, states);
         sf::RectangleShape selection_box;
         selection_box.setSize(Vector2f(tile_size.x, tile_size.y));
         selection_box.setFillColor(Color(165, 166, 240));
         for (auto &i: selection_) {
             selection_box.setPosition(i.x * tile_size.x, i.y * tile_size.y);
-            if (&selection_[3] == &i)
+            if (&selection_[3] == &i) {
+                std::cout << selection_[3].x << selection_[3].y << std::endl;
                 selection_box.setFillColor(Color(224, 78, 74, 200));
+            }
             if (i.x >= 0)
                 target.draw(selection_box, states);
         }
-        target.draw(layer2, states);
-        target.draw(layer3, states);
+        target.draw(layer2_, states);
+        target.draw(layer3_, states);
     }
 }
