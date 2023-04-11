@@ -41,17 +41,11 @@ namespace screen {
     private:
         QImage getPieceImg(const QRect& pieceRect);
 
+        void addImage(QImage& img, Coord coord, ZLayer zLayer);
+
         void setLayer1(Coord sel[4]);
 
         void setLayer2(TypePiece board[8][8]);
-
-        void setSpecialCases(
-                const Coord selection[4],
-                const QImage& selectedImg,
-                const QImage& checkImg,
-                int i, int j,
-                QImage& img,
-                bool& imgSet) const;
 
         void setPossibleMoves(std::vector<Coord>& piecePossibleMove);
 

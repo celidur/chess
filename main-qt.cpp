@@ -5,18 +5,18 @@
 #include <QStyleFactory>
 
 constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x*8.03, tileSize.y*8.03};
+constexpr screen::CoordF screenSize{tileSize.x * 8.03, tileSize.y * 8.03};
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     chess::QtGame game;
 
     screen::Board board(tileSize, "res/chess.png", game.getBoard());
     QWidget::connect(
             &board,
-            SIGNAL(caseClicked(Coord, screen::Board&)),
+            SIGNAL(caseClicked(Coord, screen::Board & )),
             &game,
-            SLOT(updateGameState(Coord, screen::Board&)));
+            SLOT(updateGameState(Coord, screen::Board & )));
 
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);

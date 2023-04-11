@@ -101,6 +101,7 @@ namespace chess {
         convertBoard(board_, boardGame);
         std::vector<Coord> movePossible =
                 pieceSelected_ != nullptr ? pieceSelected_->getPossibleMoves() : std::vector<Coord>();
+        board.viewBoard(playerRound_);
         board.update(selection_, boardGame, movePossible);
     }
 

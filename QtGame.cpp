@@ -8,15 +8,9 @@ namespace chess {
         updateBoard(board);
     }
 
-    QtGame::~QtGame() = default;
+    QtGame::QtGame(const screen::TypePiece (*board)[8], Colour color) : QObject(nullptr), Game(board, color) {
 
-//    void QtGame::displayMessage(std::string msg) {
-//        QMessageBox msgBox;
-//        msgBox.setWindowTitle("Chess message");
-//        msgBox.setText(QString::fromStdString(msg));
-//        msgBox.addButton(QMessageBox::Close);
-//        std::cout << msg << std::endl;
-//        msgBox.exec();
-//
-//    }
+    }
+
+    QtGame::~QtGame() = default;
 }

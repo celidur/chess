@@ -19,6 +19,12 @@ namespace screen {
         virtual ~BoardBase() = default;
 
         virtual void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) = 0;
+
+        void viewBoard(Colour color) {
+            side_ = color == Colour::white;
+        }
+    protected:
+        bool side_ = true;
     };
 
 }
