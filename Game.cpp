@@ -81,14 +81,14 @@ namespace chess {
         selection_[3] = {-1, -1};
         switch (player_[(int) playerRound_].getState()) {
             case State::checkmate:
-                std::cout << "Echec et mat" << std::endl;
+                displayMessage("Echec et mat");
                 selection_[3] = pos;
                 break;
             case State::stalemate:
-                std::cout << "Pat" << std::endl;
+                displayMessage("Pat");
                 break;
             case State::check:
-                std::cout << "Echec" << std::endl;
+                displayMessage("Echec");
                 selection_[3] = pos;
                 break;
             default:
@@ -109,6 +109,10 @@ namespace chess {
         static screen::TypePiece boardGame[8][8];
         convertBoard(board_, boardGame);
         return boardGame;
+    }
+
+    void Game::displayMessage(std::string msg) {
+        std::cout << msg << std::endl;
     }
 
 

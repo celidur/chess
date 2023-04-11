@@ -1,5 +1,4 @@
 #include "Board-qt.h"
-#include <iostream>
 
 namespace screen {
     Board::Board(

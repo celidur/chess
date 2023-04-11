@@ -1,11 +1,3 @@
-/*
-* Travail : $FOLDER_NAME-QtGame.cpp
-* Section # : 01
-* Équipe # : 11
-* Auteurs: Charles Khoury, Thomas Tzeng Souvanlasy
-* Correcteur : -------
-*/
-
 #include "QtGame.h"
 
 namespace chess {
@@ -18,4 +10,13 @@ namespace chess {
 
     QtGame::~QtGame() = default;
 
+//    void QtGame::displayMessage(std::string msg) {
+//        QMessageBox msgBox;
+//        msgBox.setWindowTitle("Chess message");
+//        msgBox.setText(QString::fromStdString(msg));
+//        msgBox.addButton(QMessageBox::Close);
+//        std::cout << msg << std::endl;
+//        msgBox.exec();
+//
+//    }
 }

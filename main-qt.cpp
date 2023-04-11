@@ -2,6 +2,7 @@
 #include <Board-qt.h>
 #include <QApplication>
 #include <QGraphicsView>
+#include <QStyleFactory>
 
 constexpr screen::CoordF tileSize{72, 72};
 constexpr screen::CoordF screenSize{tileSize.x*8.03, tileSize.y*8.03};

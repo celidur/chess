@@ -25,6 +25,9 @@ namespace chess {
 
         [[nodiscard]] screen::TypePiece(& getBoard() const)[8][8];
 
+    protected:
+        virtual void displayMessage(std::string msg);
+
     private:
         std::vector<Player> player_;
         TypePiece board_[8][8];
