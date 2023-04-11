@@ -3,9 +3,9 @@
 namespace screen {
     Board::Board(
             CoordF tileSize,
-            const std::string &resFile,
+            const std::string& resFile,
             TypePiece board[8][8],
-            QWidget *parent) : QGraphicsScene(parent), textureLoader_() {
+            QWidget* parent) : QGraphicsScene(parent), textureLoader_() {
         tileSize_ = tileSize;
         textureLoader_.setFileName(QString::fromStdString(resFile));
         Coord c[4] = {{-1, -1},
@@ -83,7 +83,7 @@ namespace screen {
         }
     }
 
-    QImage Board::getPieceImg(const QRect &pieceRect) {
+    QImage Board::getPieceImg(const QRect& pieceRect) {
         if (textureLoader_.device()->isOpen())
             textureLoader_.device()->seek(0); // Reset the QImageReader
 
@@ -91,14 +91,14 @@ namespace screen {
         return textureLoader_.read();
     }
 
-    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) {
         this->clear(); // Clear all items
         setLayer1(selection);
         setLayer2(boardGame);
         setPossibleMoves(piecePossibleMove);
     }
 
-    void Board::setPossibleMoves(std::vector<Coord> &piecePossibleMove) {
+    void Board::setPossibleMoves(std::vector<Coord>& piecePossibleMove) {
         auto possibleMoveImg = getPieceImg(
                 {
                         (int) tileSize_.x * 7,
@@ -120,8 +120,11 @@ namespace screen {
                 (float) coord.y * tileSize_.y);
     }
 
-    void Board::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    void Board::mousePressEvent(QGraphicsSceneMouseEvent* event) {
         auto item = this->itemAt(event->scenePos(), QTransform());
+        if (item == nullptr)
+            return;
+
         auto itemPos = item->pos();
         Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
         if (side_)
