@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 
 constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x*8.1, tileSize.y*8.1};
+constexpr screen::CoordF screenSize{tileSize.x*8.03, tileSize.y*8.03};
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
