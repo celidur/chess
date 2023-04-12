@@ -1,4 +1,4 @@
-#include "Board-sfml.h"
+#include "Board.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -32,7 +32,7 @@ namespace screen {
             throw std::runtime_error("Error loading image");
     }
 
-    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) {
+    void Board::update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove, Colour color) {
         for (int i = 0; i < 4; ++i) {
             selection_[i] = selection[i];
         }
@@ -97,7 +97,6 @@ namespace screen {
         for (auto &i: selection_) {
             selection_box.setPosition(i.x * tile_size.x, i.y * tile_size.y);
             if (&selection_[3] == &i) {
-                std::cout << selection_[3].x << selection_[3].y << std::endl;
                 selection_box.setFillColor(Color(224, 78, 74, 200));
             }
             if (i.x >= 0)

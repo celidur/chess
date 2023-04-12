@@ -1,4 +1,4 @@
-#include "Board-qt.h"
+#include "Board.h"
 
 namespace screen {
     Board::Board(

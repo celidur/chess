@@ -14,7 +14,7 @@ namespace screen {
 
         ~Board() override = default;
 
-        void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove) override;
+        void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove, Colour  color = Colour::none) override;
 
     private:
 

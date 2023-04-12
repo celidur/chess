@@ -4,31 +4,15 @@ project(chess)
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
-
-add_executable(chess-sfml
-        Board-sfml.cpp
-        main-sfml.cpp
-        Piece.cpp
-        Player.cpp Game.h Game.cpp struct.h BoardBase.h)
-
-set(SFML_INCLUDE_DIR "./SFML/include")
-set(SFML_LIBRARY_DIR "./SFML/build/lib")
-
-include_directories(SFML_INCLUDE_DIR)
-
-find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED)
-
-target_link_libraries (chess-sfml sfml-graphics sfml-window sfml-system)
-
 # Utilise moc pour générer le code des QObjects
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 add_executable(chess-qt
-        main-qt.cpp
-        Board-qt.h
-        Board-qt.cpp
+        main.cpp
+        Board.h
+        Board.cpp
         Piece.cpp
         Player.cpp
         Game.h

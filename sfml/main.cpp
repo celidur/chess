@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Board-sfml.h"
+#include "Board.h"
 #include <string>
 using namespace sf;
 
