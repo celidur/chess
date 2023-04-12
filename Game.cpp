@@ -23,24 +23,24 @@ namespace chess {
         }
     }
 
-    Game::Game() : playerRound_(Colour::white), pieceSelected_(nullptr), selection_{{-1, -1},
-                                                                                    {-1, -1},
-                                                                                    {-1, -1},
-                                                                                    {-1, -1}} {
-        player_.emplace_back(Colour::black);
-        player_.emplace_back(Colour::white);
+    Game::Game() : playerRound_(Color::white), pieceSelected_(nullptr), selection_{{-1, -1},
+                                                                                   {-1, -1},
+                                                                                   {-1, -1},
+                                                                                   {-1, -1}} {
+        player_.emplace_back(Color::black);
+        player_.emplace_back(Color::white);
         update();
     }
 
-    Game::Game(const screen::TypePiece board[8][8], Colour color) : playerRound_(color), pieceSelected_(nullptr),
-                                                                    selection_{{-1, -1},
+    Game::Game(const screen::TypePiece board[8][8], Color color) : playerRound_(color), pieceSelected_(nullptr),
+                                                                   selection_{{-1, -1},
                                                                                {-1, -1},
                                                                                {-1, -1},
                                                                                {-1, -1}} {
         TypePiece boardC[8][8];
         convertBoard(board, boardC);
-        player_.emplace_back(Colour::black, boardC);
-        player_.emplace_back(Colour::white, boardC);
+        player_.emplace_back(Color::black, boardC);
+        player_.emplace_back(Color::white, boardC);
         update();
     }
 
@@ -59,7 +59,7 @@ namespace chess {
             if (pieceSelected_->move(board_, pos)) {
                 selection_[1] = previous;
                 selection_[2] = pos;
-                playerRound_ = (playerRound_ == Colour::white ? Colour::black : Colour::white);
+                playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
                 update();
             }
             pieceSelected_ = nullptr;
@@ -71,7 +71,7 @@ namespace chess {
     void Game::update() {
         for (auto &i: board_) {
             for (auto &j: i) {
-                j = {Colour::none, Type::none, nullptr};
+                j = {Color::none, Type::none, nullptr};
             }
         }
         Coord promotionPos;
@@ -85,7 +85,7 @@ namespace chess {
             promotionPos_ = promotionPos;
         }
         if (promotionPos != Coord{-1, -1})
-            playerRound_ = (playerRound_ == Colour::white ? Colour::black : Colour::white);
+            playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
         player_[(int) playerRound_].update(board_);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
@@ -106,7 +106,7 @@ namespace chess {
         }
     }
 
-    void Game::updateBoard(screen::BoardBase &board) {
+    void Game::updateBoard(screen::Board &board) {
         screen::TypePiece boardGame[8][8];
         convertBoard(board_, boardGame);
         std::vector<Coord> movePossible =
@@ -132,8 +132,18 @@ namespace chess {
 
     void Game::promotion(Type type) {
         player_[(int) playerRound_].addPiece(type, promotionPos_);
-        playerRound_ = (playerRound_ == Colour::white ? Colour::black : Colour::white);
+        playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
         update();
+    }
+
+    void Game::loadGame(const screen::TypePiece board[8][8], Color color) {
+        convertBoard(board, board_);
+        player_.clear();
+        player_.emplace_back(Color::black, board_);
+        player_.emplace_back(Color::white, board_);
+        playerRound_ = color;
+        update();
+
     }
 
 

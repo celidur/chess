@@ -3,15 +3,15 @@
 
 namespace chess {
 
-    Player::Player(Colour color) : chess(false), nb_move(0), player_color(color) {
-        int pawnLine = color == Colour::white ? 1 : 6;
-        int kingLine = color == Colour::white ? 0 : 7;
+    Player::Player(Color color) : chess(false), nb_move(0), player_color(color) {
+        int pawnLine = color == Color::white ? 1 : 6;
+        int kingLine = color == Color::white ? 0 : 7;
         king_pos = {3, kingLine};
         for (int i = 0; i < 16; i++) {
             if (i < 8)
                 pieces.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, player_color));
             else if (i == 8 or i == 15)
-                pieces.push_back(std::make_unique<Tower>(Coord{i % 8, kingLine}, player_color));
+                pieces.push_back(std::make_unique<Rook>(Coord{i % 8, kingLine}, player_color));
             else if (i == 9 or i == 14)
                 pieces.push_back(std::make_unique<Knight>(Coord{i % 8, kingLine}, player_color));
             else if (i == 10 or i == 13)
@@ -24,8 +24,8 @@ namespace chess {
     }
 
 
-    Player::Player(Colour color, TypePiece board[8][8]) : chess(false), nb_move(0), player_color(color),
-                                                          king_pos({-1, -1}) {
+    Player::Player(Color color, TypePiece board[8][8]) : chess(false), nb_move(0), player_color(color),
+                                                         king_pos({-1, -1}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (board[i][j].color == color) {
@@ -83,8 +83,8 @@ namespace chess {
             case Type::pawn:
                 pieces.push_back(std::make_unique<Pawn>(pos, player_color));
                 break;
-            case Type::tower:
-                pieces.push_back(std::make_unique<Tower>(pos, player_color));
+            case Type::rook:
+                pieces.push_back(std::make_unique<Rook>(pos, player_color));
                 break;
             case Type::knight:
                 pieces.push_back(std::make_unique<Knight>(pos, player_color));

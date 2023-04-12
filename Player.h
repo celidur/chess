@@ -15,9 +15,9 @@ namespace chess {
 
     class Player {
     public:
-        explicit Player(Colour color = Colour::white);
+        explicit Player(Color color = Color::white);
 
-        Player(Colour color, TypePiece board[8][8]);
+        Player(Color color, TypePiece board[8][8]);
 
         void update(const TypePiece board[8][8]);
 
@@ -27,7 +27,7 @@ namespace chess {
 
         [[nodiscard]] State getState() const;
 
-        [[nodiscard]] Colour getColor() const { return player_color; }
+        [[nodiscard]] Color getColor() const { return player_color; }
 
         [[nodiscard]] Coord getKingPos() const { return king_pos; }
 
@@ -35,7 +35,7 @@ namespace chess {
         std::vector<std::shared_ptr<Piece>> pieces;
         size_t nb_move;
         bool chess;
-        Colour player_color;
+        Color player_color;
         Coord king_pos;
     };
 

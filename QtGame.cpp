@@ -8,7 +8,7 @@ namespace chess {
         updateBoard(board);
     }
 
-    QtGame::QtGame(const screen::TypePiece (*board)[8], Colour color) : QObject(nullptr), Game(board, color) {
+    QtGame::QtGame(const screen::TypePiece (*board)[8], Color color) : QObject(nullptr), Game(board, color) {
     }
 
     void QtGame::updateGameState(screen::TypePiece promotePiece, screen::Board &board) {

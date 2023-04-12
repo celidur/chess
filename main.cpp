@@ -4,17 +4,17 @@
 #include <QGraphicsView>
 
 constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x * 8.03, tileSize.y * 8.03};
+constexpr screen::CoordF screenSize{tileSize.x * 9, tileSize.y * 8};
 
 constexpr screen::TypePiece b[8][8]= {
-        {{Colour::white, Type::queen},{Colour::white, Type::king},{Colour::white,Type::queen},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{}},
-        {{},{},{},{},{},{},{},{Colour::black, Type::king}},
+        {{Color::white, Type::queen}, {Color::white, Type::king}, {Color::white, Type::queen}, {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
+        {{},                          {},                         {},                          {}, {}, {}, {}, {Color::black, Type::king}},
 };
 
 int main(int argc, char *argv[]) {
@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
             SIGNAL(promoteClicked(screen::TypePiece, screen::Board & )),
             &game,
             SLOT(updateGameState(screen::TypePiece, screen::Board & )));
-
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);
     boardView.window()->setWindowTitle("Chess!");

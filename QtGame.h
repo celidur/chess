@@ -17,7 +17,7 @@ namespace chess {
     public:
         QtGame();
 
-        explicit QtGame(const screen::TypePiece board[8][8], Colour color = Colour::white);
+        explicit QtGame(const screen::TypePiece board[8][8], Color color = Color::white);
 
         ~QtGame() override;
 

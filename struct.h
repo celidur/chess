@@ -9,7 +9,7 @@
 
 
 struct Coord {
-    int x, y;
+    int x = -1, y = -1;
 
     Coord& operator=(const Coord& b) = default;
 
@@ -34,7 +34,7 @@ struct Coord {
     }
 };
 
-enum class Colour {
+enum class Color {
     black = 0,
     white = 1,
     none = 2
@@ -42,7 +42,7 @@ enum class Colour {
 
 enum class Type {
     pawn,
-    tower,
+    rook,
     knight,
     bishop,
     queen,

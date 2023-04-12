@@ -2,7 +2,6 @@
 #define    BOARD
 
 #include "struct.h"
-#include <BoardBase.h>
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -16,6 +15,14 @@
 #include <memory>
 
 namespace screen {
+    struct CoordF {
+        float x, y;
+    };
+
+    struct TypePiece {
+        Color color = Color::none;
+        Type type = Type::none;
+    };
 
     enum class ZLayer {
         bottom,
@@ -23,7 +30,17 @@ namespace screen {
         top
     };
 
-    class Board : public QGraphicsScene, public BoardBase {
+    enum class Mode {
+        game,
+        menu,
+        personalisation
+    };
+
+    void resetBoard(TypePiece board[8][8]);
+
+    void setDefaultBoard(TypePiece board[8][8]);
+
+    class Board : public QGraphicsScene {
     Q_OBJECT
     public:
         explicit Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent = nullptr);
@@ -31,7 +48,9 @@ namespace screen {
         ~Board() override = default;
 
         void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
-                    Colour color = Colour::none) override;
+                    Color color = Color::none);
+
+        void viewBoard(Color color);
 
     signals:
 
@@ -45,11 +64,15 @@ namespace screen {
     private:
         QImage getPieceImg(const QRect &pieceRect);
 
+        void addImage(QImage &img, Coord coord, ZLayer zLayer, bool isPromote = false);
+
         void addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote = false);
 
-        void setLayer1(Coord sel[4]);
+        void setLayer1(Coord sel[4]= nullptr);
 
         void setLayer2(TypePiece board[8][8]);
+
+        void selectPiece();
 
         void promote();
 
@@ -58,7 +81,19 @@ namespace screen {
         QImageReader textureLoader_;
         inline static CoordF tileSize_ = {0, 0};
 
-        Colour promoteColor_ = Colour::none;
+        bool side_ = true;
+
+        TypePiece selectedPiece_ = {Color::none, Type::none};
+
+        Color selectedColor_ = Color::white;
+
+        Coord selectedCoord_ = {8, 7};
+
+        Mode mode_ = Mode::personalisation;
+
+        TypePiece board_[8][8];
+
+        Color promoteColor_ = Color::none;
     };
 
 }

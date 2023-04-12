@@ -18,7 +18,7 @@ namespace chess {
     }
 
 
-    Piece::Piece(const Coord &pos, Colour color) : pos_(pos), color_(color) {}
+    Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color) {}
 
     bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
         for (const auto& move: possibleMoves_) {
@@ -40,7 +40,7 @@ namespace chess {
             if (isLegalMove(board, pos)) {
                 TypePiece boardCopy[8][8];
                 copyBoard(board, boardCopy, pos, pos_);
-                if (color_ == Colour::white) {
+                if (color_ == Color::white) {
                     if (whiteKing != nullptr && !whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
                         continue;
                     }
@@ -54,7 +54,7 @@ namespace chess {
         }
     }
 
-    Tower::Tower(const Coord &pos, Colour color) : Piece(pos, color) {
+    Rook::Rook(const Coord &pos, Color color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, 0});
             legalMoves_.emplace_back(Coord{0, i});
@@ -63,7 +63,7 @@ namespace chess {
         }
     }
 
-    bool Tower::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    bool Rook::isLegalMove(const TypePiece board[8][8], Coord pos) {
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
         }
@@ -95,22 +95,22 @@ namespace chess {
         return true;
     }
 
-    bool Tower::getFirst() const {
+    bool Rook::getFirst() const {
         return first_;
     }
 
-    bool Tower::move(const TypePiece board[8][8], const Coord &pos) {
+    bool Rook::move(const TypePiece board[8][8], const Coord &pos) {
         bool res = Piece::move(board, pos);
         if (res)
             first_ = false;
         return res;
     }
 
-    TypePiece Tower::getType() {
-        return {color_, Type::tower, this, first_};
+    TypePiece Rook::getType() {
+        return {color_, Type::rook, this, first_};
     }
 
-    Bishop::Bishop(const Coord &pos, Colour color) : Piece(pos, color) {
+    Bishop::Bishop(const Coord &pos, Color color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, i});
             legalMoves_.emplace_back(Coord{-i, i});
@@ -149,18 +149,18 @@ namespace chess {
         return {color_, Type::bishop, this};
     }
 
-    Queen::Queen(const Coord &pos, Colour color) : Piece(pos, color), Tower(pos, color), Bishop(pos, color) {}
+    Queen::Queen(const Coord &pos, Color color) : Piece(pos, color), Rook(pos, color), Bishop(pos, color) {}
 
     bool Queen::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        return Tower::isLegalMove(board, pos) || Bishop::isLegalMove(board, pos);
+        return Rook::isLegalMove(board, pos) || Bishop::isLegalMove(board, pos);
     }
 
     TypePiece Queen::getType() {
         return {color_, Type::queen, this};
     }
 
-    King::King(const Coord &pos, Colour color) : Piece(pos, color) {
-        if (color == Colour::white) {
+    King::King(const Coord &pos, Color color) : Piece(pos, color) {
+        if (color == Color::white) {
             if (whiteKing != nullptr)
                 throw std::runtime_error("White king already exists");
             whiteKing = this;
@@ -178,7 +178,7 @@ namespace chess {
         }
         legalMoves_.emplace_back(Coord{2, 0});
         legalMoves_.emplace_back(Coord{-2, 0});
-        int kingLine = color == Colour::white ? 0 : 7;
+        int kingLine = color == Color::white ? 0 : 7;
         first_ = pos == Coord{3, kingLine};
     }
 
@@ -203,9 +203,9 @@ namespace chess {
                 return false;
             if (direction == -1 && board[pos_.x + 2][pos.y].type != Type::none)
                 return false;
-            int xTower = (direction == -1 ? 4 : -3) + pos_.x;
-            auto tower = board[xTower][pos.y];
-            if (tower.type != Type::tower || tower.color != color_ || !tower.first)
+            int xRook = (direction == -1 ? 4 : -3) + pos_.x;
+            auto rook = board[xRook][pos.y];
+            if (rook.type != Type::rook || rook.color != color_ || !rook.first)
                 return false;
         }
         return true;
@@ -217,12 +217,12 @@ namespace chess {
         if (!res)
             return false;
         if (pos.x == posCopy.x + 2 && pos.y == posCopy.y) {
-            auto tower = dynamic_cast<Tower *>(board[posCopy.x + 4][pos.y].piece);
-            tower->move(board, {pos.x - 1, pos.y});
+            auto rook = dynamic_cast<Rook *>(board[posCopy.x + 4][pos.y].piece);
+            rook->move(board, {pos.x - 1, pos.y});
         }
         if (pos.x == posCopy.x - 2 && pos.y == posCopy.y) {
-            auto tower = dynamic_cast<Tower *>(board[posCopy.x - 3][pos.y].piece);
-            tower->move(board, {pos.x + 1, pos.y});
+            auto rook = dynamic_cast<Rook *>(board[posCopy.x - 3][pos.y].piece);
+            rook->move(board, {pos.x + 1, pos.y});
         }
         first_ = false;
         return true;
@@ -259,9 +259,9 @@ namespace chess {
         return {color_, Type::king, this};
     }
 
-    Pawn::Pawn(const Coord& pos, Colour color) : Piece(pos, color) {
-        int direction = color == Colour::white ? 1 : -1;
-        int pawnLine = color == Colour::white ? 1 : 6;
+    Pawn::Pawn(const Coord& pos, Color color) : Piece(pos, color) {
+        int direction = color == Color::white ? 1 : -1;
+        int pawnLine = color == Color::white ? 1 : 6;
         first_ = pos.y == pawnLine ? 0 : -1;
         legalMoves_.emplace_back(Coord{0, direction});
         legalMoves_.emplace_back(Coord{0, direction * 2});
@@ -270,7 +270,7 @@ namespace chess {
     }
 
     bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        int direction = color_ == Colour::white ? 1 : -1;
+        int direction = color_ == Color::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
@@ -301,7 +301,7 @@ namespace chess {
         if ((pos.x == posCopy.x + 1 || pos.x == posCopy.x - 1) && board[pos.x][pos.y].type == Type::none) {
             board[pos.x][posCopy.y].piece->kill();
         }
-        int direction = color_ == Colour::white ? 2 : -2;
+        int direction = color_ == Color::white ? 2 : -2;
         first_ = (posCopy.y + direction == pos.y) ? 1 : -1;
         return true;
     }
@@ -316,7 +316,7 @@ namespace chess {
     }
 
 
-    Knight::Knight(const Coord& pos, Colour color) : Piece(pos, color) {
+    Knight::Knight(const Coord& pos, Color color) : Piece(pos, color) {
         legalMoves_.emplace_back(Coord{2, 1});
         legalMoves_.emplace_back(Coord{2, -1});
         legalMoves_.emplace_back(Coord{-2, 1});

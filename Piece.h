@@ -11,7 +11,7 @@ namespace chess {
     class Piece;
 
     struct TypePiece {
-        Colour color = Colour::none;
+        Color color = Color::none;
         Type type = Type::none;
         Piece *piece = nullptr;
         int first = 0;
@@ -19,22 +19,22 @@ namespace chess {
         friend std::ostream& operator<<(std::ostream& os, const TypePiece& piece) {
             switch (piece.type) {
                 case Type::pawn:
-                    os << (piece.color == Colour::white ? "p" : "P");
+                    os << (piece.color == Color::white ? "p" : "P");
                     break;
-                case Type::tower:
-                    os << (piece.color == Colour::white ? "t" : "T");
+                case Type::rook:
+                    os << (piece.color == Color::white ? "t" : "T");
                     break;
                 case Type::knight:
-                    os << (piece.color == Colour::white ? "c" : "C");
+                    os << (piece.color == Color::white ? "c" : "C");
                     break;
                 case Type::bishop:
-                    os << (piece.color == Colour::white ? "f" : "F");
+                    os << (piece.color == Color::white ? "f" : "F");
                     break;
                 case Type::queen:
-                    os << (piece.color == Colour::white ? "q" : "Q");
+                    os << (piece.color == Color::white ? "q" : "Q");
                     break;
                 case Type::king:
-                    os << (piece.color == Colour::white ? "k" : "K");
+                    os << (piece.color == Color::white ? "k" : "K");
                     break;
                 case Type::none:
                     os << " ";
@@ -47,7 +47,7 @@ namespace chess {
 
     class Piece {
     public:
-        Piece(const Coord& pos, Colour color);
+        Piece(const Coord& pos, Color color);
 
         virtual bool move(const TypePiece board[8][8], const Coord& pos);
 
@@ -57,7 +57,7 @@ namespace chess {
 
         [[nodiscard]] virtual TypePiece getType() = 0;
 
-        [[nodiscard]] Colour getColor() const { return color_; }
+        [[nodiscard]] Color getColor() const { return color_; }
 
         [[nodiscard]] bool isAlive() const { return isAlive_; }
 
@@ -75,14 +75,14 @@ namespace chess {
         std::vector<Coord> legalMoves_;
         std::vector<Coord> possibleMoves_;
         Coord pos_;
-        Colour color_;
+        Color color_;
         bool isAlive_ = true;
     };
 
 
     class Pawn : virtual public Piece {
     public:
-        Pawn(const Coord& pos, Colour color);
+        Pawn(const Coord& pos, Color color);
 
         void update(const TypePiece board[8][8]) override;
 
@@ -98,7 +98,7 @@ namespace chess {
 
     class Knight : virtual public Piece {
     public:
-        Knight(const Coord& pos, Colour color);
+        Knight(const Coord& pos, Color color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -106,9 +106,9 @@ namespace chess {
 
     };
 
-    class Tower : virtual public Piece {
+    class Rook : virtual public Piece {
     public:
-        Tower(const Coord& pos, Colour color);
+        Rook(const Coord& pos, Color color);
 
         [[nodiscard]] bool getFirst() const;
 
@@ -125,7 +125,7 @@ namespace chess {
 
     class Bishop : virtual public Piece {
     public:
-        Bishop(const Coord& pos, Colour color);
+        Bishop(const Coord& pos, Color color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -133,9 +133,9 @@ namespace chess {
     };
 
 
-    class Queen : public Tower, Bishop {
+    class Queen : public Rook, Bishop {
     public:
-        Queen(const Coord& pos, Colour color);
+        Queen(const Coord& pos, Color color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
@@ -144,7 +144,7 @@ namespace chess {
 
     class King : virtual public Piece {
     public:
-        King(const Coord& pos, Colour color);
+        King(const Coord& pos, Color color);
 
         void update(const TypePiece board[8][8]) override;
 
