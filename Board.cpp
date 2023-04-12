@@ -11,6 +11,22 @@ namespace screen {
         }
     }
 
+    bool king(TypePiece board[8][8]) {
+        int white = 0;
+        int black = 0;
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                if (board[i][j].type == Type::king) {
+                    if (board[i][j].color == Color::white)
+                        ++white;
+                    else
+                        ++black;
+                }
+            }
+        }
+        return white <= 1 && black <= 1;
+    }
+
     void setDefaultBoard(TypePiece board[8][8]) {
         resetBoard(board);
         for (int i = 0; i < 8; ++i) {
@@ -246,9 +262,6 @@ namespace screen {
                 if (side_)
                     pos = {7 - pos.x, 7 - pos.y};
                 board_[pos.x][pos.y] = selectedPiece_;
-                this->clear(); // Clear all items
-                setLayer1();
-                setLayer2(board_);
                 selectPiece();
             } else if (pos.x == 8 && 1 <= pos.y && pos.y < 7) {
                 selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
@@ -262,8 +275,26 @@ namespace screen {
                 selectedPiece_ = {Color::none, Type::none};
                 selectedCoord_ = pos;
                 selectPiece();
+            } else if (pos.x == 9 && pos.y == 0) {
+                if (!king(board_)) {
+                    std::cout << "there is too much king" << std::endl;
+                    return;
+                }
+                mode_ = Mode::game;
+                this->clear(); // Clear all items
+                setLayer1();
+                setLayer2(board_);
+                emit loadGame(*this);
+            } else if (pos.x == 9 && pos.y == 1) {
+                setDefaultBoard(board_);
+                selectPiece();
+            } else if (pos.x == 9 && pos.y == 2) {
+                resetBoard(board_);
+                selectPiece();
+            } else if (pos.x == 9 && pos.y == 3) {
+                side_ = !side_;
+                selectPiece();
             }
-
         }
     }
 
@@ -272,6 +303,9 @@ namespace screen {
     }
 
     void Board::selectPiece() {
+        this->clear(); // Clear all items
+        setLayer1();
+        setLayer2(board_);
         for (int i = 0; i < 7; i++) {
             QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
             QPainter interface(&interfaceImg);
@@ -304,7 +338,18 @@ namespace screen {
         int size = 17;
         img = img.scaled((int) tileSize_.x - size * 2, (int) tileSize_.y - size * 2, Qt::KeepAspectRatio);
         addImage(img, CoordF{8 + size / tileSize_.x, size / tileSize_.y}, ZLayer::top, true);
-
+        r = QColor::fromRgb(100, 70, 80);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
+        addImage(interfaceImg, Coord{9, 0}, ZLayer::top, true);
+        r = QColor::fromRgb(180, 150, 140);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
+        addImage(interfaceImg, Coord{9, 1}, ZLayer::top, true);
+        r = QColor::fromRgb(100, 200, 80);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
+        addImage(interfaceImg, Coord{9, 2}, ZLayer::top, true);
+        r = QColor::fromRgb(100, 70, 200);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
+        addImage(interfaceImg, Coord{9, 3}, ZLayer::top, true);
     }
 
     void Board::addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote) {
@@ -316,6 +361,10 @@ namespace screen {
                 (float) coord.x * tileSize_.x,
                 (float) coord.y * tileSize_.y);
 
+    }
+
+    auto Board::getBoard() -> TypePiece (*)[8] {
+        return board_;
     }
 
 }

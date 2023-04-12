@@ -24,6 +24,7 @@ namespace chess {
     public slots:
         void updateGameState(Coord coord, screen::Board& board);
         void updateGameState(screen::TypePiece promotePiece, screen::Board& board);
+        void loadGame(screen::Board& board);
     };
 }
 

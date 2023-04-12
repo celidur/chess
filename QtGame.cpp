@@ -16,5 +16,9 @@ namespace chess {
         updateBoard(board);
     }
 
+    void QtGame::loadGame(screen::Board& board) {
+        Game::loadGame(board.getBoard());
+    }
+
     QtGame::~QtGame() = default;
 }

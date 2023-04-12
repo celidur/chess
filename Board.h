@@ -52,11 +52,16 @@ namespace screen {
 
         void viewBoard(Color color);
 
+        auto getBoard() -> TypePiece(*)[8];
+
     signals:
 
         QEvent *caseClicked(Coord coord, screen::Board &board);
 
+        QEvent *loadGame(screen::Board &board);
+
         QEvent *promoteClicked(screen::TypePiece, screen::Board &board);
+
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

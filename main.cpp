@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 
 constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x * 9, tileSize.y * 8};
+constexpr screen::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
 
 constexpr screen::TypePiece b[8][8]= {
         {{Color::white, Type::queen}, {Color::white, Type::king}, {Color::white, Type::queen}, {}, {}, {}, {}, {}},
@@ -33,6 +33,12 @@ int main(int argc, char *argv[]) {
             SIGNAL(promoteClicked(screen::TypePiece, screen::Board & )),
             &game,
             SLOT(updateGameState(screen::TypePiece, screen::Board & )));
+
+    QWidget::connect(
+            &board,
+            SIGNAL(loadGame(screen::Board &)),
+            &game,
+            SLOT(loadGame(screen::Board &)));
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);
     boardView.window()->setWindowTitle("Chess!");

@@ -138,6 +138,7 @@ namespace chess {
 
     void Game::loadGame(const screen::TypePiece board[8][8], Color color) {
         convertBoard(board, board_);
+        Piece::reset();
         player_.clear();
         player_.emplace_back(Color::black, board_);
         player_.emplace_back(Color::white, board_);

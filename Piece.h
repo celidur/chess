@@ -49,6 +49,8 @@ namespace chess {
     public:
         Piece(const Coord& pos, Color color);
 
+        static void reset();
+
         virtual bool move(const TypePiece board[8][8], const Coord& pos);
 
         virtual void update(const TypePiece board[8][8]);
