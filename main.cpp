@@ -1,5 +1,5 @@
-#include <Board.h>
-#include <QtGame.h>
+#include "view/Board.h"
+#include "controller/QtGame.h"
 #include <QApplication>
 #include <QGraphicsView>
 
@@ -10,7 +10,9 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     chess::QtGame game;
 
-    screen::Board board(tileSize, "res/chess.png", game.getBoard());
+    screen::Board board(tileSize, "res/chess.png", nullptr);
+    game.updateBoard(board);
+
     QWidget::connect(
             &board,
             SIGNAL(caseClicked(Coord, screen::Board & )),

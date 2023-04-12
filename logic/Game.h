@@ -5,34 +5,40 @@
 #ifndef CHESS_GAME_H
 #define CHESS_GAME_H
 
+#include "common/struct.h"
 #include "Player.h"
-#include "Board.h"
+#include <array>
 
 namespace chess {
+
     class Game {
     public:
         Game();
 
-        explicit Game(const screen::TypePiece board[8][8], Color color = Color::white);
+        explicit Game(const TypePiece board[8][8], Color color = Color::white);
 
         virtual ~Game() = default;
 
         void update();
 
-        void loadGame(const screen::TypePiece board[8][8], Color color = Color::white);
+        virtual void loadGame(Color color);
 
         void selectionCase(Coord pos);
 
-        void updateBoard(screen::Board& board);
+        void updateBoard(screen::BoardBase& board);
 
-        [[nodiscard]] screen::TypePiece(& getBoard() const)[8][8];
+        virtual void resetBoard();
+        virtual void setDefaultBoard();
+
+        [[nodiscard]] std::array<std::array<TypePiece, 8>, 8> getBoard();
 
     protected:
-        virtual void displayMessage(std::string msg);
-
+        virtual void displayMessage(const std::string& msg);
         void promotion(Type type);
 
     private:
+        bool isKingDefined();
+
         std::vector<Player> player_;
         TypePiece board_[8][8];
         Color playerRound_;
@@ -40,6 +46,7 @@ namespace chess {
         Coord selection_[4];
         bool rotation_ = true;
         Coord promotionPos_;
+        Mode mode_ = Mode::personalisation;
     };
 }
 

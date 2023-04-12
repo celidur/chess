@@ -4,8 +4,8 @@
 
 #include <QObject>
 #include <QMessageBox>
-#include <Game.h>
-#include <Board.h>
+#include "logic/Game.h"
+#include "vue/Board.h"
 
 
 namespace chess {

@@ -1,76 +1,12 @@
+#include <QMessageBox>
 #include "Board.h"
 
 namespace screen {
 
-    void resetBoard(TypePiece board[8][8]) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                board[i][j].color = Color::none;
-                board[i][j].type = Type::none;
-            }
-        }
-    }
-
-    bool king(TypePiece board[8][8]) {
-        int white = 0;
-        int black = 0;
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                if (board[i][j].type == Type::king) {
-                    if (board[i][j].color == Color::white)
-                        ++white;
-                    else
-                        ++black;
-                }
-            }
-        }
-        return white <= 1 && black <= 1;
-    }
-
-    void setDefaultBoard(TypePiece board[8][8]) {
-        resetBoard(board);
-        for (int i = 0; i < 8; ++i) {
-            board[i][1] = {Color::white, Type::pawn};
-            board[i][6] = {Color::black, Type::pawn};
-        }
-        board[0][0] = {Color::white, Type::rook};
-        board[1][0] = {Color::white, Type::knight};
-        board[2][0] = {Color::white, Type::bishop};
-        board[3][0] = {Color::white, Type::king};
-        board[4][0] = {Color::white, Type::queen};
-        board[5][0] = {Color::white, Type::bishop};
-        board[6][0] = {Color::white, Type::knight};
-        board[7][0] = {Color::white, Type::rook};
-        board[0][7] = {Color::black, Type::rook};
-        board[1][7] = {Color::black, Type::knight};
-        board[2][7] = {Color::black, Type::bishop};
-        board[3][7] = {Color::black, Type::king};
-        board[4][7] = {Color::black, Type::queen};
-        board[5][7] = {Color::black, Type::bishop};
-        board[6][7] = {Color::black, Type::knight};
-        board[7][7] = {Color::black, Type::rook};
-    }
-
-
-    Board::Board(
-            CoordF tileSize,
-            const std::string &resFile,
-            TypePiece board[8][8],
-            QWidget *parent) : QGraphicsScene(parent), textureLoader_() {
+    Board::Board(CoordF tileSize, const std::string &resFile, QWidget *parent) :
+    QGraphicsScene(parent), textureLoader_() {
         tileSize_ = tileSize;
         textureLoader_.setFileName(QString::fromStdString(resFile));
-        if (mode_ == Mode::game) {
-            setLayer1();
-            setLayer2(board);
-            if (promoteColor_ != Color::none) {
-                promote();
-            }
-        } else if (mode_ == Mode::personalisation) {
-            setDefaultBoard(board_);
-            setLayer1();
-            setLayer2(board_);
-            selectPiece();
-        }
     }
 
     void Board::setLayer2(TypePiece board[8][8]) {
@@ -233,74 +169,9 @@ namespace screen {
         auto item = this->itemAt(event->scenePos(), QTransform());
         if (item == nullptr)
             return;
-        if (mode_ == Mode::game) {
-            auto itemPos = item->pos();
-            Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
-            std::cout << pos << std::endl;
-            if (side_ && promoteColor_ == Color::none)
-                pos = {7 - pos.x, 7 - pos.y};
-            if (promoteColor_ == Color::none)
-                    emit caseClicked(pos, *this);
-            else {
-                TypePiece piece = {promoteColor_, Type::none};
-                if (pos.x == 3 && pos.y == 3)
-                    piece.type = Type::queen;
-                else if (pos.x == 4 && pos.y == 3)
-                    piece.type = Type::rook;
-                else if (pos.x == 3 && pos.y == 4)
-                    piece.type = Type::bishop;
-                else if (pos.x == 4 && pos.y == 4)
-                    piece.type = Type::knight;
-                if (piece.type != Type::none) {
-                    promoteColor_ = Color::none;
-                    emit promoteClicked(piece, *this);
-                }
-            }
-        } else if (mode_ == Mode::personalisation) {
-            auto itemPos = item->pos();
-            Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
-            if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
-                if (side_)
-                    pos = {7 - pos.x, 7 - pos.y};
-                if (selectedPiece_.type == Type::pawn && (pos.y == 0 || pos.y == 7)) {
-                    selectPiece();
-                    return;
-                }
-                board_[pos.x][pos.y] = selectedPiece_;
-                selectPiece();
-            } else if (pos.x == 8 && 1 <= pos.y && pos.y < 7) {
-                selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
-                selectedCoord_ = pos;
-                selectPiece();
-            } else if (pos.x == 8 && pos.y == 0) {
-                selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
-                selectedPiece_.color = selectedColor_;
-                selectPiece();
-            } else if (pos.x == 8 && pos.y == 7) {
-                selectedPiece_ = {Color::none, Type::none};
-                selectedCoord_ = pos;
-                selectPiece();
-            } else if (pos.x == 9 && pos.y == 0) {
-                if (!king(board_)) {
-                    std::cout << "there is too much king" << std::endl;
-                    return;
-                }
-                mode_ = Mode::game;
-                this->clear(); // Clear all items
-                setLayer1();
-                setLayer2(board_);
-                emit loadGame(*this);
-            } else if (pos.x == 9 && pos.y == 1) {
-                setDefaultBoard(board_);
-                selectPiece();
-            } else if (pos.x == 9 && pos.y == 2) {
-                resetBoard(board_);
-                selectPiece();
-            } else if (pos.x == 9 && pos.y == 3) {
-                side_ = !side_;
-                selectPiece();
-            }
-        }
+        auto itemPos = item->pos();
+        Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
+        emit caseClicked(pos, *this);
     }
 
     void Board::viewBoard(Color color) {
@@ -368,8 +239,10 @@ namespace screen {
 
     }
 
-    auto Board::getBoard() -> TypePiece (*)[8] {
-        return board_;
+    void Board::displayMessage(const QString& s) {
+        QMessageBox msgBox;
+        msgBox.setInformativeText(s);
+        msgBox.exec();
     }
 
 }

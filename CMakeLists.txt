@@ -13,15 +13,27 @@ set(CMAKE_AUTOUIC ON)
 
 add_executable(chess
         main.cpp
-        Board.h
-        Board.cpp
-        Piece.cpp
-        Player.cpp
-        Game.h
-        Game.cpp
-        struct.h
-        QtGame.cpp
-        QtGame.h)
+        view/Board.h
+        view/Board.cpp
+        logic/Piece.cpp
+        logic/Player.cpp
+        logic/Game.h
+        logic/Game.cpp
+        common/struct.h
+        controller/QtGame.cpp
+        controller/QtGame.h
+        logic/King.cpp
+        logic/King.h
+        logic/Queen.cpp
+        logic/Queen.h
+        logic/Pawn.cpp
+        logic/Pawn.h
+        logic/Rook.cpp
+        logic/Rook.h
+        logic/Bishop.cpp
+        logic/Bishop.h
+        logic/Knight.cpp
+        logic/Knight.h)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
 target_link_libraries(chess Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.
