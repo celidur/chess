@@ -82,7 +82,7 @@ namespace chess {
     };
 
 
-    class Pawn : virtual public Piece {
+    class Pawn : public Piece {
     public:
         Pawn(const Coord& pos, Color color);
 
@@ -98,7 +98,7 @@ namespace chess {
         int first_;
     };
 
-    class Knight : virtual public Piece {
+    class Knight : public Piece {
     public:
         Knight(const Coord& pos, Color color);
 
@@ -144,7 +144,7 @@ namespace chess {
         [[nodiscard]] TypePiece getType() override;
     };
 
-    class King : virtual public Piece {
+    class King : public Piece {
     public:
         King(const Coord& pos, Color color);
 

@@ -38,7 +38,7 @@ namespace chess {
         Color playerRound_;
         Piece *pieceSelected_;
         Coord selection_[4];
-        bool rotation_ = false;
+        bool rotation_ = true;
         Coord promotionPos_;
     };
 }

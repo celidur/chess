@@ -6,17 +6,6 @@
 constexpr screen::CoordF tileSize{72, 72};
 constexpr screen::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
 
-constexpr screen::TypePiece b[8][8]= {
-        {{Color::white, Type::queen}, {Color::white, Type::king}, {Color::white, Type::queen}, {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {}},
-        {{},                          {},                         {},                          {}, {}, {}, {}, {Color::black, Type::king}},
-};
-
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     chess::QtGame game;

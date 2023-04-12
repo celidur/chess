@@ -236,6 +236,7 @@ namespace screen {
         if (mode_ == Mode::game) {
             auto itemPos = item->pos();
             Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
+            std::cout << pos << std::endl;
             if (side_ && promoteColor_ == Color::none)
                 pos = {7 - pos.x, 7 - pos.y};
             if (promoteColor_ == Color::none)
@@ -261,6 +262,10 @@ namespace screen {
             if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
                 if (side_)
                     pos = {7 - pos.x, 7 - pos.y};
+                if (selectedPiece_.type == Type::pawn && (pos.y == 0 || pos.y == 7)) {
+                    selectPiece();
+                    return;
+                }
                 board_[pos.x][pos.y] = selectedPiece_;
                 selectPiece();
             } else if (pos.x == 8 && 1 <= pos.y && pos.y < 7) {

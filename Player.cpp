@@ -64,10 +64,9 @@ namespace chess {
         for (auto it = pieces.begin(); it != pieces.end();) {
             auto posPiece = (*it)->getPos();
             if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == 7)) {
-                pieces.erase(it);
-                promote = true;
                 pos = posPiece;
                 board[posPiece.x][posPiece.y] = (*it)->getType();
+                pieces.erase(it);
             } else if (!(*it)->isAlive()) {
                 pieces.erase(it);
             } else {
