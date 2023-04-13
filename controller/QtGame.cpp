@@ -1,6 +1,7 @@
 #include "QtGame.h"
 
 namespace chess {
+
     QtGame::QtGame() : QObject(nullptr) {}
     QtGame::QtGame(const TypePiece (*board)[8], Color color) : QObject(nullptr), Game(board, color) {}
     QtGame::~QtGame() = default;

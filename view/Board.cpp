@@ -9,49 +9,13 @@ namespace screen {
         textureLoader_.setFileName(QString::fromStdString(resFile));
     }
 
-    void Board::setLayer2(TypePiece board[8][8]) {
-        // Pièces
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                if (board[i][j].type == Type::none)
-                    continue;
-                auto img = getPieceImg(
-                        {
-                                (int) tileSize_.x * (int) board[i][j].type,
-                                (int) tileSize_.y * (int) board[i][j].color,
-                                (int) tileSize_.x,
-                                (int) tileSize_.y
-                        });
-                addImage(img, Coord{i, j}, ZLayer::middle);
-            }
-        }
-    }
-
     void Board::setLayer1(Coord selection[4]) {
         // Cases grises-blanches
-        auto greyImg = getPieceImg(
-                {
-                        (int) tileSize_.x * 6,
-                        (int) tileSize_.y,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
+        auto greyImg = getImage({6,1});
 
-        auto whiteImg = getPieceImg(
-                {
-                        (int) tileSize_.x * 6,
-                        0,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
+        auto whiteImg = getImage({6,0});
 
-        auto selectedImg = getPieceImg(
-                {
-                        (int) tileSize_.x * 7,
-                        (int) tileSize_.y,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
+        auto selectedImg = getImage({7,0});
 
         QImage checkImg((int) tileSize_.x, (int) tileSize_.y, QImage::Format::Format_ARGB32);
         QPainter red(&checkImg);
@@ -78,6 +42,24 @@ namespace screen {
         }
     }
 
+
+    void Board::setLayer2(TypePiece board[8][8]) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                if (board[i][j].type == Type::none)
+                    continue;
+                auto img = getPieceImg(
+                        {
+                                (int) tileSize_.x * (int) board[i][j].type,
+                                (int) tileSize_.y * (int) board[i][j].color,
+                                (int) tileSize_.x,
+                                (int) tileSize_.y
+                        });
+                addImage(img, Coord{i, j}, ZLayer::middle);
+            }
+        }
+    }
+
     QImage Board::getPieceImg(const QRect &pieceRect) {
         if (textureLoader_.device()->isOpen())
             textureLoader_.device()->seek(0); // Reset the QImageReader
@@ -98,60 +80,33 @@ namespace screen {
         }
     }
 
+    void Board::update(TypePiece boardGame[8][8]) {
+        this->clear(); // Clear all items
+        setLayer1();
+        setLayer2(boardGame);
+        selectPiece();
+    }
+
     void Board::setPossibleMoves(std::vector<Coord> &piecePossibleMove) {
-        auto possibleMoveImg = getPieceImg(
-                {
-                        (int) tileSize_.x * 7,
-                        (int) 0,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
+        auto possibleMoveImg = getImage({7,0});
         for (Coord &possibleCoord: piecePossibleMove)
             addImage(possibleMoveImg, possibleCoord, ZLayer::middle);
     }
 
     void Board::promote() {
-        QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
-        QPainter interface(&interfaceImg);
         auto r = QColor::fromRgb(209, 207, 206);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
         // afficher les 4 pièces
-        auto img = getPieceImg(
-                {
-                        (int) tileSize_.x * (int) Type::queen,
-                        (int) tileSize_.y * (int) promoteColor_,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
-        addImage(interfaceImg, Coord{3, 3}, ZLayer::top, true);
+        auto img = getImage({(int) Type::queen,(int) promoteColor_});
+        drawRect(r, Coord{3, 3}, ZLayer::top, true);
         addImage(img, Coord{3, 3}, ZLayer::top, true);
-        img = getPieceImg(
-                {
-                        (int) tileSize_.x * (int) Type::rook,
-                        (int) tileSize_.y * (int) promoteColor_,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
-
-        addImage(interfaceImg, Coord{4, 3}, ZLayer::top, true);
+        img = getImage({(int) Type::rook,(int) promoteColor_});
+        drawRect(r, Coord{4, 3}, ZLayer::top, true);
         addImage(img, Coord{4, 3}, ZLayer::top, true);
-        img = getPieceImg(
-                {
-                        (int) tileSize_.x * (int) Type::bishop,
-                        (int) tileSize_.y * (int) promoteColor_,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
-        addImage(interfaceImg, Coord{3, 4}, ZLayer::top, true);
+        img = getImage({(int) Type::bishop,(int) promoteColor_});
+        drawRect(r, Coord{3, 4}, ZLayer::top, true);
         addImage(img, Coord{3, 4}, ZLayer::top, true);
-        img = getPieceImg(
-                {
-                        (int) tileSize_.x * (int) Type::knight,
-                        (int) tileSize_.y * (int) promoteColor_,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
-        addImage(interfaceImg, Coord{4, 4}, ZLayer::top, true);
+        img = getImage({(int) Type::knight,(int) promoteColor_});
+        drawRect(r, Coord{4, 4}, ZLayer::top, true);
         addImage(img, Coord{4, 4}, ZLayer::top, true);
     }
 
@@ -179,24 +134,12 @@ namespace screen {
     }
 
     void Board::selectPiece() {
-        this->clear(); // Clear all items
-        setLayer1();
-        setLayer2(board_);
         for (int i = 0; i < 7; i++) {
-            QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
-            QPainter interface(&interfaceImg);
             auto r = (selectedCoord_.y == i + 1) ? QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
-            interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
-            addImage(interfaceImg, Coord{8, i + 1}, ZLayer::top, true);
+            drawRect(r,Coord{8, i + 1}, ZLayer::top, true);
             if (i == 6)
                 continue;
-            QImage img = getPieceImg(
-                    {
-                            (int) tileSize_.x * i,
-                            (int) tileSize_.y * (int) selectedColor_,
-                            (int) tileSize_.x,
-                            (int) tileSize_.y
-                    });
+            QImage img = getImage({i,(int)selectedColor_});
             addImage(img, Coord{8, i + 1}, ZLayer::top, true);
         }
         QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
@@ -204,28 +147,14 @@ namespace screen {
         auto r = QColor::fromRgb(70, 100, 130);
         interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
         addImage(interfaceImg, Coord{8, 0}, ZLayer::top, true);
-        QImage img = getPieceImg(
-                {
-                        (int) tileSize_.x * 6,
-                        (int) tileSize_.y * (int) selectedColor_,
-                        (int) tileSize_.x,
-                        (int) tileSize_.y
-                });
+        QImage img = getImage({6, (int) selectedColor_});
         int size = 17;
         img = img.scaled((int) tileSize_.x - size * 2, (int) tileSize_.y - size * 2, Qt::KeepAspectRatio);
         addImage(img, CoordF{8 + size / tileSize_.x, size / tileSize_.y}, ZLayer::top, true);
-        r = QColor::fromRgb(100, 70, 80);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
-        addImage(interfaceImg, Coord{9, 0}, ZLayer::top, true);
-        r = QColor::fromRgb(180, 150, 140);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
-        addImage(interfaceImg, Coord{9, 1}, ZLayer::top, true);
-        r = QColor::fromRgb(100, 200, 80);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
-        addImage(interfaceImg, Coord{9, 2}, ZLayer::top, true);
-        r = QColor::fromRgb(100, 70, 200);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), r);
-        addImage(interfaceImg, Coord{9, 3}, ZLayer::top, true);
+        drawRect(QColor::fromRgb(100, 70, 80),Coord{9, 0}, ZLayer::top, true);
+        drawRect(QColor::fromRgb(180, 150, 140),Coord{9, 1}, ZLayer::top, true);
+        drawRect(QColor::fromRgb(100, 200, 80),Coord{9, 2}, ZLayer::top, true);
+        drawRect(QColor::fromRgb(100, 70, 200),Coord{9, 3}, ZLayer::top, true);
     }
 
     void Board::addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote) {
@@ -243,6 +172,23 @@ namespace screen {
         QMessageBox msgBox;
         msgBox.setInformativeText(s);
         msgBox.exec();
+    }
+
+    QImage Board::getImage(Coord pos){
+        return getPieceImg(
+                {
+                        (int) tileSize_.x * pos.x,
+                        (int) tileSize_.y * pos.y,
+                        (int) tileSize_.x,
+                        (int) tileSize_.y
+                });
+    }
+
+    void Board::drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote){
+        QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
+        QPainter interface(&interfaceImg);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), color);
+        addImage(interfaceImg, pos, zLayer, isPromote);
     }
 
 }

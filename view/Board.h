@@ -29,7 +29,7 @@ namespace screen {
     class Board : public QGraphicsScene, public BoardBase {
     Q_OBJECT
     public:
-        explicit Board(CoordF tileSize, const std::string &resFile, TypePiece board[8][8], QWidget *parent = nullptr);
+        explicit Board(CoordF tileSize, const std::string &resFile, QWidget *parent = nullptr);
 
         ~Board() override = default;
 
@@ -55,7 +55,7 @@ namespace screen {
 
         QEvent *loadGame(screen::Board &board);
 
-        QEvent *promoteClicked(screen::TypePiece, screen::Board &board);
+        QEvent *promoteClicked(TypePiece, screen::Board &board);
 
         QEvent* resetBoard(Board& board);
 

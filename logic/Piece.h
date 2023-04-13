@@ -7,44 +7,7 @@
 #include <memory>
 #include "common/struct.h"
 
-namespace chess {
-
-    class Piece;
-
-    struct TypePiece {
-        Color color = Color::none;
-        Type type = Type::none;
-        Piece *piece = nullptr;
-        int first = 0;
-
-        friend std::ostream& operator<<(std::ostream& os, const TypePiece& piece) {
-            switch (piece.type) {
-                case Type::pawn:
-                    os << (piece.color == Color::white ? "p" : "P");
-                    break;
-                case Type::rook:
-                    os << (piece.color == Color::white ? "t" : "T");
-                    break;
-                case Type::knight:
-                    os << (piece.color == Color::white ? "c" : "C");
-                    break;
-                case Type::bishop:
-                    os << (piece.color == Color::white ? "f" : "F");
-                    break;
-                case Type::queen:
-                    os << (piece.color == Color::white ? "q" : "Q");
-                    break;
-                case Type::king:
-                    os << (piece.color == Color::white ? "k" : "K");
-                    break;
-                case Type::none:
-                    os << " ";
-                    break;
-            }
-            return os;
-        }
-    };
-
+namespace chess{
 
     class Piece {
     public:

@@ -7,22 +7,6 @@
 
 namespace chess {
 
-    void convertBoard(const screen::TypePiece boardGame[8][8], TypePiece board[8][8]) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                board[i][j] = {boardGame[i][j].color, boardGame[i][j].type};
-            }
-        }
-    }
-
-    void convertBoard(const TypePiece boardGame[8][8], screen::TypePiece board[8][8]) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                board[i][j] = {boardGame[i][j].color, boardGame[i][j].type};
-            }
-        }
-    }
-
     Game::Game() : playerRound_(Color::white), pieceSelected_(nullptr), selection_{{-1, -1},
                                                                                    {-1, -1},
                                                                                    {-1, -1},
@@ -32,15 +16,14 @@ namespace chess {
         update();
     }
 
-    Game::Game(const screen::TypePiece board[8][8], Color color) : playerRound_(color), pieceSelected_(nullptr),
+    Game::Game(const TypePiece board[8][8], Color color) : playerRound_(color), pieceSelected_(nullptr),
                                                                    selection_{{-1, -1},
                                                                                {-1, -1},
                                                                                {-1, -1},
                                                                                {-1, -1}} {
-        TypePiece boardC[8][8];
-        convertBoard(board, boardC);
-        player_.emplace_back(Color::black, boardC);
-        player_.emplace_back(Color::white, boardC);
+        copyBoard(board,board_);
+        player_.emplace_back(Color::black, board_);
+        player_.emplace_back(Color::white, board_);
         update();
     }
 
