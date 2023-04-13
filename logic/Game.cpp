@@ -120,7 +120,7 @@ namespace chess {
     void Game::update() {
         for (auto &i: board_) {
             for (auto &j: i) {
-                j = {Color::none, Type::none, nullptr};
+                j = TypePiece{Color::none, Type::none};
             }
         }
         Coord promotionPos;
@@ -164,14 +164,12 @@ namespace chess {
         if (promotionPos_ != Coord{-1, -1})
             board.update(selection_, boardGame, movePossible, playerRound_);
         else
-            board.update(selection_, boardGame, movePossible);
+            // TODO pas sûr à propos de celui-là
+            board.update(selection_, boardGame, movePossible, playerRound_);
     }
 
-    TypePiece (&Game::getBoard() const )[8][8] {
-        // make with no warning stack reference local variable
-        static TypePiece boardGame[8][8];
-//        boardGame = board_;
-        return boardGame;
+    TypePiece (&Game::getBoard() )[8][8] {
+        return board_;
     }
 
     void Game::displayMessage(const std::string& msg) {

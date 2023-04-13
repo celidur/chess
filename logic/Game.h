@@ -30,7 +30,7 @@ namespace chess {
         virtual void resetBoard();
         virtual void setDefaultBoard();
 
-        [[nodiscard]] std::array<std::array<TypePiece, 8>, 8> getBoard();
+        [[nodiscard]] TypePiece (&getBoard() )[8][8];
 
     protected:
         virtual void displayMessage(const std::string& msg);
