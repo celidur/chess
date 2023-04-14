@@ -36,7 +36,7 @@ namespace chess{
 
     bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
         if (pos == pos_)
-            return !isCheck(board);
+            return false;
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
         }
@@ -48,7 +48,7 @@ namespace chess{
             return false;
         }
         if (pos.x - pos_.x == 2 || pos.x - pos_.x == -2) {
-            if (!first_ || isCheck(board) || piece.type != Type::none || pos.y != pos_.y)
+            if (!first_ || piece.type != Type::none || pos.y != pos_.y)
                 return false;
             int direction = pos.x - pos_.x == 2 ? -1 : 1;
             if (board[pos.x + direction][pos.y].type != Type::none)
@@ -72,29 +72,11 @@ namespace chess{
         return true;
     }
 
-    bool King::isCheck(const TypePiece board[8][8], Coord pos) {
-        if (pos == Coord{-1, -1})
-            pos = pos_;
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 8; j++) {
-                if (board[i][j].type == Type::none || board[i][j].color == color_ || pos == Coord{i, j})
-                    continue;
-                // TODO: Verify chess logic
-//                if (board[i][j].piece->isLegalMove(board, pos))
-//                    return true;
-            }
-        return false;
-    }
-
     void King::update(const TypePiece board[8][8]) {
         possibleMoves_.clear();
         for (auto &move: legalMoves_) {
             auto pos = Coord{pos_.x + move.x, pos_.y + move.y};
             if (isLegalMove(board, pos)) {
-                TypePiece boardCopy[8][8];
-                copyBoard(board, boardCopy, pos, pos_);
-                if (isCheck(boardCopy, pos))
-                    continue;
                 possibleMoves_.emplace_back(pos);
             }
         }

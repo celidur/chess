@@ -14,8 +14,6 @@ namespace chess {
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 
-        bool isCheck(const TypePiece board[8][8], Coord pos = Coord{-1, -1});
-
         [[nodiscard]] TypePiece getType() override;
 
     private:
