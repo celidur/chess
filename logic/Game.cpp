@@ -93,26 +93,37 @@ namespace chess {
 
 
     void Game::update() {
-        for (auto &i: board_) {
-            for (auto &j: i) {
-                j = TypePiece{Color::none, Type::none};
-            }
-        }
-        Coord promotionPos;
+        clearTypePieceBoard();
+
         promotionPos_ = {-1, -1};
-        promotionPos = player_[0].updateBoard(board_);
-        if (promotionPos != Coord{-1, -1}) {
-            promotionPos_ = promotionPos;
-        }
-        promotionPos = player_[1].updateBoard(board_);
-        if (promotionPos != Coord{-1, -1}) {
-            promotionPos_ = promotionPos;
-        }
-        if (promotionPos != Coord{-1, -1})
+        updatePlayerBoard(0);
+        updatePlayerBoard(1);
+
+        if (promotionPos_ != Coord{-1, -1})
             playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
         player_[(int) playerRound_].update(board_);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
+
+        checkGameState(pos);
+    }
+
+    void Game::clearTypePieceBoard() {
+        for (auto&& pieces : board_) {
+            for (auto&& piece: pieces) {
+                piece = TypePiece{Color::none, Type::none};
+            }
+        }
+    }
+
+    void Game::updatePlayerBoard(int playerNumber) {
+        Coord promotionPos = player_[playerNumber].updateBoard(board_, pieceBoard_);
+        if (promotionPos != Coord{-1, -1}) {
+            promotionPos_ = promotionPos;
+        }
+    }
+
+    void Game::checkGameState(const Coord &pos) {
         switch (player_[(int) playerRound_].getState()) {
             case State::checkmate:
                 displayMessage("Echec et mat");
@@ -142,7 +153,6 @@ namespace chess {
         if (promotionPos_ != Coord{-1, -1})
             board.update(selection_, board_, movePossible, playerRound_);
         else
-            // TODO pas sûr à propos de celui-là
             board.update(selection_, board_, movePossible, Color::none);
     }
 
@@ -170,8 +180,8 @@ namespace chess {
     }
 
     void Game::resetBoard() {
-        for (auto &&line: board_) {
-            for (auto &&boardCase: line) {
+        for (auto&& line : board_) {
+            for (auto&& boardCase : line) {
                 boardCase.color = Color::none;
                 boardCase.type = Type::none;
             }
@@ -180,7 +190,7 @@ namespace chess {
 
     void Game::setDefaultBoard() {
         resetBoard();
-        for (auto &column: board_) {
+        for (auto & column : board_) {
             column[1] = {Color::white, Type::pawn};
             column[6] = {Color::black, Type::pawn};
         }
@@ -205,8 +215,8 @@ namespace chess {
     bool Game::isKingDefined() {
         int white = 0;
         int black = 0;
-        for (auto &&col: board_) {
-            for (auto &boardCase: col) {
+        for (auto&& col : board_) {
+            for (auto&& boardCase : col) {
                 if (boardCase.type == Type::king) {
                     if (boardCase.color == Color::white)
                         ++white;

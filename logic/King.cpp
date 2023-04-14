@@ -9,7 +9,7 @@
 #include "King.h"
 #include "Rook.h"
 
-namespace chess {
+namespace chess{
 
     King::King(const Coord &pos, Color color) : Piece(pos, color) {
         if (color == Color::white) {

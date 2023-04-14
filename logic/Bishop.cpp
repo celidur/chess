@@ -10,7 +10,7 @@ namespace chess{
         }
     }
 
-    bool Bishop::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    bool Bishop::isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) {
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
         }

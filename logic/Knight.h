@@ -9,7 +9,7 @@ namespace chess {
     public:
         Knight(const Coord &pos, Color color);
 
-        bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
+        bool isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) override;
 
         [[nodiscard]] TypePiece getType() override;
 
