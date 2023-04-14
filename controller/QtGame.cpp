@@ -28,7 +28,7 @@ namespace chess {
         Game::setDefaultBoard();
     }
 
-    void QtGame::displayMessage(std::string msg) {
+    void QtGame::displayMessage(const std::string& msg) {
         emit displayQtMessage(QString::fromStdString(msg));
     }
 

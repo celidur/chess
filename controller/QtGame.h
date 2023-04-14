@@ -13,7 +13,7 @@ namespace chess {
     Q_OBJECT
 
     protected:
-        void displayMessage(std::string msg) override; // Addition to display the message in a system box
+        void displayMessage(const std::string& msg) override; // Addition to display the message in a system box
 
     public:
         QtGame();
