@@ -101,7 +101,8 @@ namespace chess {
 
         if (promotionPos_ != Coord{-1, -1})
             playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
-        player_[(int) playerRound_].update(board_);
+        Color other = (playerRound_ == Color::white ? Color::black : Color::white);
+        player_[(int) playerRound_].update(board_, player_[(int) other]);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
 

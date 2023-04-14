@@ -23,7 +23,7 @@ namespace chess {
 
         Player(Color color, TypePiece board[8][8]);
 
-        void update(const TypePiece board[8][8]);
+        void update(const TypePiece board[8][8], Player &opponent);
 
         void addPiece(Type type, const Coord& pos);
 
@@ -38,6 +38,7 @@ namespace chess {
         [[nodiscard]] Coord getKingPos() const { return kingPos_; }
 
     private:
+        static bool isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent);
         std::vector<std::shared_ptr<Piece>> pieces_;
         size_t nbMove_;
         bool isCheck_;

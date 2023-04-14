@@ -19,17 +19,6 @@ namespace chess {
         for (const auto &move: legalMoves_) {
             Coord pos = pos_ + move;
             if (isLegalMove(board, pos)) {
-                TypePiece boardCopy[8][8];
-                copyBoard(board, boardCopy, pos, pos_);
-                if (color_ == Color::white) {
-                    if (whiteKing != nullptr && !whiteKing->isLegalMove(boardCopy, whiteKing->pos_)) {
-                        continue;
-                    }
-                } else {
-                    if (blackKing != nullptr && !blackKing->isLegalMove(boardCopy, blackKing->pos_)) {
-                        continue;
-                    }
-                }
                 possibleMoves_.push_back(pos);
             }
         }

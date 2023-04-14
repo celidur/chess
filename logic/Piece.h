@@ -35,6 +35,8 @@ namespace chess{
 
         [[nodiscard]] std::vector<Coord> getPossibleMoves() const { return possibleMoves_; }
 
+        void setMove(std::vector<Coord>& move) { possibleMoves_ = move; }
+
     protected:
         inline static Piece* whiteKing{};
         inline static Piece* blackKing{};

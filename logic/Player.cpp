@@ -45,14 +45,28 @@ namespace chess {
         return State::normal;
     }
 
-    void Player::update(const TypePiece board[8][8]) {
+    void Player::update(const TypePiece board[8][8], Player &opponent) {
         nbMove_ = 0;
         for (auto &&piece: pieces_) {
             piece->update(board);
-            nbMove_ += piece->nbMove();
+            auto move = piece->getPossibleMoves();
+            std::vector<Coord> mv;
+            for (auto &&m: move) {
+                // verify if the move is valid
+                TypePiece tmpBoard[8][8];
+                copyBoard(board, tmpBoard);
+                tmpBoard[piece->getPos().x][piece->getPos().y] = {};
+                tmpBoard[m.x][m.y] = piece->getType();
+                Coord kingPos = piece->getType().type == Type::king ? m : kingPos_;
+                if (!isCheck(tmpBoard, kingPos, opponent)) {
+                    mv.push_back(m);
+                }
+            }
+            nbMove_ += mv.size();
+            piece->setMove(mv);
             auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
-                isCheck_ = king->isCheck(board);
+                isCheck_ = isCheck(board, king->getPos(), opponent);
                 kingPos_ = king->getPos();
             }
         }
@@ -109,6 +123,14 @@ namespace chess {
                 return piece.get();
         }
         return nullptr;
+    }
+
+    bool Player::isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent) {
+        for (auto &&piece: opponent.pieces_) {
+            if (piece->isLegalMove(board, kingPos))
+                return true;
+        }
+        return false;
     }
 
 
