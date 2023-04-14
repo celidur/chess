@@ -5,7 +5,6 @@
 #ifndef CHESS_GAME_H
 #define CHESS_GAME_H
 
-#include "common/struct.h"
 #include "Player.h"
 #include <array>
 
@@ -42,11 +41,13 @@ namespace chess {
         std::vector<Player> player_;
         TypePiece board_[8][8];
         Color playerRound_;
-        Piece *pieceSelected_;
+        Piece* pieceSelected_;
         Coord selection_[4];
         bool rotation_ = true;
         Coord promotionPos_;
         Mode mode_ = Mode::personalisation;
+        Coord selectedCoord_ = {8, 7};
+        Color selectedColor_ = Color::white;
     };
 }
 

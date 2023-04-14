@@ -29,6 +29,8 @@ namespace chess {
 
         Coord updateBoard(TypePiece board[8][8]);
 
+        Piece* getPiece(const Coord& pos);
+
         [[nodiscard]] State getState() const;
 
         [[nodiscard]] Color getColor() const { return player_color; }

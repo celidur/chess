@@ -5,7 +5,7 @@
 #include <vector>
 #include <ostream>
 #include <memory>
-#include "common/struct.h"
+#include "common/fuction.h"
 
 namespace chess{
 

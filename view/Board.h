@@ -1,7 +1,7 @@
 #ifndef BOARD
 #define    BOARD
 
-#include "common/struct.h"
+#include "common/fuction.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -39,7 +39,7 @@ namespace screen {
                 std::vector<Coord> &piecePossibleMove,
                 Color color) override;
 
-        void update(TypePiece boardGame[8][8]) override;
+        void update(TypePiece boardGame[8][8], Color pieceColor,Coord pos) override;
 
         void viewBoard(Color color) override;
 
@@ -53,13 +53,7 @@ namespace screen {
 
         QEvent* addPiece(TypePiece typePiece, Coord pos, screen::Board& board);
 
-        QEvent *loadGame(screen::Board &board);
-
         QEvent *promoteClicked(TypePiece, screen::Board &board);
-
-        QEvent* resetBoard(Board& board);
-
-        QEvent* setDefaultBoard(Board& board);
 
     public slots:
         void displayMessage(const QString& s);
@@ -90,13 +84,9 @@ namespace screen {
 
         bool side_ = true;
 
-        TypePiece selectedPiece_ = {Color::none, Type::none};
-
         Color selectedColor_ = Color::white;
 
-        Coord selectedCoord_ = {8, 7};
-
-//        TypePiece board_[8][8];
+        Coord selectedCoord_;
 
         Color promoteColor_ = Color::none;
     };

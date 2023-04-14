@@ -59,7 +59,6 @@ namespace chess {
     }
 
     Coord Player::updateBoard(TypePiece board[8][8]) {
-        bool promote = false;
         Coord pos = {-1, -1};
         for (auto it = pieces.begin(); it != pieces.end();) {
             auto posPiece = (*it)->getPos();
@@ -102,6 +101,14 @@ namespace chess {
                 break;
         }
 
+    }
+
+    Piece *Player::getPiece(const Coord &pos) {
+        for (auto &&piece: pieces) {
+            if (piece->getPos() == pos)
+                return piece.get();
+        }
+        return nullptr;
     }
 
 

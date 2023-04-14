@@ -12,25 +12,25 @@
 struct Coord {
     int x = -1, y = -1;
 
-    Coord& operator=(const Coord& b) = default;
+    Coord &operator=(const Coord &b) = default;
 
-    bool operator==(const Coord& b) const {
+    bool operator==(const Coord &b) const {
         return x == b.x && y == b.y;
     }
 
-    bool operator!=(const Coord& b) const {
+    bool operator!=(const Coord &b) const {
         return x != b.x || y != b.y;
     }
 
-    Coord operator+(const Coord& b) const {
+    Coord operator+(const Coord &b) const {
         return Coord{x + b.x, y + b.y};
     }
 
-    Coord operator-(const Coord& b) const {
+    Coord operator-(const Coord &b) const {
         return Coord{x - b.x, y - b.y};
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Coord& coord) {
+    friend std::ostream &operator<<(std::ostream &os, const Coord &coord) {
         return os << coord.x << " " << coord.y;
     }
 };
@@ -63,22 +63,6 @@ struct TypePiece {
     int first = 0;
 };
 
-void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap = Coord{-1, -1},
-               Coord swap2 = Coord{-1, -1});
-
-
-void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap, Coord swap2) {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            boardCopy[i][j] = board[i][j];
-        }
-    }
-    if (swap.x != -1 && swap.y != -1) {
-        boardCopy[swap.x][swap.y] = board[swap2.x][swap2.y];
-        boardCopy[swap2.x][swap2.y] = {};
-    }
-}
-
 namespace screen {
 
 
@@ -92,7 +76,7 @@ namespace screen {
                 std::vector<Coord> &piecePossibleMove,
                 Color color) = 0;
 
-        virtual void update(TypePiece boardGame[8][8]) = 0;
+        virtual void update(TypePiece boardGame[8][8], Color pieceColor,Coord pos) = 0;
 
         virtual void viewBoard(Color color) = 0;
     };

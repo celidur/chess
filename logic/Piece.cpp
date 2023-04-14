@@ -7,9 +7,6 @@ namespace chess {
     bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
         for (const auto& move: possibleMoves_) {
             if (move == pos) {
-                if (board[pos.x][pos.y].type != Type::none) {
-                    board[pos.x][pos.y].piece->kill();
-                }
                 pos_ = pos;
                 return true;
             }

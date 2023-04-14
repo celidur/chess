@@ -25,11 +25,6 @@ int main(int argc, char *argv[]) {
             &game,
             SLOT(updateGameState(screen::TypePiece, screen::Board & )));
 
-    QWidget::connect(
-            &board,
-            SIGNAL(loadGame(screen::Board &)),
-            &game,
-            SLOT(loadGame(screen::Board &)));
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);
     boardView.window()->setWindowTitle("Chess!");

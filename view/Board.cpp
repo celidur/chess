@@ -15,7 +15,7 @@ namespace screen {
 
         auto whiteImg = getImage({6,0});
 
-        auto selectedImg = getImage({7,0});
+        auto selectedImg = getImage({7,1});
 
         QImage checkImg((int) tileSize_.x, (int) tileSize_.y, QImage::Format::Format_ARGB32);
         QPainter red(&checkImg);
@@ -48,13 +48,7 @@ namespace screen {
             for (int j = 0; j < 8; ++j) {
                 if (board[i][j].type == Type::none)
                     continue;
-                auto img = getPieceImg(
-                        {
-                                (int) tileSize_.x * (int) board[i][j].type,
-                                (int) tileSize_.y * (int) board[i][j].color,
-                                (int) tileSize_.x,
-                                (int) tileSize_.y
-                        });
+                auto img = getImage({(int) board[i][j].type, (int) board[i][j].color});
                 addImage(img, Coord{i, j}, ZLayer::middle);
             }
         }
@@ -80,7 +74,9 @@ namespace screen {
         }
     }
 
-    void Board::update(TypePiece boardGame[8][8]) {
+    void Board::update(TypePiece boardGame[8][8], Color pieceColor,Coord pos) {
+        selectedColor_ = pieceColor;
+        selectedCoord_ = pos;
         this->clear(); // Clear all items
         setLayer1();
         setLayer2(boardGame);
@@ -126,7 +122,24 @@ namespace screen {
             return;
         auto itemPos = item->pos();
         Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
-        emit caseClicked(pos, *this);
+        if (side_ && promoteColor_ == Color::none && pos.x < 8)
+            pos = {7 - pos.x, 7 - pos.y};
+        if (promoteColor_ != Color::none){
+            TypePiece type = {promoteColor_};
+            if (pos.x == 3 && pos.y == 3)
+                type.type = Type::queen;
+            else if (pos.x == 4 && pos.y == 3)
+                type.type = Type::rook;
+            else if (pos.x == 3 && pos.y == 4)
+                type.type = Type::bishop;
+            else if (pos.x == 4 && pos.y == 4)
+                type.type = Type::knight;
+            if (type.type != Type::none) {
+                emit promoteClicked(type, *this);
+            }
+        }
+        if (promoteColor_ == Color::none)
+            emit caseClicked(pos, *this);
     }
 
     void Board::viewBoard(Color color) {

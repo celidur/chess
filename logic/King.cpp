@@ -9,7 +9,7 @@
 #include "King.h"
 #include "Rook.h"
 
-namespace chess{
+namespace chess {
 
     King::King(const Coord &pos, Color color) : Piece(pos, color) {
         if (color == Color::white) {
@@ -63,19 +63,11 @@ namespace chess{
         return true;
     }
 
-    bool King::move(const TypePiece board[8][8], const Coord& pos) {
+    bool King::move(const TypePiece board[8][8], const Coord &pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
-        if (pos.x == posCopy.x + 2 && pos.y == posCopy.y) {
-            auto rook = dynamic_cast<Rook *>(board[posCopy.x + 4][pos.y].piece);
-            rook->move(board, {pos.x - 1, pos.y});
-        }
-        if (pos.x == posCopy.x - 2 && pos.y == posCopy.y) {
-            auto rook = dynamic_cast<Rook *>(board[posCopy.x - 3][pos.y].piece);
-            rook->move(board, {pos.x + 1, pos.y});
-        }
         first_ = false;
         return true;
     }
@@ -87,8 +79,9 @@ namespace chess{
             for (int j = 0; j < 8; j++) {
                 if (board[i][j].type == Type::none || board[i][j].color == color_ || pos == Coord{i, j})
                     continue;
-                if (board[i][j].piece->isLegalMove(board, pos))
-                    return true;
+                // TODO: Verify chess logic
+//                if (board[i][j].piece->isLegalMove(board, pos))
+//                    return true;
             }
         return false;
     }
@@ -108,6 +101,6 @@ namespace chess{
     }
 
     TypePiece King::getType() {
-        return {color_, Type::king, this};
+        return {color_, Type::king};
     }
 }

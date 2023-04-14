@@ -16,19 +16,7 @@ namespace chess {
         updateBoard(board);
     }
 
-    void QtGame::loadGame(Color color) {
-        Game::loadGame(color);
-    }
-
-    void QtGame::resetBoard() {
-        Game::resetBoard();
-    }
-
-    void QtGame::setDefaultBoard() {
-        Game::setDefaultBoard();
-    }
-
-    void QtGame::displayMessage(std::string msg) {
+    void QtGame::displayMessage(const std::string& msg) {
         emit displayQtMessage(QString::fromStdString(msg));
     }
 

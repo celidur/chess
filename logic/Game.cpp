@@ -17,83 +17,44 @@ namespace chess {
     }
 
     Game::Game(const TypePiece board[8][8], Color color) : playerRound_(color), pieceSelected_(nullptr),
-                                                                   selection_{{-1, -1},
-                                                                               {-1, -1},
-                                                                               {-1, -1},
-                                                                               {-1, -1}} {
-        copyBoard(board,board_);
+                                                           selection_{{-1, -1},
+                                                                      {-1, -1},
+                                                                      {-1, -1},
+                                                                      {-1, -1}} {
+        copyBoard(board, board_);
         player_.emplace_back(Color::black, board_);
         player_.emplace_back(Color::white, board_);
         update();
     }
 
     void Game::selectionCase(Coord pos) {
-        switch (mode_) {
-            case Mode::game:
-                if (rotation_ && playerRound_ == Color::none)
-                    pos = {7 - pos.x, 7 - pos.y};
-                if (playerRound_ != Color::none){
-                    Type type = Type::none;
-                    if (pos.x == 3 && pos.y == 3)
-                        type = Type::queen;
-                    else if (pos.x == 4 && pos.y == 3)
-                        type = Type::rook;
-                    else if (pos.x == 3 && pos.y == 4)
-                        type = Type::bishop;
-                    else if (pos.x == 4 && pos.y == 4)
-                        type = Type::knight;
-                    if (type != Type::none) {
-                        promotion(type);
-                    }
+        if (mode_ == Mode::personalisation) {
+            if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
+                Type type = (Type) (selectedCoord_.y - 1);
+                board_[pos.x][pos.y] = {type == Type::none ? Color::none : selectedColor_, type};
+            } else if (pos.x == 8 && 1 <= pos.y && pos.y < 8) {
+                selectedCoord_ = pos;
+            } else if (pos.x == 8 && pos.y == 0) {
+                selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
+            } else if (pos.x == 9 && pos.y == 0) {
+                if (!isKingDefined()) {
+                    displayMessage("There is too much king!");
+                    return;
                 }
-                break;
-            case Mode::menu:
-                break;
-            case Mode::personalisation:
-                if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
-                    if (side_)
-                        pos = {7 - pos.x, 7 - pos.y};
-                    board_[pos.x][pos.y] = selectedPiece_;
-                    selectPiece();
-                } else if (pos.x == 8 && 1 <= pos.y && pos.y < 7) {
-                    selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
-                    selectedCoord_ = pos;
-                    selectPiece();
-                } else if (pos.x == 8 && pos.y == 0) {
-                    selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
-                    selectedPiece_.color = selectedColor_;
-                    selectPiece();
-                } else if (pos.x == 8 && pos.y == 7) {
-                    selectedPiece_ = {Color::none, Type::none};
-                    selectedCoord_ = pos;
-                    selectPiece();
-                } else if (pos.x == 9 && pos.y == 0) {
-                    if (!isKingDefined()) {
-                        displayMessage("There is too much king!");
-                        return;
-                    }
-                    mode_ = Mode::game;
-                    this->clear(); // Clear all items
-                    setLayer1();
-                    setLayer2(board_);
-                    emit loadGame(*this);
-                } else if (pos.x == 9 && pos.y == 1) {
-                    // Reset board
-                    setDefaultBoard(board_);
-                    selectPiece();
-                } else if (pos.x == 9 && pos.y == 2) {
-                    resetBoard(board_);
-                    selectPiece();
-                } else if (pos.x == 9 && pos.y == 3) {
-                    side_ = !side_;
-                    selectPiece();
-                }
-                break;
+                mode_ = Mode::game;
+                loadGame(playerRound_);
+            } else if (pos.x == 9 && pos.y == 1) {
+                setDefaultBoard();
+            } else if (pos.x == 9 && pos.y == 2) {
+                resetBoard();
+            } else if (pos.x == 9 && pos.y == 3) {
+                // side_ = !side_;
+            }
+            return;
         }
 
         if (pos.x < 0 || pos.x > 7 || pos.y < 0 || pos.y > 7)
             return;
-
 
         if (pieceSelected_ != nullptr && pieceSelected_->getColor() != playerRound_) {
             pieceSelected_ = nullptr;
@@ -101,16 +62,30 @@ namespace chess {
         }
 
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
-            pieceSelected_ = board_[pos.x][pos.y].piece;
+            pieceSelected_ = player_[(int) playerRound_].getPiece(pos);
             selection_[0] = pos;
         } else if (pieceSelected_ != nullptr) {
             Coord previous = pieceSelected_->getPos();
             if (pieceSelected_->move(board_, pos)) {
-                selection_[1] = previous;
-                selection_[2] = pos;
-                playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
-                update();
+                Color other = (playerRound_ == Color::white ? Color::black : Color::white);
+                if (board_[pos.x][pos.y].color == other) {
+                    player_[(int) other].getPiece(pos)->kill();
+                }
+                if (pieceSelected_->getType().type == Type::king && abs(pos.x - previous.x) == 2) {
+                    Coord rookPos = {pos.x == 6 ? 7 : 0, pos.y};
+                    Coord rookNewPos = {pos.x == 6 ? 5 : 3, pos.y};
+                    player_[(int) playerRound_].getPiece(rookPos)->move(board_, rookNewPos);
+                }
+                if (pieceSelected_->getType().type == Type::pawn && abs(pos.x - previous.x) == 1 &&
+                    board_[pos.x][pos.y].type == Type::none) {
+                    Coord enPassantPos = {pos.x, previous.y};
+                    player_[(int) other].getPiece(enPassantPos)->kill();
+                }
             }
+            selection_[1] = previous;
+            selection_[2] = pos;
+            playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
+            update();
             pieceSelected_ = nullptr;
             selection_[0] = {-1, -1};
         }
@@ -155,24 +130,27 @@ namespace chess {
         }
     }
 
-    void Game::updateBoard(screen::BoardBase& board) {
-        TypePiece boardGame[8][8];
+    void Game::updateBoard(screen::BoardBase &board) {
         std::vector<Coord> movePossible =
                 pieceSelected_ != nullptr ? pieceSelected_->getPossibleMoves() : std::vector<Coord>();
+        if (mode_ == Mode::personalisation) {
+            board.update(board_, selectedColor_, selectedCoord_);
+            return;
+        }
         if (rotation_)
             board.viewBoard(playerRound_);
         if (promotionPos_ != Coord{-1, -1})
-            board.update(selection_, boardGame, movePossible, playerRound_);
+            board.update(selection_, board_, movePossible, playerRound_);
         else
             // TODO pas sûr à propos de celui-là
-            board.update(selection_, boardGame, movePossible, playerRound_);
+            board.update(selection_, board_, movePossible, Color::none);
     }
 
-    TypePiece (&Game::getBoard() )[8][8] {
+    TypePiece (&Game::getBoard())[8][8] {
         return board_;
     }
 
-    void Game::displayMessage(const std::string& msg) {
+    void Game::displayMessage(const std::string &msg) {
         std::cout << msg << std::endl;
     }
 
@@ -192,8 +170,8 @@ namespace chess {
     }
 
     void Game::resetBoard() {
-        for (auto&& line : board_) {
-            for (auto&& boardCase : line) {
+        for (auto &&line: board_) {
+            for (auto &&boardCase: line) {
                 boardCase.color = Color::none;
                 boardCase.type = Type::none;
             }
@@ -202,7 +180,7 @@ namespace chess {
 
     void Game::setDefaultBoard() {
         resetBoard();
-        for (auto & column : board_) {
+        for (auto &column: board_) {
             column[1] = {Color::white, Type::pawn};
             column[6] = {Color::black, Type::pawn};
         }
@@ -227,8 +205,8 @@ namespace chess {
     bool Game::isKingDefined() {
         int white = 0;
         int black = 0;
-        for (auto&& col : board_) {
-            for (auto & boardCase : col) {
+        for (auto &&col: board_) {
+            for (auto &boardCase: col) {
                 if (boardCase.type == Type::king) {
                     if (boardCase.color == Color::white)
                         ++white;

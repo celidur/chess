@@ -28,10 +28,8 @@ namespace chess{
         if ((pos.x == pos_.x + 1 || pos.x == pos_.x - 1) && pos.y == pos_.y + direction) {
             if (piece.type != Type::none)
                 return piece.color != color_; // for eating
-            auto pawn = dynamic_cast<Pawn *>(board[pos.x][pos_.y].piece);
-            if (pawn == nullptr)
-                return false;
-            if (pawn->color_ != color_ && pawn->first_ == 1)
+            auto pawn = board[pos.x][pos_.y];
+            if (board[pos.x][pos_.y].type == Type::pawn && pawn.color != color_ && pawn.first == 1)
                 return true;
         }
         return false;
@@ -42,9 +40,6 @@ namespace chess{
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
-        if ((pos.x == posCopy.x + 1 || pos.x == posCopy.x - 1) && board[pos.x][pos.y].type == Type::none) {
-            board[pos.x][posCopy.y].piece->kill();
-        }
         int direction = color_ == Color::white ? 2 : -2;
         first_ = (posCopy.y + direction == pos.y) ? 1 : -1;
         return true;
