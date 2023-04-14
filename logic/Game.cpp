@@ -117,7 +117,7 @@ namespace chess {
     }
 
     void Game::updatePlayerBoard(int playerNumber) {
-        Coord promotionPos = player_[playerNumber].updateBoard(board_, pieceBoard_);
+        Coord promotionPos = player_[playerNumber].updateBoard(board_);
         if (promotionPos != Coord{-1, -1}) {
             promotionPos_ = promotionPos;
         }
@@ -227,6 +227,4 @@ namespace chess {
         }
         return white <= 1 && black <= 1;
     }
-
-
 }

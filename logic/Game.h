@@ -39,6 +39,7 @@ namespace chess {
         bool isKingDefined();
         void checkGameState(const Coord &pos);
         void updatePlayerBoard(int playerNumber);
+        void clearTypePieceBoard();
 
         std::vector<Player> player_;
         TypePiece board_[8][8];

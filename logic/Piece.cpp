@@ -39,5 +39,4 @@ namespace chess {
         whiteKing = nullptr;
         blackKing = nullptr;
     }
-
 }

@@ -23,11 +23,11 @@ namespace chess {
 
         Player(Color color, TypePiece board[8][8]);
 
-        void update(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8]);
+        void update(const TypePiece board[8][8]);
 
         void addPiece(Type type, const Coord& pos);
 
-        Coord updateBoard(TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8]);
+        Coord updateBoard(TypePiece board[8][8]);
 
         Piece* getPiece(const Coord& pos);
 

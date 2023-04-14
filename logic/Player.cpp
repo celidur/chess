@@ -3,29 +3,29 @@
 
 namespace chess {
 
-    Player::Player(Color color) : chess(false), nb_move(0), player_color(color) {
+    Player::Player(Color color) : isCheck_(false), nbMove_(0), playerColor_(color) {
         int pawnLine = color == Color::white ? 1 : 6;
         int kingLine = color == Color::white ? 0 : 7;
-        king_pos = {3, kingLine};
+        kingPos_ = {3, kingLine};
         for (int i = 0; i < 16; i++) {
             if (i < 8)
-                pieces.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, player_color));
+                pieces_.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, playerColor_));
             else if (i == 8 or i == 15)
-                pieces.push_back(std::make_unique<Rook>(Coord{i % 8, kingLine}, player_color));
+                pieces_.push_back(std::make_unique<Rook>(Coord{i % 8, kingLine}, playerColor_));
             else if (i == 9 or i == 14)
-                pieces.push_back(std::make_unique<Knight>(Coord{i % 8, kingLine}, player_color));
+                pieces_.push_back(std::make_unique<Knight>(Coord{i % 8, kingLine}, playerColor_));
             else if (i == 10 or i == 13)
-                pieces.push_back(std::make_unique<Bishop>(Coord{i % 8, kingLine}, player_color));
+                pieces_.push_back(std::make_unique<Bishop>(Coord{i % 8, kingLine}, playerColor_));
             else if (i == 11)
-                pieces.push_back(std::make_unique<Queen>(Coord{4, kingLine}, player_color));
+                pieces_.push_back(std::make_unique<Queen>(Coord{4, kingLine}, playerColor_));
             else
-                pieces.push_back(std::make_unique<King>(Coord{3, kingLine}, player_color));
+                pieces_.push_back(std::make_unique<King>(Coord{3, kingLine}, playerColor_));
         }
     }
 
 
-    Player::Player(Color color, TypePiece board[8][8]) : chess(false), nb_move(0), player_color(color),
-                                                         king_pos({-1, -1}) {
+    Player::Player(Color color, TypePiece board[8][8]) : isCheck_(false), nbMove_(0), playerColor_(color),
+                                                         kingPos_({-1, -1}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (board[i][j].color == color) {
@@ -36,38 +36,38 @@ namespace chess {
     }
 
     State Player::getState() const {
-        if (nb_move == 0 and chess)
+        if (isCheck_ && nbMove_ == 0)
             return State::checkmate;
-        else if (nb_move == 0)
+        else if (nbMove_ == 0)
             return State::stalemate;
-        else if (chess)
+        else if (isCheck_)
             return State::check;
         return State::normal;
     }
 
     void Player::update(const TypePiece board[8][8]) {
-        nb_move = 0;
-        for (auto &&piece: pieces) {
+        nbMove_ = 0;
+        for (auto &&piece: pieces_) {
             piece->update(board);
-            nb_move += piece->nbMove();
+            nbMove_ += piece->nbMove();
             auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
-                chess = king->isCheck(board);
-                king_pos = king->getPos();
+                isCheck_ = king->isCheck(board);
+                kingPos_ = king->getPos();
             }
         }
     }
 
     Coord Player::updateBoard(TypePiece board[8][8]) {
         Coord pos = {-1, -1};
-        for (auto it = pieces.begin(); it != pieces.end();) {
+        for (auto it = pieces_.begin(); it != pieces_.end();) {
             auto posPiece = (*it)->getPos();
             if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == 7)) {
                 pos = posPiece;
                 board[posPiece.x][posPiece.y] = (*it)->getType();
-                pieces.erase(it);
+                pieces_.erase(it);
             } else if (!(*it)->isAlive()) {
-                pieces.erase(it);
+                pieces_.erase(it);
             } else {
                 board[posPiece.x][posPiece.y] = (*it)->getType();
                 ++it;
@@ -79,23 +79,23 @@ namespace chess {
     void Player::addPiece(Type type, const Coord &pos) {
         switch (type) {
             case Type::pawn:
-                pieces.push_back(std::make_unique<Pawn>(pos, player_color));
+                pieces_.push_back(std::make_unique<Pawn>(pos, playerColor_));
                 break;
             case Type::rook:
-                pieces.push_back(std::make_unique<Rook>(pos, player_color));
+                pieces_.push_back(std::make_unique<Rook>(pos, playerColor_));
                 break;
             case Type::knight:
-                pieces.push_back(std::make_unique<Knight>(pos, player_color));
+                pieces_.push_back(std::make_unique<Knight>(pos, playerColor_));
                 break;
             case Type::bishop:
-                pieces.push_back(std::make_unique<Bishop>(pos, player_color));
+                pieces_.push_back(std::make_unique<Bishop>(pos, playerColor_));
                 break;
             case Type::queen:
-                pieces.push_back(std::make_unique<Queen>(pos, player_color));
+                pieces_.push_back(std::make_unique<Queen>(pos, playerColor_));
                 break;
             case Type::king:
-                pieces.push_back(std::make_unique<King>(pos, player_color));
-                king_pos = pos;
+                pieces_.push_back(std::make_unique<King>(pos, playerColor_));
+                kingPos_ = pos;
                 break;
             case Type::none:
                 break;
@@ -104,7 +104,7 @@ namespace chess {
     }
 
     Piece *Player::getPiece(const Coord &pos) {
-        for (auto &&piece: pieces) {
+        for (auto &&piece: pieces_) {
             if (piece->getPos() == pos)
                 return piece.get();
         }
