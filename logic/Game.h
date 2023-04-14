@@ -38,15 +38,20 @@ namespace chess {
 
     private:
         bool isKingDefined();
+        void checkGameState(const Coord &pos);
+        void updatePlayerBoard(int playerNumber);
 
         std::vector<Player> player_;
         TypePiece board_[8][8];
+        std::shared_ptr<Piece> pieceBoard_[8][8];
         Color playerRound_;
-        Piece *pieceSelected_;
+        std::shared_ptr<Piece> pieceSelected_;
         Coord selection_[4];
         bool rotation_ = true;
         Coord promotionPos_;
         Mode mode_ = Mode::personalisation;
+
+        void clearTypePieceBoard();
     };
 }
 

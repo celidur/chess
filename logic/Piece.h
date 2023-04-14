@@ -15,11 +15,11 @@ namespace chess{
 
         static void reset();
 
-        virtual bool move(const TypePiece board[8][8], const Coord& pos);
+        virtual bool move(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], const Coord &pos);
 
-        virtual void update(const TypePiece board[8][8]);
+        virtual void update(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8]);
 
-        virtual bool isLegalMove(const TypePiece board[8][8], Coord pos) = 0;
+        virtual bool isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) = 0;
 
         [[nodiscard]] virtual TypePiece getType() = 0;
 
@@ -36,8 +36,8 @@ namespace chess{
         [[nodiscard]] std::vector<Coord> getPossibleMoves() const { return possibleMoves_; }
 
     protected:
-        inline static Piece *whiteKing = nullptr;
-        inline static Piece *blackKing = nullptr;
+        inline static std::shared_ptr<Piece> whiteKing{};
+        inline static std::shared_ptr<Piece> blackKing{};
         std::vector<Coord> legalMoves_;
         std::vector<Coord> possibleMoves_;
         Coord pos_;

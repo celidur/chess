@@ -10,7 +10,7 @@ namespace chess {
         }
     }
 
-    bool Rook::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    bool Rook::isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) {
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
         }
@@ -46,8 +46,8 @@ namespace chess {
         return first_;
     }
 
-    bool Rook::move(const TypePiece board[8][8], const Coord &pos) {
-        bool res = Piece::move(board, pos);
+    bool Rook::move(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], const Coord &pos) {
+        bool res = Piece::move(board, nullptr, pos);
         if (res)
             first_ = false;
         return res;

@@ -101,11 +101,11 @@ namespace chess {
         }
 
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
-            pieceSelected_ = board_[pos.x][pos.y].piece;
+            pieceSelected_ = pieceBoard_[pos.x][pos.y];
             selection_[0] = pos;
         } else if (pieceSelected_ != nullptr) {
             Coord previous = pieceSelected_->getPos();
-            if (pieceSelected_->move(board_, pos)) {
+            if (pieceSelected_->move(board_, nullptr, pos)) {
                 selection_[1] = previous;
                 selection_[2] = pos;
                 playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
@@ -118,26 +118,38 @@ namespace chess {
 
 
     void Game::update() {
-        for (auto &i: board_) {
-            for (auto &j: i) {
-                j = TypePiece{Color::none, Type::none};
-            }
-        }
-        Coord promotionPos;
+        clearTypePieceBoard();
+
         promotionPos_ = {-1, -1};
-        promotionPos = player_[0].updateBoard(board_);
-        if (promotionPos != Coord{-1, -1}) {
-            promotionPos_ = promotionPos;
-        }
-        promotionPos = player_[1].updateBoard(board_);
-        if (promotionPos != Coord{-1, -1}) {
-            promotionPos_ = promotionPos;
-        }
-        if (promotionPos != Coord{-1, -1})
+        updatePlayerBoard(0);
+        updatePlayerBoard(1);
+
+        if (promotionPos_ != Coord{-1, -1})
             playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
-        player_[(int) playerRound_].update(board_);
+
+        player_[(int) playerRound_].update(board_, pieceBoard_);
         Coord pos = player_[(int) playerRound_].getKingPos();
         selection_[3] = {-1, -1};
+
+        checkGameState(pos);
+    }
+
+    void Game::clearTypePieceBoard() {
+        for (auto&& pieces : board_) {
+            for (auto&& piece: pieces) {
+                piece = TypePiece{Color::none, Type::none};
+            }
+        }
+    }
+
+    void Game::updatePlayerBoard(int playerNumber) {
+        Coord promotionPos = player_[playerNumber].updateBoard(board_, pieceBoard_);
+        if (promotionPos != Coord{-1, -1}) {
+            promotionPos_ = promotionPos;
+        }
+    }
+
+    void Game::checkGameState(const Coord &pos) {
         switch (player_[(int) playerRound_].getState()) {
             case State::checkmate:
                 displayMessage("Echec et mat");
@@ -164,8 +176,7 @@ namespace chess {
         if (promotionPos_ != Coord{-1, -1})
             board.update(selection_, boardGame, movePossible, playerRound_);
         else
-            // TODO pas sûr à propos de celui-là
-            board.update(selection_, boardGame, movePossible, playerRound_);
+            board.update(boardGame);
     }
 
     TypePiece (&Game::getBoard() )[8][8] {
@@ -228,7 +239,7 @@ namespace chess {
         int white = 0;
         int black = 0;
         for (auto&& col : board_) {
-            for (auto & boardCase : col) {
+            for (auto&& boardCase : col) {
                 if (boardCase.type == Type::king) {
                     if (boardCase.color == Color::white)
                         ++white;

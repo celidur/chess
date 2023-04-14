@@ -18,9 +18,9 @@ namespace chess {
 
         [[nodiscard]] bool getFirst() const;
 
-        bool move(const TypePiece board[8][8], const Coord& pos) override;
+        bool move(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], const Coord &pos) override;
 
-        bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
+        bool isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) override;
 
         [[nodiscard]] TypePiece getType() override;
 

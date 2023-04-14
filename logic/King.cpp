@@ -34,9 +34,9 @@ namespace chess{
         first_ = pos == Coord{3, kingLine};
     }
 
-    bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    bool King::isLegalMove(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) {
         if (pos == pos_)
-            return !isCheck(board);
+            return !isCheck(board, nullptr, Coord());
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
         }
@@ -48,7 +48,7 @@ namespace chess{
             return false;
         }
         if (pos.x - pos_.x == 2 || pos.x - pos_.x == -2) {
-            if (!first_ || isCheck(board) || piece.type != Type::none || pos.y != pos_.y)
+            if (!first_ || isCheck(board, nullptr, Coord()) || piece.type != Type::none || pos.y != pos_.y)
                 return false;
             int direction = pos.x - pos_.x == 2 ? -1 : 1;
             if (board[pos.x + direction][pos.y].type != Type::none)
@@ -63,44 +63,44 @@ namespace chess{
         return true;
     }
 
-    bool King::move(const TypePiece board[8][8], const Coord& pos) {
+    bool King::move(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], const Coord &pos) {
         Coord posCopy = pos_;
-        bool res = Piece::move(board, pos);
+        bool res = Piece::move(board, nullptr, pos);
         if (!res)
             return false;
         if (pos.x == posCopy.x + 2 && pos.y == posCopy.y) {
-            auto rook = dynamic_cast<Rook *>(board[posCopy.x + 4][pos.y].piece);
-            rook->move(board, {pos.x - 1, pos.y});
+            auto rook = dynamic_cast<Rook *>(pieceBoard[posCopy.x + 4][pos.y].get());
+            rook->move(board, nullptr, {pos.x - 1, pos.y});
         }
         if (pos.x == posCopy.x - 2 && pos.y == posCopy.y) {
-            auto rook = dynamic_cast<Rook *>(board[posCopy.x - 3][pos.y].piece);
-            rook->move(board, {pos.x + 1, pos.y});
+            auto rook = dynamic_cast<Rook *>(pieceBoard[posCopy.x - 3][pos.y].get());
+            rook->move(board, nullptr, {pos.x + 1, pos.y});
         }
         first_ = false;
         return true;
     }
 
-    bool King::isCheck(const TypePiece board[8][8], Coord pos) {
+    bool King::isCheck(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8], Coord pos) {
         if (pos == Coord{-1, -1})
             pos = pos_;
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++) {
                 if (board[i][j].type == Type::none || board[i][j].color == color_ || pos == Coord{i, j})
                     continue;
-                if (board[i][j].piece->isLegalMove(board, pos))
+                if (pieceBoard[i][j]->isLegalMove(board, nullptr, pos))
                     return true;
             }
         return false;
     }
 
-    void King::update(const TypePiece board[8][8]) {
+    void King::update(const TypePiece board[8][8], std::shared_ptr<Piece> pieceBoard[8][8]) {
         possibleMoves_.clear();
         for (auto &move: legalMoves_) {
             auto pos = Coord{pos_.x + move.x, pos_.y + move.y};
-            if (isLegalMove(board, pos)) {
+            if (isLegalMove(board, nullptr, pos)) {
                 TypePiece boardCopy[8][8];
                 copyBoard(board, boardCopy, pos, pos_);
-                if (isCheck(boardCopy, pos))
+                if (isCheck(boardCopy, nullptr, pos))
                     continue;
                 possibleMoves_.emplace_back(pos);
             }
@@ -108,6 +108,6 @@ namespace chess{
     }
 
     TypePiece King::getType() {
-        return {color_, Type::king, this};
+        return {color_, Type::king};
     }
 }
