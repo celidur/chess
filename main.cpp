@@ -10,20 +10,46 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     chess::QtGame game;
 
-    screen::Board board(tileSize, "res/chess.png", nullptr);
-    game.updateBoard(board);
+    screen::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
 
     QWidget::connect(
             &board,
-            SIGNAL(caseClicked(Coord, screen::Board & )),
+            &screen::Board::caseClicked,
             &game,
-            SLOT(updateGameState(Coord, screen::Board & )));
+            &chess::QtGame::doUpdateGame);
     //add promotion menu
     QWidget::connect(
             &board,
-            SIGNAL(promoteClicked(screen::TypePiece, screen::Board & )),
+            &screen::Board::promoteClicked,
             &game,
-            SLOT(updateGameState(screen::TypePiece, screen::Board & )));
+            &chess::QtGame::doPromotePiece);
+    QWidget::connect(
+            &board,
+            &screen::Board::pieceAdded,
+            &game,
+            &chess::QtGame::doAddPiece);
+    QWidget::connect(&board,
+                     &screen::Board::gameStarted,
+                     &game,
+                     &chess::QtGame::doLoadGame);
+    QWidget::connect(&board,
+                     &screen::Board::playerSwitched,
+                     &game,
+                     &chess::QtGame::doSwitchPlayer);
+    QWidget::connect(&board,
+                     &screen::Board::boardDefaulted,
+                     &game,
+                     &chess::QtGame::doSetDefaultBoard);
+    QWidget::connect(&board,
+                     &screen::Board::boardReset,
+                     &game,
+                     &chess::QtGame::doResetBoard);
+    QWidget::connect(&board,
+                     &screen::Board::rotationSwitched,
+                     &game,
+                     &chess::QtGame::doSwitchRotation);
+
+    game.updateBoard(board);
 
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);

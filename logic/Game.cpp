@@ -11,47 +11,26 @@ namespace chess {
                                                                                    {-1, -1},
                                                                                    {-1, -1},
                                                                                    {-1, -1}} {
+        mode_ = Mode::personalisation;
         player_.emplace_back(Color::black);
         player_.emplace_back(Color::white);
         update();
     }
 
     Game::Game(const TypePiece board[8][8], Color color) : playerRound_(color), pieceSelected_(nullptr),
-                                                           selection_{{-1, -1},
-                                                                      {-1, -1},
-                                                                      {-1, -1},
-                                                                      {-1, -1}} {
-        copyBoard(board, board_);
+                                                                   selection_{{-1, -1},
+                                                                               {-1, -1},
+                                                                               {-1, -1},
+                                                                               {-1, -1}} {
+        mode_ = Mode::personalisation;
+        copyBoard(board,board_);
         player_.emplace_back(Color::black, board_);
         player_.emplace_back(Color::white, board_);
         update();
     }
 
     void Game::selectionCase(Coord pos) {
-        if (mode_ == Mode::personalisation) {
-            if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
-                Type type = (Type) (selectedCoord_.y - 1);
-                board_[pos.x][pos.y] = {type == Type::none ? Color::none : selectedColor_, type};
-            } else if (pos.x == 8 && 1 <= pos.y && pos.y < 8) {
-                selectedCoord_ = pos;
-            } else if (pos.x == 8 && pos.y == 0) {
-                selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
-            } else if (pos.x == 9 && pos.y == 0) {
-                if (!isKingDefined()) {
-                    displayMessage("There is too much king!");
-                    return;
-                }
-                mode_ = Mode::game;
-                loadGame(playerRound_);
-            } else if (pos.x == 9 && pos.y == 1) {
-                setDefaultBoard();
-            } else if (pos.x == 9 && pos.y == 2) {
-                resetBoard();
-            } else if (pos.x == 9 && pos.y == 3) {
-                // side_ = !side_;
-            }
-            return;
-        }
+        setSelectedCoord(pos);
 
         if (pos.x < 0 || pos.x > 7 || pos.y < 0 || pos.y > 7)
             return;
@@ -145,16 +124,21 @@ namespace chess {
     void Game::updateBoard(screen::BoardBase &board) {
         std::vector<Coord> movePossible =
                 pieceSelected_ != nullptr ? pieceSelected_->getPossibleMoves() : std::vector<Coord>();
-        if (mode_ == Mode::personalisation) {
-            board.update(board_, selectedColor_, selectedCoord_);
-            return;
+        switch (mode_) {
+            case Mode::game:
+                if (rotation_)
+                    board.viewBoard(playerRound_);
+
+                board.updateGame(
+                        selection_,
+                        board_,
+                        movePossible,
+                        promotionPos_ != Coord{-1, -1} ? playerRound_: Color::none);
+                break;
+            case Mode::personalisation:
+                board.updatePersonnalisation(board_);
+                break;
         }
-        if (rotation_)
-            board.viewBoard(playerRound_);
-        if (promotionPos_ != Coord{-1, -1})
-            board.update(selection_, board_, movePossible, playerRound_);
-        else
-            board.update(selection_, board_, movePossible, Color::none);
     }
 
     TypePiece (&Game::getBoard())[8][8] {
@@ -171,12 +155,17 @@ namespace chess {
         update();
     }
 
-    void Game::loadGame(Color color) {
+    void Game::loadGame() {
+        if (!isKingDefined()){
+            displayMessage("There is too much kings!");
+            return;
+        }
+
+        setMode(Mode::game);
         Piece::reset();
         player_.clear();
         player_.emplace_back(Color::black, board_);
         player_.emplace_back(Color::white, board_);
-        playerRound_ = color;
         update();
     }
 
@@ -227,5 +216,41 @@ namespace chess {
             }
         }
         return white <= 1 && black <= 1;
+    }
+
+    Mode Game::getMode() {
+        return mode_;
+    }
+
+    void Game::addPiece(Coord &pos, TypePiece &type) {
+        board_[pos.x][pos.y] = type;
+    }
+
+    bool Game::isRotation() const {
+        return rotation_;
+    }
+
+    void Game::setRotation(bool rotation) {
+        rotation_ = rotation;
+    }
+
+    void Game::setMode(Mode mode) {
+        mode_ = mode;
+    }
+
+    const Coord &Game::getSelectedCoord() const {
+        return selectedCoord_;
+    }
+
+    void Game::setSelectedCoord(const Coord &selectedCoord) {
+        selectedCoord_ = selectedCoord;
+    }
+
+    Color Game::getPlayerRound() const {
+        return playerRound_;
+    }
+
+    void Game::setPlayerRound(Color playerRound) {
+        playerRound_ = playerRound;
     }
 }

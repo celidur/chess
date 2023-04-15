@@ -29,31 +29,41 @@ namespace screen {
     class Board : public QGraphicsScene, public BoardBase {
     Q_OBJECT
     public:
-        explicit Board(CoordF tileSize, const std::string &resFile, QWidget *parent = nullptr);
+        explicit Board(CoordF tileSize, const std::string &resFile,  Mode mode, QWidget *parent = nullptr);
 
         ~Board() override = default;
 
-        void update(
+        void updateGame(
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
                 Color color) override;
 
-        void update(TypePiece boardGame[8][8], Color pieceColor,Coord pos) override;
+        void updatePersonnalisation(TypePiece boardGame[8][8]) override;
 
         void viewBoard(Color color) override;
 
         QImage getImage(Coord pos);
 
-        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote);
+        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string& text = "");
 
     signals:
 
-        QEvent *caseClicked(Coord coord, screen::Board &board);
+        QEvent *caseClicked(Coord& coord, screen::Board &board);
 
-        QEvent* addPiece(TypePiece typePiece, Coord pos, screen::Board& board);
+        QEvent* pieceAdded(TypePiece& typePiece, Coord& pos, screen::Board& board);
 
-        QEvent *promoteClicked(TypePiece, screen::Board &board);
+        QEvent *gameStarted(screen::Board &board);
+
+        QEvent *promoteClicked(TypePiece&, screen::Board &board);
+
+        QEvent* boardReset(Board& board);
+
+        QEvent* boardDefaulted(Board& board);
+
+        QEvent* playerSwitched(Color color, Board& board);
+
+        QEvent* rotationSwitched();
 
     public slots:
         void displayMessage(const QString& s);
@@ -72,23 +82,26 @@ namespace screen {
 
         void setLayer2(TypePiece board[8][8]);
 
-        void selectPiece();
+        void showPersonnalisationMenu();
 
         void promote();
 
         void setPossibleMoves(std::vector<Coord> &piecePossibleMove);
 
+        void handleGameMode(Coord& pos);
+        void handlePersonnalisationMode(Coord &pos);
+
+        [[nodiscard]] TypePiece getPieceToPromote(const Coord &pos) const;
+
         inline static CoordF tileSize_ = {0, 0};
-
         QImageReader textureLoader_;
-
         bool side_ = true;
-
+        TypePiece selectedPiece_ = {Color::none, Type::none};
         Color selectedColor_ = Color::white;
-
         Coord selectedCoord_;
-
         Color promoteColor_ = Color::none;
+        Mode mode_;
+        bool rotation = true;
     };
 
 }

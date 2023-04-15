@@ -13,7 +13,7 @@ namespace chess {
     Q_OBJECT
 
     protected:
-        void displayMessage(const std::string& msg) override; // Addition to display the message in a system box
+        void displayMessage(const std::string &msg) override; // Addition to display the message in a system box
 
     public:
         QtGame();
@@ -28,11 +28,21 @@ namespace chess {
 
     public slots:
 
-        void updateGameState(Coord coord, screen::Board &board);
+        void doUpdateGame(Coord &coord, screen::Board &board);
 
-        void updateGameState(TypePiece promotePiece, screen::Board &board);
+        void doPromotePiece(TypePiece &promotePiece, screen::Board &board);
 
-        void addPiece(TypePiece typePiece, Coord pos, screen::Board &board);
+        void doAddPiece(TypePiece &typePiece, Coord &pos, screen::Board &board);
+
+        void doLoadGame(screen::Board &board);
+
+        void doSwitchPlayer(Color color, screen::Board &board);
+
+        void doSetDefaultBoard(screen::Board &board);
+
+        void doResetBoard(screen::Board &board);
+
+        void doSwitchRotation();
     };
 }
 #endif //CHESS_QTGAME_H

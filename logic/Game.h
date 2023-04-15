@@ -20,7 +20,7 @@ namespace chess {
 
         void update();
 
-        virtual void loadGame(Color color);
+        virtual void loadGame();
 
         void selectionCase(Coord pos);
 
@@ -30,10 +30,26 @@ namespace chess {
         virtual void setDefaultBoard();
 
         [[nodiscard]] TypePiece (&getBoard() )[8][8];
+        [[nodiscard]] Mode getMode();
+
+        [[nodiscard]] bool isRotation() const;
+
+        void setRotation(bool rotation);
+
+        void setMode(Mode mode);
+
+        Color getPlayerRound() const;
+
+        void setPlayerRound(Color playerRound);
+
+        [[nodiscard]] const Coord &getSelectedCoord() const;
+
+        void setSelectedCoord(const Coord &selectedCoord);
 
     protected:
         virtual void displayMessage(const std::string& msg);
         void promotion(Type type);
+        void addPiece(Coord &pos, TypePiece &type);
 
     private:
         bool isKingDefined();

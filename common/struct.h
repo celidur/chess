@@ -53,7 +53,6 @@ enum class Type {
 
 enum class Mode {
     game,
-    menu,
     personalisation
 };
 
@@ -70,13 +69,13 @@ namespace screen {
     public:
         virtual ~BoardBase() = default;
 
-        virtual void update(
+        virtual void updateGame(
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
                 Color color) = 0;
 
-        virtual void update(TypePiece boardGame[8][8], Color pieceColor,Coord pos) = 0;
+        virtual void updatePersonnalisation(TypePiece boardGame[8][8]) = 0;
 
         virtual void viewBoard(Color color) = 0;
     };
