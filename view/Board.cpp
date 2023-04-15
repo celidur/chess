@@ -4,7 +4,7 @@ namespace screen {
 
     Board::Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent) :
             QGraphicsScene(parent), textureLoader_(), mode_(mode), tileSize_(tileSize), side_(true), rotation_(true),
-            selectedColor_(Color::white) {
+            selectedColor_(Color::white), selectedCoord_({8,7}) {
         textureLoader_.setFileName(QString::fromStdString(resFile));
     }
 
@@ -168,7 +168,7 @@ namespace screen {
             if (side_)
                 pos = {7 - pos.x, 7 - pos.y};
             emit pieceAdded(selectedPiece_, pos, *this);
-        } else if (pos.x == 8 && 1 <= pos.y && pos.y < 7) {
+        } else if (pos.x == 8 && 1 <= pos.y && pos.y < 8) {
             selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
             selectedCoord_ = pos;
             emit caseClicked(pos, *this);
@@ -176,14 +176,9 @@ namespace screen {
             selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
             selectedPiece_.color = selectedColor_;
             emit caseClicked(pos, *this);
-        } else if (pos.x == 8 && pos.y == 7) {
-            selectedPiece_ = {Color::none, Type::none};
-            selectedCoord_ = pos;
-            emit caseClicked(pos, *this);
         } else if (pos.x == 9 && pos.y == 0) {
             emit gameStarted(*this);
         } else if (pos.x == 9 && pos.y == 1) {
-            // Reset board
             emit boardDefaulted(*this);
         } else if (pos.x == 9 && pos.y == 2) {
             emit boardReset(*this);

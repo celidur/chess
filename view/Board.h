@@ -99,7 +99,7 @@ namespace screen {
         bool side_;
         TypePiece selectedPiece_;
         Color selectedColor_;
-        Coord selectedCoord_ = {8, 7};
+        Coord selectedCoord_;
         Color promoteColor_;
         Mode mode_;
         bool rotation_;
