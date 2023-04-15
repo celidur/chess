@@ -116,7 +116,8 @@ namespace chess {
 
     bool Player::isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent) {
         for (auto &&piece: opponent.pieces_) {
-            if (piece->isLegalMove(board, kingPos))
+            auto pos = piece->getPos();
+            if (piece->isLegalMove(board, kingPos) && board[pos.x][pos.y].color != playerColor_)
                 return true;
         }
         return false;

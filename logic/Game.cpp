@@ -61,8 +61,9 @@ namespace chess {
                 }
                 selection_[1] = selection_[0];
                 selection_[2] = pos;
+                update();
             }
-            update();
+            selection_[0] = {-1, -1};
         }
     }
 
@@ -75,7 +76,6 @@ namespace chess {
         Color other = (playerRound_ == Color::white ? Color::black : Color::white);
         player_[(int) playerRound_].update(board_, player_[(int) other]);
 
-        selection_[0] = {-1, -1};
         selection_[3] = {-1, -1};
         checkGameState();
     }

@@ -283,8 +283,8 @@ namespace screen {
                     x = 0;
                     y++;
                 }
-                addImage(img, CoordF{8 + (x * (size * 1.4f)) / tileSize_.x,
-                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2.4f) + size * 3.4f) / tileSize_.y},
+                addImage(img, CoordF{8 + (x * (size * 1.5f)) / tileSize_.x,
+                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2) + size * 3.4f) / tileSize_.y},
                          ZLayer::top,
                          true);
                 x++;

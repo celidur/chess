@@ -42,7 +42,7 @@ namespace chess {
         [[nodiscard]] Coord getKingPos() const;
 
     private:
-        static bool isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent);
+        bool isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent);
         std::vector<std::shared_ptr<Piece>> pieces_;
         std::vector<TypePiece> deadPieces_;
         size_t nbMove_;
