@@ -181,9 +181,7 @@ namespace screen {
             selectedCoord_ = pos;
             emit caseClicked(pos, *this);
         } else if (pos.x == 9 && pos.y == 0) {
-            mode_ = Mode::game;
             emit gameStarted(*this);
-            selectedColor_ = Color::none;
         } else if (pos.x == 9 && pos.y == 1) {
             // Reset board
             emit boardDefaulted(*this);

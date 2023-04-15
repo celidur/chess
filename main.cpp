@@ -48,6 +48,10 @@ int main(int argc, char *argv[]) {
                      &screen::Board::rotationSwitched,
                      &game,
                      &chess::QtGame::doSwitchRotation);
+    QWidget::connect(&game,
+                     &chess::QtGame::displayQtMessage,
+                     &board,
+                     &screen::Board::displayMessage);
 
     game.updateBoard(board);
 
