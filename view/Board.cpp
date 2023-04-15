@@ -1,4 +1,3 @@
-#include <QMessageBox>
 #include "Board.h"
 
 namespace screen {

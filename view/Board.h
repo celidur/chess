@@ -13,6 +13,7 @@
 #include <QColorTransform>
 #include <QPainter>
 #include <memory>
+#include <QMessageBox>
 
 namespace screen {
     struct CoordF {

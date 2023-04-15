@@ -5,7 +5,6 @@
 #ifndef CHESS_STRUCT_H
 #define CHESS_STRUCT_H
 
-#include <iostream>
 #include <vector>
 
 
