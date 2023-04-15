@@ -2,7 +2,7 @@
 // Created by Gaetan on 2023-04-14.
 //
 
-#include "fuction.h"
+#include "function.h"
 
 void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap,
                Coord swap2) {

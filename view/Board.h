@@ -1,7 +1,7 @@
 #ifndef BOARD
 #define    BOARD
 
-#include "common/fuction.h"
+#include "common/function.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
