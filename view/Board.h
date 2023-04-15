@@ -63,7 +63,7 @@ namespace screen {
 
         QEvent* playerSwitched(Color color, Board& board);
 
-        QEvent* rotationSwitched();
+        QEvent* rotationSwitched(screen::Board& board);
 
     public slots:
         void displayMessage(const QString& s);

@@ -192,7 +192,7 @@ namespace screen {
             emit playerSwitched(side_ ? Color::white : Color::black, *this);
         } else if (pos.x == 9 && pos.y == 4) {
             rotation = !rotation;
-            emit rotationSwitched();
+            emit rotationSwitched(*this);
         }
     }
 
@@ -219,7 +219,7 @@ namespace screen {
         drawRect(QColor::fromRgb(180, 150, 140),Coord{9, 1}, ZLayer::top, true, "Default");
         drawRect(QColor::fromRgb(100, 200, 80),Coord{9, 2}, ZLayer::top, true, "Reset");
         drawRect(QColor::fromRgb(100, 70, 200),Coord{9, 3}, ZLayer::top, true, side_? "Set\nblack\nfirst" : "Set\nwhite\nfirst");
-        drawRect(QColor::fromRgb(150, 20, 200),Coord{9, 4}, ZLayer::top, true, side_? "Disable\nrotation" : "Enable\nrotation");
+        drawRect(QColor::fromRgb(150, 20, 200),Coord{9, 4}, ZLayer::top, true, rotation? "Disable\nrotation" : "Enable\nrotation");
     }
 
     void Board::addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote) {

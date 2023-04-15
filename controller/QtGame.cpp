@@ -45,7 +45,8 @@ namespace chess {
         emit displayQtMessage(QString::fromStdString(msg));
     }
 
-    void QtGame::doSwitchRotation() {
+    void QtGame::doSwitchRotation(screen::Board& board) {
         setRotation(!isRotation());
+        updateBoard(board);
     }
 }

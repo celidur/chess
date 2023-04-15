@@ -42,7 +42,7 @@ namespace chess {
 
         void doResetBoard(screen::Board &board);
 
-        void doSwitchRotation();
+        void doSwitchRotation(screen::Board& board);
     };
 }
 #endif //CHESS_QTGAME_H
