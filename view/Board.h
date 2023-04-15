@@ -1,118 +1,31 @@
-/**
-* \file   Bishop.h
-* \author Charles Khoury et Gaëtan Florio
-* \date   5 mai 2022
-* Créé le 27 mars 2022
-*/
-
 #ifndef BOARD
-#define BOARD
+#define    BOARD
 
+#include <SFML/Graphics.hpp>
+#include "struct.h"
 #include "BoardBase.h"
-#include <QMainWindow>
-#include <QGraphicsScene>
-#include <QGraphicsRectItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QTransform>
-#include <QImageReader>
-#include <qnamespace.h>
-#include <QColor>
-#include <QColorTransform>
-#include <QPainter>
-#include <memory>
-#include <QMessageBox>
 
-namespace view {
-    struct CoordF {
-        float x, y;
-    };
-
-    enum class ZLayer {
-        bottom,
-        middle,
-        top
-    };
+namespace screen {
 
 
-    class Board : public QGraphicsScene, public BoardBase {
-    Q_OBJECT
+    class Board : public BoardBase, public sf::Drawable, public sf::Transformable {
     public:
-        explicit Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent = nullptr);
+        Board(CoordF tileSize, std::string& s);
 
         ~Board() override = default;
 
-        QImage getImage(Coord pos);
-
-        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string &text = "");
-
-    signals:
-
-        QEvent *caseClicked(Coord &coord, view::Board &board);
-
-        QEvent *pieceAdded(TypePiece &typePiece, Coord &pos, view::Board &board);
-
-        QEvent *gameStarted(view::Board &board);
-
-        QEvent *promoteClicked(TypePiece &, view::Board &board);
-
-        QEvent *boardReset(Board &board);
-
-        QEvent *boardDefaulted(Board &board);
-
-        QEvent *playerSwitched(Color color, Board &board);
-
-        QEvent *rotationSwitched(view::Board &board);
-
-    public slots:
-
-        static void displayMessage(const QString &s);
-
-        void updateGame(
-                Coord selection[4],
-                TypePiece boardGame[8][8],
-                std::vector<Coord> &piecePossibleMove,
-                Color color,std::vector<TypePiece> deadPieces[2]) override;
-
-        void viewBoard(Color color) override;
-
-        void updatePersonalization(TypePiece boardGame[8][8]) override;
-
-    protected:
-        void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+        void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove, Colour  color = Colour::none) override;
 
     private:
-        QImage getPieceImg(const QRect &pieceRect);
 
-        void addImage(QImage &img, Coord coord, ZLayer zLayer, bool isPromote = false);
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-        void addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote = false);
-
-        void setLayer1(Coord sel[4] = nullptr);
-
-        void setLayer2(TypePiece board[8][8]);
-
-        void showPanel(std::vector<TypePiece> deadPieces[2]);
-
-        void showPersonalizationMenu();
-
-        void promote();
-
-        void setPossibleMoves(std::vector<Coord> &piecePossibleMove);
-
-        void handleGameMode(Coord &pos);
-
-        void handlePersonalizationMode(Coord &pos);
-
-        [[nodiscard]] TypePiece getPieceToPromote(const Coord &pos) const;
-
-        CoordF tileSize_;
-        QImageReader textureLoader_;
-        bool side_;
-        TypePiece selectedPiece_;
-        Color selectedColor_;
-        Color promoteColor_;
-        Mode mode_;
-        bool rotation_;
+        sf::Texture chess;
+        sf::VertexArray layer1_;
+        sf::VertexArray layer2_;
+        sf::VertexArray layer3_;
+        sf::Vector2f tile_size;
+        Coord selection_[4];
     };
 
 }

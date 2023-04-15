@@ -9,7 +9,7 @@
 
 namespace logic {
 
-    Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
+    Piece::Piece(const Coord &pos, Colour color) : pos_(pos), color_(color), isAlive_(true) {}
 
     bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
         for (const auto& move: possibleMoves_) {

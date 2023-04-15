@@ -14,7 +14,7 @@
 namespace logic {
     class Knight : public Piece {
     public:
-        Knight(const Coord &pos, Color color);
+        Knight(const Coord &pos, Colour color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 

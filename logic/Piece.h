@@ -15,10 +15,46 @@
 #include "common/function.h"
 
 namespace logic{
+    class Piece;
+
+    struct TypePiece {
+        Colour color = Colour::none;
+        Type type = Type::none;
+        Piece *piece = nullptr;
+        int first = 0;
+
+        friend std::ostream& operator<<(std::ostream& os, const TypePiece& piece) {
+            switch (piece.type) {
+                case Type::pawn:
+                    os << (piece.color == Colour::white ? "p" : "P");
+                    break;
+                case Type::rook:
+                    os << (piece.color == Colour::white ? "t" : "T");
+                    break;
+                case Type::knight:
+                    os << (piece.color == Colour::white ? "c" : "C");
+                    break;
+                case Type::bishop:
+                    os << (piece.color == Colour::white ? "f" : "F");
+                    break;
+                case Type::queen:
+                    os << (piece.color == Colour::white ? "q" : "Q");
+                    break;
+                case Type::king:
+                    os << (piece.color == Colour::white ? "k" : "K");
+                    break;
+                case Type::none:
+                    os << " ";
+                    break;
+            }
+            return os;
+        }
+    };
+
 
     class Piece {
     public:
-        Piece(const Coord& pos, Color color);
+        Piece(const Coord& pos, Colour color);
 
         static void reset();
 
@@ -36,13 +72,15 @@ namespace logic{
 
         void setMove(std::vector<Coord>& move);
 
+        Colour getColor() const { return color_; }
+
     protected:
         inline static Piece* whiteKing{};
         inline static Piece* blackKing{};
         std::vector<Coord> legalMoves_;
         std::vector<Coord> possibleMoves_;
         Coord pos_;
-        Color color_;
+        Colour color_;
         bool isAlive_;
     };
 }

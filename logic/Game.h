@@ -1,75 +1,43 @@
-/**
-* \file   Game.h
-* \author Charles Khoury et Gaëtan Florio
-* \date   5 mai 2022
-* Créé le 27 mars 2022
-*/
+//
+// Created by Gaetan on 2023-04-05.
+//
 
 #ifndef CHESS_GAME_H
 #define CHESS_GAME_H
 
 #include "Player.h"
-#include <array>
+#include "view/BoardBase.h"
 
 namespace logic {
-
     class Game {
     public:
         Game();
 
-        explicit Game(const TypePiece board[8][8], Color color = Color::white);
+        explicit Game(const screen::TypePiece board[8][8], Colour color = Colour::white);
 
         virtual ~Game() = default;
 
         void update();
 
-        virtual void loadGame();
-
         void selectionCase(Coord pos);
 
-        void updateBoard();
+        void updateBoard(screen::BoardBase& board);
 
-        virtual void resetBoard();
-
-        virtual void setDefaultBoard();
-
-        [[nodiscard]] Mode getMode();
-
-        [[nodiscard]] bool isRotation() const;
-
-        void setRotation(bool rotation);
-
-        void setPlayerRound(Color playerRound);
+        [[nodiscard]] screen::TypePiece(& getBoard() const)[8][8];
 
     protected:
-        virtual void displayMessage(const std::string &msg);
-
-        virtual void
-        updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
-                        Color color, std::vector<TypePiece> deadPieces[2]) = 0;
-
-        virtual void viewBoard(Color color) = 0;
-
-        virtual void updatePersonalizationBoard(TypePiece boardGame[8][8]) = 0;
+        virtual void displayMessage(std::string msg);
 
         void promotion(Type type);
 
-        void addPiece(Coord &pos, TypePiece &type);
-
     private:
-        bool isKingDefined();
-
-        void checkGameState();
-
-        void clearTypePieceBoard();
-
         std::vector<Player> player_;
         TypePiece board_[8][8];
-        Color playerRound_;
+        Colour playerRound_;
+        Piece *pieceSelected_;
         Coord selection_[4];
-        bool rotation_;
+        bool rotation_ = false;
         Coord promotionPos_;
-        Mode mode_;
     };
 }
 

@@ -1,3 +1,3 @@
 # chess
 
-Need QT6 librairies
+Need sfml librairies

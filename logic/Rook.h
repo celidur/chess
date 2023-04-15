@@ -13,7 +13,7 @@
 namespace logic {
     class Rook : virtual public Piece {
     public:
-        Rook(const Coord& pos, Color color);
+        Rook(const Coord& pos, Colour color);
 
         bool move(const TypePiece board[8][8], const Coord &pos) override;
 

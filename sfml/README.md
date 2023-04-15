@@ -1,3 +1,0 @@
-# chess
-
-Need sfml librairies

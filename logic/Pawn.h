@@ -13,7 +13,7 @@
 namespace logic {
     class Pawn : public Piece {
     public:
-        Pawn(const Coord &pos, Color color);
+        Pawn(const Coord &pos, Colour color);
 
         void update(const TypePiece board[8][8]) override;
 

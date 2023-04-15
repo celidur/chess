@@ -38,7 +38,7 @@ struct Coord {
     }
 };
 
-enum class Color {
+enum class Colour {
     black = 0,
     white = 1,
     none = 2
@@ -60,7 +60,7 @@ enum class Mode {
 };
 
 struct TypePiece {
-    Color color = Color::none;
+    Colour color = Colour::none;
     Type type = Type::none;
     int first = 0;
 };

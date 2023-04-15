@@ -8,7 +8,7 @@
 #include "Rook.h"
 
 namespace logic {
-    Rook::Rook(const Coord &pos, Color color) : Piece(pos, color) {
+    Rook::Rook(const Coord &pos, Colour color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, 0});
             legalMoves_.emplace_back(Coord{0, i});
@@ -57,6 +57,6 @@ namespace logic {
     }
 
     TypePiece Rook::getType() {
-        return {color_, Type::rook, first_};
+        return {color_, Type::rook, this,first_};
     }
 }

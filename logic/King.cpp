@@ -9,8 +9,8 @@
 
 namespace logic{
 
-    King::King(const Coord &pos, Color color) : Piece(pos, color) {
-        if (color == Color::white) {
+    King::King(const Coord &pos, Colour color) : Piece(pos, color) {
+        if (color == Colour::white) {
             if (whiteKing != nullptr)
                 throw std::runtime_error("White king already exists");
             whiteKing = this;
@@ -28,7 +28,7 @@ namespace logic{
         }
         legalMoves_.emplace_back(Coord{2, 0});
         legalMoves_.emplace_back(Coord{-2, 0});
-        int kingLine = color == Color::white ? 0 : 7;
+        int kingLine = color == Colour::white ? 0 : 7;
         first_ = pos == Coord{3, kingLine};
     }
 
@@ -80,6 +80,6 @@ namespace logic{
     }
 
     TypePiece King::getType() {
-        return {color_, Type::king};
+        return {color_, Type::king, this};
     }
 }

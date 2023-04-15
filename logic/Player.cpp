@@ -9,9 +9,9 @@
 
 namespace logic {
 
-    Player::Player(Color color) : isCheck_(false), nbMove_(0), playerColor_(color) {
-        int pawnLine = color == Color::white ? 1 : 6;
-        int kingLine = color == Color::white ? 0 : 7;
+    Player::Player(Colour color) : isCheck_(false), nbMove_(0), playerColor_(color) {
+        int pawnLine = color == Colour::white ? 1 : 6;
+        int kingLine = color == Colour::white ? 0 : 7;
         kingPos_ = {3, kingLine};
         for (int i = 0; i < 16; i++) {
             if (i < 8)
@@ -30,8 +30,8 @@ namespace logic {
     }
 
 
-    Player::Player(Color color, TypePiece board[8][8]) : isCheck_(false), nbMove_(0), playerColor_(color),
-                                                         kingPos_({-1, -1}) {
+    Player::Player(Colour color, TypePiece board[8][8]) : isCheck_(false), nbMove_(0), playerColor_(color),
+                                                          kingPos_({-1, -1}) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (board[i][j].color == color) {

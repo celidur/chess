@@ -13,7 +13,7 @@ namespace logic {
 
     class King : public Piece {
     public:
-        King(const Coord &pos, Color color);
+        King(const Coord &pos, Colour color);
 
         void update(const TypePiece board[8][8]) override;
 

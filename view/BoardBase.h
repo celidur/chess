@@ -1,29 +1,34 @@
-//
-// Created by Gaetan on 2023-04-15.
-//
-
 #ifndef CHESS_BOARDBASE_H
 #define CHESS_BOARDBASE_H
 
+#include <vector>
 #include "common/struct.h"
 
-namespace view {
+namespace screen {
+    struct CoordF {
+        float x, y;
+    };
 
+    struct TypePiece {
+        Colour color = Colour::none;
+        Type type = Type::none;
+    };
 
     class BoardBase {
     public:
         virtual ~BoardBase() = default;
 
-        virtual void updateGame(
-                Coord selection[4],
-                TypePiece boardGame[8][8],
-                std::vector<Coord> &piecePossibleMove,
-                Color color, std::vector<TypePiece> deadPieces[2]) = 0;
+        virtual void update(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
+                            Colour color = Colour::none) = 0;
 
-        virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;
+        void viewBoard(Colour color) {
+            side_ = color == Colour::white;
+        }
 
-        virtual void viewBoard(Color color) = 0;
+    protected:
+        bool side_ = true;
     };
+
 }
 
 #endif //CHESS_BOARDBASE_H

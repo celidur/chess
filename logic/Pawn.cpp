@@ -8,9 +8,9 @@
 #include "Pawn.h"
 
 namespace logic {
-    Pawn::Pawn(const Coord &pos, Color color) : Piece(pos, color) {
-        int direction = color == Color::white ? 1 : -1;
-        int pawnLine = color == Color::white ? 1 : 6;
+    Pawn::Pawn(const Coord &pos, Colour color) : Piece(pos, color) {
+        int direction = color == Colour::white ? 1 : -1;
+        int pawnLine = color == Colour::white ? 1 : 6;
         first_ = pos.y == pawnLine ? 0 : -1;
         legalMoves_.emplace_back(Coord{0, direction});
         legalMoves_.emplace_back(Coord{0, direction * 2});
@@ -19,7 +19,7 @@ namespace logic {
     }
 
     bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        int direction = color_ == Color::white ? 1 : -1;
+        int direction = color_ == Colour::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
         if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
             return false;
@@ -45,7 +45,7 @@ namespace logic {
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
-        int direction = color_ == Color::white ? 2 : -2;
+        int direction = color_ == Colour::white ? 2 : -2;
         first_ = (posCopy.y + direction == pos.y) ? 1 : -1;
         return true;
     }
@@ -56,6 +56,6 @@ namespace logic {
     }
 
     TypePiece Pawn::getType() {
-        return {color_, Type::pawn, first_};
+        return {color_, Type::pawn, this,first_};
     }
 }

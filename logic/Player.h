@@ -27,9 +27,9 @@ namespace logic {
 
     class Player {
     public:
-        explicit Player(Color color = Color::white);
+        explicit Player(Colour color = Colour::white);
 
-        Player(Color color, TypePiece board[8][8]);
+        Player(Colour color, TypePiece board[8][8]);
 
         void update(const TypePiece board[8][8], Player &opponent);
 
@@ -55,7 +55,7 @@ namespace logic {
         std::vector<TypePiece> deadPieces_;
         size_t nbMove_;
         bool isCheck_;
-        Color playerColor_;
+        Colour playerColor_;
         Coord kingPos_;
     };
 
