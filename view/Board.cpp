@@ -280,8 +280,8 @@ namespace screen {
                                                   Qt::KeepAspectRatio);
         addImage(img, CoordF{8, 5 + size / tileSize_.y}, ZLayer::top, true);
         for (int i = 0; i < 2; ++i) {
-            int x = 0;
-            int y = 0;
+            float x = 0;
+            float y = 0;
             for (auto &piece: deadPieces[i]) {
                 img = getImage({(int) piece.type, i}).scaled((int) (tileSize_.x - size * 2),
                                                              (int) (tileSize_.y - size * 2),
@@ -290,8 +290,8 @@ namespace screen {
                     x = 0;
                     y++;
                 }
-                addImage(img, CoordF{8 + (x * (size * 1.5f)) / tileSize_.x,
-                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2) + size * 3.4f) / tileSize_.y},
+                addImage(img, CoordF{8 + (x * (size * 1.6f)) / tileSize_.x,
+                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2) + size * 3.5f) / tileSize_.y},
                          ZLayer::top,
                          true);
                 x++;

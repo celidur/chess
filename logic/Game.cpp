@@ -49,8 +49,8 @@ namespace chess {
                 }
                 auto piece = board_[selection_[0].x][selection_[0].y];
                 if (piece.type == Type::king && abs(pos.x - selection_[0].x) == 2) {
-                    Coord rookPos = {pos.x == 6 ? 7 : 0, pos.y};
-                    Coord rookNewPos = {pos.x == 6 ? 5 : 3, pos.y};
+                    Coord rookPos = {pos.x == 5 ? 7 : 0, pos.y};
+                    Coord rookNewPos = {pos.x == 5 ? 4 : 2, pos.y};
                     player_[(int) playerRound_].move(board_, rookPos, rookNewPos);
                 }
                 if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
