@@ -76,16 +76,13 @@ namespace chess {
         Coord pos = {-1, -1};
         for (auto it = pieces_.begin(); it != pieces_.end();) {
             auto posPiece = (*it)->getPos();
+            board[posPiece.x][posPiece.y] = (*it)->getType();
             if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == 7)) {
                 pos = posPiece;
-                board[posPiece.x][posPiece.y] = (*it)->getType();
                 pieces_.erase(it);
-            } else if (!(*it)->isAlive()) {
-                pieces_.erase(it);
-            } else {
-                board[posPiece.x][posPiece.y] = (*it)->getType();
-                ++it;
+                --it;
             }
+            ++it;
         }
         return pos;
     }
@@ -137,7 +134,9 @@ namespace chess {
     void Player::removePiece(const Coord &pos) {
         for (auto &&piece: pieces_) {
             if (piece->getPos() == pos) {
-                piece->kill();
+                deadPieces_.push_back(piece->getType());
+                pieces_.erase(std::remove(pieces_.begin(), pieces_.end(), piece), pieces_.end());
+                return;
             }
         }
     }
@@ -149,6 +148,12 @@ namespace chess {
             }
         }
         return {};
+    }
+
+    Coord Player::getKingPos() const { return kingPos_; }
+
+    std::vector<TypePiece> Player::getDeadPieces() const {
+        return deadPieces_;
     }
 
 

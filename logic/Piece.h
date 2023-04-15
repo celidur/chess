@@ -23,10 +23,6 @@ namespace chess{
 
         [[nodiscard]] virtual TypePiece getType() = 0;
 
-        [[nodiscard]] bool isAlive() const;
-
-        void kill();
-
         [[nodiscard]] Coord getPos() const;
 
         [[nodiscard]] std::vector<Coord> getPossibleMoves() const;

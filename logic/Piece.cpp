@@ -29,10 +29,6 @@ namespace chess {
         blackKing = nullptr;
     }
 
-    bool Piece::isAlive() const { return isAlive_; }
-
-    void Piece::kill() { isAlive_ = false; }
-
     std::vector<Coord> Piece::getPossibleMoves() const { return possibleMoves_; }
 
     Coord Piece::getPos() const { return pos_; }

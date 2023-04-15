@@ -73,9 +73,9 @@ namespace screen {
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
-                Color color) = 0;
+                Color color, std::vector<TypePiece> deadPieces[2]) = 0;
 
-        virtual void updatePersonnalisation(TypePiece boardGame[8][8]) = 0;
+        virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;
 
         virtual void viewBoard(Color color) = 0;
     };

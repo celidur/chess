@@ -30,7 +30,7 @@ namespace screen {
     class Board : public QGraphicsScene, public BoardBase {
     Q_OBJECT
     public:
-        explicit Board(CoordF tileSize, const std::string &resFile,  Mode mode, QWidget *parent = nullptr);
+        explicit Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent = nullptr);
 
         ~Board() override = default;
 
@@ -38,36 +38,37 @@ namespace screen {
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
-                Color color) override;
+                Color color,std::vector<TypePiece> deadPieces[2]) override;
 
-        void updatePersonnalisation(TypePiece boardGame[8][8]) override;
+        void updatePersonalization(TypePiece boardGame[8][8]) override;
 
         void viewBoard(Color color) override;
 
         QImage getImage(Coord pos);
 
-        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string& text = "");
+        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string &text = "");
 
     signals:
 
-        QEvent *caseClicked(Coord& coord, screen::Board &board);
+        QEvent *caseClicked(Coord &coord, screen::Board &board);
 
-        QEvent* pieceAdded(TypePiece& typePiece, Coord& pos, screen::Board& board);
+        QEvent *pieceAdded(TypePiece &typePiece, Coord &pos, screen::Board &board);
 
         QEvent *gameStarted(screen::Board &board);
 
-        QEvent *promoteClicked(TypePiece&, screen::Board &board);
+        QEvent *promoteClicked(TypePiece &, screen::Board &board);
 
-        QEvent* boardReset(Board& board);
+        QEvent *boardReset(Board &board);
 
-        QEvent* boardDefaulted(Board& board);
+        QEvent *boardDefaulted(Board &board);
 
-        QEvent* playerSwitched(Color color, Board& board);
+        QEvent *playerSwitched(Color color, Board &board);
 
-        QEvent* rotationSwitched(screen::Board& board);
+        QEvent *rotationSwitched(screen::Board &board);
 
     public slots:
-        void displayMessage(const QString& s);
+
+        static void displayMessage(const QString &s);
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -79,18 +80,21 @@ namespace screen {
 
         void addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote = false);
 
-        void setLayer1(Coord sel[4]= nullptr);
+        void setLayer1(Coord sel[4] = nullptr);
 
         void setLayer2(TypePiece board[8][8]);
 
-        void showPersonnalisationMenu();
+        void showPanel(std::vector<TypePiece> deadPieces[2]);
+
+        void showPersonalizationMenu();
 
         void promote();
 
         void setPossibleMoves(std::vector<Coord> &piecePossibleMove);
 
-        void handleGameMode(Coord& pos);
-        void handlePersonnalisationMode(Coord &pos);
+        void handleGameMode(Coord &pos);
+
+        void handlePersonalizationMode(Coord &pos);
 
         [[nodiscard]] TypePiece getPieceToPromote(const Coord &pos) const;
 
@@ -99,7 +103,6 @@ namespace screen {
         bool side_;
         TypePiece selectedPiece_;
         Color selectedColor_;
-        Coord selectedCoord_;
         Color promoteColor_;
         Mode mode_;
         bool rotation_;

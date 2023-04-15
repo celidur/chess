@@ -4,7 +4,7 @@ namespace screen {
 
     Board::Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent) :
             QGraphicsScene(parent), textureLoader_(), mode_(mode), tileSize_(tileSize), side_(true), rotation_(true),
-            selectedColor_(Color::white), selectedCoord_({8,7}), promoteColor_(Color::none) {
+            selectedColor_(Color::white), promoteColor_(Color::none) {
         textureLoader_.setFileName(QString::fromStdString(resFile));
     }
 
@@ -62,24 +62,25 @@ namespace screen {
     }
 
     void Board::updateGame(Coord selection[4], TypePiece boardGame[8][8],
-                           std::vector<Coord> &piecePossibleMove, Color color) {
+                           std::vector<Coord> &piecePossibleMove, Color color, std::vector<TypePiece> deadPieces[2]) {
         mode_ = Mode::game;
         clear(); // Clear all items
         setLayer1(selection);
         setLayer2(boardGame);
         setPossibleMoves(piecePossibleMove);
+        showPanel(deadPieces);
         if (color != Color::none) {
             promoteColor_ = color;
             promote();
         }
     }
 
-    void Board::updatePersonnalisation(TypePiece boardGame[8][8]) {
+    void Board::updatePersonalization(TypePiece boardGame[8][8]) {
         mode_ = Mode::personalisation;
         this->clear(); // Clear all items
         setLayer1();
         setLayer2(boardGame);
-        showPersonnalisationMenu();
+        showPersonalizationMenu();
     }
 
     void Board::setPossibleMoves(std::vector<Coord> &piecePossibleMove) {
@@ -128,7 +129,7 @@ namespace screen {
                 handleGameMode(pos);
                 break;
             case Mode::personalisation:
-                handlePersonnalisationMode(pos);
+                handlePersonalizationMode(pos);
                 break;
         }
     }
@@ -137,7 +138,6 @@ namespace screen {
     void Board::handleGameMode(Coord &pos) {
         if (side_ && promoteColor_ == Color::none)
             pos = {7 - pos.x, 7 - pos.y};
-
         if (promoteColor_ != Color::none) {
             TypePiece type = getPieceToPromote(pos);
             if (type.type != Type::none) {
@@ -146,7 +146,6 @@ namespace screen {
             } else
                 return;
         }
-
         emit caseClicked(pos, *this);
     }
 
@@ -163,14 +162,13 @@ namespace screen {
         return type;
     }
 
-    void Board::handlePersonnalisationMode(Coord &pos) {
+    void Board::handlePersonalizationMode(Coord &pos) {
         if (0 <= pos.x && pos.x < 8 && 0 <= pos.y && pos.y < 8) {
             if (side_)
                 pos = {7 - pos.x, 7 - pos.y};
             emit pieceAdded(selectedPiece_, pos, *this);
         } else if (pos.x == 8 && 1 <= pos.y && pos.y < 8) {
             selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
-            selectedCoord_ = pos;
             emit caseClicked(pos, *this);
         } else if (pos.x == 8 && pos.y == 0) {
             selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
@@ -195,9 +193,9 @@ namespace screen {
         side_ = color == Color::white;
     }
 
-    void Board::showPersonnalisationMenu() {
+    void Board::showPersonalizationMenu() {
         for (int i = 0; i < 7; i++) {
-            auto r = (selectedCoord_.y == i + 1) ? QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
+            auto r = ((int) selectedPiece_.type == i) ? QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
             drawRect(r, Coord{8, i + 1}, ZLayer::top, true);
             if (i == 6)
                 continue;
@@ -207,8 +205,8 @@ namespace screen {
         drawRect(QColor::fromRgb(70, 100, 130), {8, 0}, ZLayer::top, true);
 
         QImage img = getImage({6, (int) selectedColor_});
-        int size = 17;
-        img = img.scaled((int) tileSize_.x - size * 2, (int) tileSize_.y - size * 2, Qt::KeepAspectRatio);
+        float size = 17;
+        img = img.scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2), Qt::KeepAspectRatio);
         addImage(img, CoordF{8 + size / tileSize_.x, size / tileSize_.y}, ZLayer::top, true);
         drawRect(QColor::fromRgb(100, 70, 80), Coord{9, 0}, ZLayer::top, true, "Play");
         drawRect(QColor::fromRgb(180, 150, 140), Coord{9, 1}, ZLayer::top, true, "Default");
@@ -256,6 +254,43 @@ namespace screen {
         }
 
         addImage(interfaceImg, pos, zLayer, isPromote);
+    }
+
+    void Board::showPanel(std::vector<TypePiece> deadPieces[2]) {
+        QImage interfaceImg((int) (tileSize_.x) * 2, (int) (tileSize_.y) * 8, QImage::Format::Format_ARGB32);
+        QPainter interface(&interfaceImg);
+        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), QColor::fromRgb(209, 207, 206));
+        interface.drawText(QRectF{50, (float) (side_ ? 0 : 1) * 5 * tileSize_.y + 30, tileSize_.x * 2, tileSize_.y},
+                           Qt::AlignLeft, "player 2");
+        interface.drawText(QRectF{50, (float) (side_ ? 1 : 0) * 5 * tileSize_.y + 30, tileSize_.x * 2, tileSize_.y},
+                           Qt::AlignLeft, "player 1");
+        addImage(interfaceImg, Coord{8, 0}, ZLayer::top, true);
+        float size = 17;
+        QImage img = getImage({5, side_ ? 0 : 1}).scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
+                                                         Qt::KeepAspectRatio);
+        addImage(img, CoordF{8, size / tileSize_.y}, ZLayer::top, true);
+        img = getImage({5, side_ ? 1 : 0}).scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
+                                                  Qt::KeepAspectRatio);
+        addImage(img, CoordF{8, 5 + size / tileSize_.y}, ZLayer::top, true);
+        for (int i = 0; i < 2; ++i) {
+            int x = 0;
+            int y = 0;
+            for (auto &piece: deadPieces[i]) {
+                img = getImage({(int) piece.type, i}).scaled((int) (tileSize_.x - size * 2),
+                                                             (int) (tileSize_.y - size * 2),
+                                                             Qt::KeepAspectRatio);
+                if (x == 5) {
+                    x = 0;
+                    y++;
+                }
+                addImage(img, CoordF{8 + (x * (size * 1.4f)) / tileSize_.x,
+                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2.4f) + size * 3.4f) / tileSize_.y},
+                         ZLayer::top,
+                         true);
+                x++;
+            }
+
+        }
     }
 
 }

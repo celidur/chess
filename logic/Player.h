@@ -35,13 +35,16 @@ namespace chess {
 
         std::vector<Coord> getPossibleMoves(const Coord &pos);
 
+        std::vector<TypePiece> getDeadPieces() const;
+
         [[nodiscard]] State getState() const;
 
-        [[nodiscard]] Coord getKingPos() const { return kingPos_; }
+        [[nodiscard]] Coord getKingPos() const;
 
     private:
         static bool isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent);
         std::vector<std::shared_ptr<Piece>> pieces_;
+        std::vector<TypePiece> deadPieces_;
         size_t nbMove_;
         bool isCheck_;
         Color playerColor_;

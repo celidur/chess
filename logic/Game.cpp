@@ -7,17 +7,20 @@
 
 namespace chess {
 
-    Game::Game() : playerRound_(Color::white), rotation_(true), mode_(Mode::personalisation), selection_{{-1, -1},
+    Game::Game() : playerRound_(Color::white), rotation_(false), mode_(Mode::game), selection_{{-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1}} {
-        player_.emplace_back(Color::black);
-        player_.emplace_back(Color::white);
-        update();
+        setDefaultBoard();
+        if (Mode::game == mode_) {
+            player_.emplace_back(Color::black, board_);
+            player_.emplace_back(Color::white, board_);
+            update();
+        }
     }
 
     Game::Game(const TypePiece board[8][8], Color color) : playerRound_(color), rotation_(true),
-                                                           mode_(Mode::personalisation),
+                                                           mode_(Mode::game),
                                                            selection_{{-1, -1},
                                                                       {-1, -1},
                                                                       {-1, -1},
@@ -35,28 +38,30 @@ namespace chess {
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
             selection_[0] = pos;
         } else if (selection_[0] != Coord{-1, -1}) {
-            Coord previous = selection_[0];
-            if (player_[(int) playerRound_].move(board_, previous, pos)) {
+            if (player_[(int) playerRound_].move(board_, selection_[0], pos)) {
+                promotionPos_ = {};
                 Color other = (playerRound_ == Color::white ? Color::black : Color::white);
                 if (board_[pos.x][pos.y].color == other) {
                     player_[(int) other].removePiece(pos);
                 }
-                auto piece = board_[previous.x][previous.y];
-                if (piece.type == Type::king && abs(pos.x - previous.x) == 2) {
+                auto piece = board_[selection_[0].x][selection_[0].y];
+                if (piece.type == Type::king && abs(pos.x - selection_[0].x) == 2) {
                     Coord rookPos = {pos.x == 6 ? 7 : 0, pos.y};
                     Coord rookNewPos = {pos.x == 6 ? 5 : 3, pos.y};
                     player_[(int) playerRound_].move(board_, rookPos, rookNewPos);
                 }
-                if (piece.type == Type::pawn && abs(pos.x - previous.x) == 1 &&
+                if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
                     board_[pos.x][pos.y].type == Type::none) {
-                    Coord enPassantPos = {pos.x, previous.y};
-                    player_[(int) other].removePiece(enPassantPos);
+                    player_[(int) other].removePiece({pos.x, selection_[0].y});
                 }
                 playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
+                if (piece.type == Type::pawn && (pos.y == 0 || pos.y == 7)) {
+                    promotionPos_ = pos;
+                    playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
+                }
+                selection_[1] = selection_[0];
+                selection_[2] = pos;
             }
-            selection_[0] = {-1, -1};
-            selection_[1] = previous;
-            selection_[2] = pos;
             update();
         }
     }
@@ -64,75 +69,58 @@ namespace chess {
 
     void Game::update() {
         clearTypePieceBoard();
+        player_[0].updateBoard(board_);
+        player_[1].updateBoard(board_);
 
-        promotionPos_ = {-1, -1};
-        updatePlayerBoard(0);
-        updatePlayerBoard(1);
-
-        if (promotionPos_ != Coord{-1, -1})
-            playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
         Color other = (playerRound_ == Color::white ? Color::black : Color::white);
         player_[(int) playerRound_].update(board_, player_[(int) other]);
-        Coord pos = player_[(int) playerRound_].getKingPos();
-        selection_[3] = {-1, -1};
 
-        checkGameState(pos);
+        selection_[0] = {-1, -1};
+        selection_[3] = {-1, -1};
+        checkGameState();
     }
 
     void Game::clearTypePieceBoard() {
         for (auto &&pieces: board_) {
             for (auto &&piece: pieces) {
-                piece = TypePiece{Color::none, Type::none};
+                piece = {};
             }
         }
     }
 
-    void Game::updatePlayerBoard(int playerNumber) {
-        Coord promotionPos = player_[playerNumber].updateBoard(board_);
-        if (promotionPos != Coord{-1, -1}) {
-            promotionPos_ = promotionPos;
-        }
-    }
-
-    void Game::checkGameState(const Coord &pos) {
+    void Game::checkGameState() {
+        auto kingPos = player_[(int) playerRound_].getKingPos();
         switch (player_[(int) playerRound_].getState()) {
             case State::checkmate:
                 displayMessage("Echec et mat");
-                selection_[3] = pos;
+                selection_[3] = kingPos;
                 break;
             case State::stalemate:
                 displayMessage("Pat");
                 break;
             case State::check:
                 displayMessage("Echec");
-                selection_[3] = pos;
+                selection_[3] = kingPos;
                 break;
-            default:
+            case State::normal:
                 break;
         }
     }
 
     void Game::updateBoard(screen::BoardBase &board) {
-        std::vector<Coord> movePossible = player_[(int) playerRound_].getPossibleMoves(selection_[0]);
-        switch (mode_) {
-            case Mode::game:
-                if (rotation_)
-                    board.viewBoard(playerRound_);
-
-                board.updateGame(
-                        selection_,
-                        board_,
-                        movePossible,
-                        promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none);
-                break;
-            case Mode::personalisation:
-                board.updatePersonnalisation(board_);
-                break;
+        if (mode_ == Mode::game) {
+            if (rotation_)
+                board.viewBoard(playerRound_);
+            auto movePossible = player_[(int) playerRound_].getPossibleMoves(selection_[0]);
+            std::vector<TypePiece> deadPieces[2] = {player_[0].getDeadPieces(), player_[1].getDeadPieces()};
+            board.updateGame(
+                    selection_,
+                    board_,
+                    movePossible,
+                    promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none, deadPieces);
+        } else {
+            board.updatePersonalization(board_);
         }
-    }
-
-    TypePiece (&Game::getBoard())[8][8] {
-        return board_;
     }
 
     void Game::displayMessage(const std::string &msg) {
@@ -142,6 +130,7 @@ namespace chess {
     void Game::promotion(Type type) {
         player_[(int) playerRound_].addPiece(type, promotionPos_);
         playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
+        promotionPos_ = {};
         update();
     }
 
@@ -150,8 +139,7 @@ namespace chess {
             displayMessage("There is too much kings!");
             return;
         }
-
-        setMode(Mode::game);
+        mode_ = Mode::game;
         Piece::reset();
         player_.clear();
         player_.emplace_back(Color::black, board_);
@@ -222,22 +210,6 @@ namespace chess {
 
     void Game::setRotation(bool rotation) {
         rotation_ = rotation;
-    }
-
-    void Game::setMode(Mode mode) {
-        mode_ = mode;
-    }
-
-    const Coord &Game::getSelectedCoord() const {
-        return selectedCoord_;
-    }
-
-    void Game::setSelectedCoord(const Coord &selectedCoord) {
-        selectedCoord_ = selectedCoord;
-    }
-
-    Color Game::getPlayerRound() const {
-        return playerRound_;
     }
 
     void Game::setPlayerRound(Color playerRound) {

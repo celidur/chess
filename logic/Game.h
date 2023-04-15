@@ -29,22 +29,13 @@ namespace chess {
         virtual void resetBoard();
         virtual void setDefaultBoard();
 
-        [[nodiscard]] TypePiece (&getBoard() )[8][8];
         [[nodiscard]] Mode getMode();
 
         [[nodiscard]] bool isRotation() const;
 
         void setRotation(bool rotation);
 
-        void setMode(Mode mode);
-
-        Color getPlayerRound() const;
-
         void setPlayerRound(Color playerRound);
-
-        [[nodiscard]] const Coord &getSelectedCoord() const;
-
-        void setSelectedCoord(const Coord &selectedCoord);
 
     protected:
         virtual void displayMessage(const std::string& msg);
@@ -53,8 +44,7 @@ namespace chess {
 
     private:
         bool isKingDefined();
-        void checkGameState(const Coord &pos);
-        void updatePlayerBoard(int playerNumber);
+        void checkGameState();
         void clearTypePieceBoard();
 
         std::vector<Player> player_;
@@ -64,7 +54,6 @@ namespace chess {
         bool rotation_;
         Coord promotionPos_;
         Mode mode_;
-        Coord selectedCoord_ = {8, 7};
     };
 }
 
