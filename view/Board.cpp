@@ -4,7 +4,7 @@ namespace screen {
 
     Board::Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent) :
             QGraphicsScene(parent), textureLoader_(), mode_(mode), tileSize_(tileSize), side_(true), rotation_(true),
-            selectedColor_(Color::white), selectedCoord_({8,7}) {
+            selectedColor_(Color::white), selectedCoord_({8,7}), promoteColor_(Color::none) {
         textureLoader_.setFileName(QString::fromStdString(resFile));
     }
 
