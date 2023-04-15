@@ -1,3 +1,3 @@
-# logic
+# chess
 
 Need sfml librairies
