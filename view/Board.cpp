@@ -143,6 +143,7 @@ namespace screen {
             TypePiece type = getPieceToPromote(pos);
             if (type.type != Type::none) {
                 emit promoteClicked(type, *this);
+                promoteColor_ = Color::none;
             } else
                 return;
         }
