@@ -99,7 +99,7 @@ namespace screen {
         bool side_ = true;
         TypePiece selectedPiece_ = {Color::none, Type::none};
         Color selectedColor_ = Color::white;
-        Coord selectedCoord_;
+        Coord selectedCoord_ = {8, 7};
         Color promoteColor_ = Color::none;
         Mode mode_;
         bool rotation = true;
