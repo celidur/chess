@@ -11,7 +11,6 @@ namespace chess {
                                                                                    {-1, -1},
                                                                                    {-1, -1},
                                                                                    {-1, -1}} {
-        mode_ = Mode::personalisation;
         player_.emplace_back(Color::black);
         player_.emplace_back(Color::white);
         update();
@@ -22,7 +21,6 @@ namespace chess {
                                                                                {-1, -1},
                                                                                {-1, -1},
                                                                                {-1, -1}} {
-        mode_ = Mode::personalisation;
         copyBoard(board,board_);
         player_.emplace_back(Color::black, board_);
         player_.emplace_back(Color::white, board_);
@@ -30,8 +28,6 @@ namespace chess {
     }
 
     void Game::selectionCase(Coord pos) {
-        setSelectedCoord(pos);
-
         if (pos.x < 0 || pos.x > 7 || pos.y < 0 || pos.y > 7)
             return;
 

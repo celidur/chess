@@ -136,10 +136,10 @@ namespace screen {
 
 
     void Board::handleGameMode(Coord& pos){
-        if (side_ && selectedColor_ == Color::none)
+        if (side_ && promoteColor_ == Color::none)
             pos = {7 - pos.x, 7 - pos.y};
 
-        if (selectedColor_ != Color::none){
+        if (promoteColor_ != Color::none){
             TypePiece type = getPieceToPromote(pos);
             if (type.type != Type::none) {
                 emit promoteClicked(type, *this);
