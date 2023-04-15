@@ -56,10 +56,10 @@ namespace chess {
                     Coord enPassantPos = {pos.x, previous.y};
                     player_[(int) other].getPiece(enPassantPos)->kill();
                 }
+                playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
             }
             selection_[1] = previous;
             selection_[2] = pos;
-            playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
             update();
             pieceSelected_ = nullptr;
             selection_[0] = {-1, -1};
