@@ -29,7 +29,7 @@ namespace chess {
 
         Coord updateBoard(TypePiece board[8][8]);
 
-        Piece* getPiece(const Coord& pos);
+        std::shared_ptr<Piece> getPiece(const Coord& pos);
 
         [[nodiscard]] State getState() const;
 

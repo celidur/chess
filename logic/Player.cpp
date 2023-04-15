@@ -117,10 +117,10 @@ namespace chess {
 
     }
 
-    Piece *Player::getPiece(const Coord &pos) {
+    std::shared_ptr<Piece> Player::getPiece(const Coord &pos) {
         for (auto &&piece: pieces_) {
             if (piece->getPos() == pos)
-                return piece.get();
+                return piece;
         }
         return nullptr;
     }
