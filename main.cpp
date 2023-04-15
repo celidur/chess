@@ -10,70 +10,70 @@
 #include <QApplication>
 #include <QGraphicsView>
 
-constexpr screen::CoordF tileSize{72, 72};
-constexpr screen::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
+constexpr view::CoordF tileSize{72, 72};
+constexpr view::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    chess::QtGame game;
+    controller::QtGame game;
 
-    screen::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
+    view::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
 
     QWidget::connect(
             &board,
-            &screen::Board::caseClicked,
+            &view::Board::caseClicked,
             &game,
-            &chess::QtGame::doUpdateGame);
+            &controller::QtGame::doUpdateGame);
     //add promotion menu
     QWidget::connect(
             &board,
-            &screen::Board::promoteClicked,
+            &view::Board::promoteClicked,
             &game,
-            &chess::QtGame::doPromotePiece);
+            &controller::QtGame::doPromotePiece);
     QWidget::connect(
             &board,
-            &screen::Board::pieceAdded,
+            &view::Board::pieceAdded,
             &game,
-            &chess::QtGame::doAddPiece);
+            &controller::QtGame::doAddPiece);
     QWidget::connect(&board,
-                     &screen::Board::gameStarted,
+                     &view::Board::gameStarted,
                      &game,
-                     &chess::QtGame::doLoadGame);
+                     &controller::QtGame::doLoadGame);
     QWidget::connect(&board,
-                     &screen::Board::playerSwitched,
+                     &view::Board::playerSwitched,
                      &game,
-                     &chess::QtGame::doSwitchPlayer);
+                     &controller::QtGame::doSwitchPlayer);
     QWidget::connect(&board,
-                     &screen::Board::boardDefaulted,
+                     &view::Board::boardDefaulted,
                      &game,
-                     &chess::QtGame::doSetDefaultBoard);
+                     &controller::QtGame::doSetDefaultBoard);
     QWidget::connect(&board,
-                     &screen::Board::boardReset,
+                     &view::Board::boardReset,
                      &game,
-                     &chess::QtGame::doResetBoard);
+                     &controller::QtGame::doResetBoard);
     QWidget::connect(&board,
-                     &screen::Board::rotationSwitched,
+                     &view::Board::rotationSwitched,
                      &game,
-                     &chess::QtGame::doSwitchRotation);
+                     &controller::QtGame::doSwitchRotation);
     QWidget::connect(&game,
-                     &chess::QtGame::displayQtMessage,
+                     &controller::QtGame::displayQtMessage,
                      &board,
-                     &screen::Board::displayMessage);
+                     &view::Board::displayMessage);
 
     QWidget::connect(&game,
-                     &chess::QtGame::updateGameQt,
+                     &controller::QtGame::updateGameQt,
                      &board,
-                     &screen::Board::updateGame);
+                     &view::Board::updateGame);
 
     QWidget::connect(&game,
-                     &chess::QtGame::updatePersonalizationQt,
+                     &controller::QtGame::updatePersonalizationQt,
                      &board,
-                     &screen::Board::updatePersonalization);
+                     &view::Board::updatePersonalization);
 
     QWidget::connect(&game,
-                     &chess::QtGame::viewBoardQt,
+                     &controller::QtGame::viewBoardQt,
                      &board,
-                     &screen::Board::viewBoard);
+                     &view::Board::viewBoard);
 
     game.updateBoard();
 

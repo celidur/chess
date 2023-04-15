@@ -7,7 +7,7 @@
 
 #include "Piece.h"
 
-namespace chess {
+namespace logic {
 
     Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
 

@@ -7,7 +7,7 @@
 
 #include "Bishop.h"
 
-namespace chess{
+namespace logic{
     Bishop::Bishop(const Coord &pos, Color color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, i});

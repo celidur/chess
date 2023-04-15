@@ -10,7 +10,7 @@
 #include "Piece.h"
 
 
-namespace chess {
+namespace logic {
     class Rook : virtual public Piece {
     public:
         Rook(const Coord& pos, Color color);

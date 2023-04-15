@@ -15,7 +15,7 @@
 #include "logic/King.h"
 
 
-namespace chess {
+namespace logic {
 
     enum class State {
         normal,

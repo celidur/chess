@@ -8,7 +8,7 @@
 #include "Game.h"
 #include <iostream>
 
-namespace chess {
+namespace logic {
 
     Game::Game() : playerRound_(Color::white), rotation_(true), mode_(Mode::personalisation), selection_{{-1, -1},
                                                                                                          {-1, -1},

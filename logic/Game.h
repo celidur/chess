@@ -11,7 +11,7 @@
 #include "Player.h"
 #include <array>
 
-namespace chess {
+namespace logic {
 
     class Game {
     public:

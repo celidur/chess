@@ -13,8 +13,8 @@
 #include "logic/Game.h"
 
 
-namespace chess {
-    class QtGame : public QObject, public chess::Game {
+namespace controller {
+    class QtGame : public QObject, public logic::Game {
     Q_OBJECT
 
     protected:

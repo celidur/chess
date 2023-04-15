@@ -10,7 +10,7 @@
 
 #include "Piece.h"
 
-namespace chess {
+namespace logic {
     class Pawn : public Piece {
     public:
         Pawn(const Coord &pos, Color color);

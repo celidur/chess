@@ -9,7 +9,7 @@
 #define CHESS_KING_H
 #include "Piece.h"
 
-namespace chess {
+namespace logic {
 
     class King : public Piece {
     public:

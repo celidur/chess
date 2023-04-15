@@ -22,7 +22,7 @@
 #include <memory>
 #include <QMessageBox>
 
-namespace screen {
+namespace view {
     struct CoordF {
         float x, y;
     };
@@ -47,13 +47,13 @@ namespace screen {
 
     signals:
 
-        QEvent *caseClicked(Coord &coord, screen::Board &board);
+        QEvent *caseClicked(Coord &coord, view::Board &board);
 
-        QEvent *pieceAdded(TypePiece &typePiece, Coord &pos, screen::Board &board);
+        QEvent *pieceAdded(TypePiece &typePiece, Coord &pos, view::Board &board);
 
-        QEvent *gameStarted(screen::Board &board);
+        QEvent *gameStarted(view::Board &board);
 
-        QEvent *promoteClicked(TypePiece &, screen::Board &board);
+        QEvent *promoteClicked(TypePiece &, view::Board &board);
 
         QEvent *boardReset(Board &board);
 
@@ -61,7 +61,7 @@ namespace screen {
 
         QEvent *playerSwitched(Color color, Board &board);
 
-        QEvent *rotationSwitched(screen::Board &board);
+        QEvent *rotationSwitched(view::Board &board);
 
     public slots:
 

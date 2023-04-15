@@ -7,7 +7,7 @@
 
 #include "King.h"
 
-namespace chess{
+namespace logic{
 
     King::King(const Coord &pos, Color color) : Piece(pos, color) {
         if (color == Color::white) {

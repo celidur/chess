@@ -7,7 +7,7 @@
 
 #include "Knight.h"
 
-namespace chess {
+namespace logic {
     Knight::Knight(const Coord &pos, Color color) : Piece(pos, color) {
         legalMoves_.emplace_back(Coord{2, 1});
         legalMoves_.emplace_back(Coord{2, -1});

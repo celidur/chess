@@ -11,7 +11,7 @@
 #include "Bishop.h"
 #include "common/struct.h"
 
-namespace chess {
+namespace logic {
     class Queen : public Rook, Bishop {
     public:
         Queen(const Coord &pos, Color color);

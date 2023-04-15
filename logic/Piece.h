@@ -14,7 +14,7 @@
 #include <memory>
 #include "common/function.h"
 
-namespace chess{
+namespace logic{
 
     class Piece {
     public:

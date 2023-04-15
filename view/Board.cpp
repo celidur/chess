@@ -7,7 +7,7 @@
 
 #include "Board.h"
 
-namespace screen {
+namespace view {
 
     Board::Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent) :
             QGraphicsScene(parent), textureLoader_(), mode_(mode), tileSize_(tileSize), side_(true), rotation_(true),

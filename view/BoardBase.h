@@ -7,7 +7,7 @@
 
 #include "common/struct.h"
 
-namespace screen {
+namespace view {
 
 
     class BoardBase {

@@ -7,7 +7,7 @@
 
 #include "QtGame.h"
 
-namespace chess {
+namespace controller {
 
     QtGame::QtGame() : QObject(nullptr) {}
     QtGame::QtGame(const TypePiece (*board)[8], Color color) : QObject(nullptr), Game(board, color) {}

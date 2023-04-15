@@ -7,7 +7,7 @@
 
 #include "Player.h"
 
-namespace chess {
+namespace logic {
 
     Player::Player(Color color) : isCheck_(false), nbMove_(0), playerColor_(color) {
         int pawnLine = color == Color::white ? 1 : 6;

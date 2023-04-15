@@ -11,7 +11,7 @@
 #include "common/struct.h"
 #include "Piece.h"
 
-namespace chess {
+namespace logic {
     class Knight : public Piece {
     public:
         Knight(const Coord &pos, Color color);
