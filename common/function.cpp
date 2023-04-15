@@ -1,6 +1,9 @@
-//
-// Created by Gaetan on 2023-04-14.
-//
+/**
+* \file   function.cpp
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
 
 #include "function.h"
 

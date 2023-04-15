@@ -1,3 +1,10 @@
+/**
+* \file   main.cpp
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
+
 #include "view/Board.h"
 #include "controller/QtGame.h"
 #include <QApplication>
@@ -57,8 +64,8 @@ int main(int argc, char *argv[]) {
 
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);
-    boardView.window()->setWindowTitle("Chess!");
+    boardView.window()->setWindowTitle("Chess");
     boardView.show();
 
-    return app.exec();
+    return QApplication::exec();
 }

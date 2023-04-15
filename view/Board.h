@@ -1,5 +1,12 @@
+/**
+* \file   Bishop.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
+
 #ifndef BOARD
-#define    BOARD
+#define BOARD
 
 #include "common/function.h"
 #include <QMainWindow>

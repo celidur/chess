@@ -1,9 +1,8 @@
-/*
-* Travail : $FOLDER_NAME-Rook.hpp
-* Section # : 01
-* Équipe # : 11
-* Auteurs: Charles Khoury, Thomas Tzeng Souvanlasy
-* Correcteur : -------
+/**
+* \file   Rook.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
 */
 
 #ifndef CHESS_ROOK_H

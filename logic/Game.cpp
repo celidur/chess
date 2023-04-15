@@ -1,13 +1,16 @@
-//
-// Created by Gaetan on 2023-04-05.
-//
+/**
+* \file   Game.cpp
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
 
 #include "Game.h"
 #include <iostream>
 
 namespace chess {
 
-    Game::Game() : playerRound_(Color::white), rotation_(false), mode_(Mode::game), selection_{{-1, -1},
+    Game::Game() : playerRound_(Color::white), rotation_(true), mode_(Mode::personalisation), selection_{{-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1}} {

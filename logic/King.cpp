@@ -1,13 +1,11 @@
-/*
-* Travail : $FOLDER_NAME-King.cpp
-* Section # : 01
-* Équipe # : 11
-* Auteurs: Charles Khoury, Thomas Tzeng Souvanlasy
-* Correcteur : -------
+/**
+* \file   King.cpp
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
 */
 
 #include "King.h"
-#include "Rook.h"
 
 namespace chess{
 

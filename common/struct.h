@@ -1,6 +1,9 @@
-//
-// Created by Gaetan on 2023-04-05.
-//
+/**
+* \file   struct.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
 
 #ifndef CHESS_STRUCT_H
 #define CHESS_STRUCT_H

@@ -1,3 +1,10 @@
+/**
+* \file   Queen.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 27 mars 2022
+*/
+
 #ifndef CHESS_QUEEN_H
 #define CHESS_QUEEN_H
 #include "Rook.h"
