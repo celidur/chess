@@ -27,7 +27,7 @@ namespace chess{
         }
         if ((pos.x == pos_.x + 1 || pos.x == pos_.x - 1) && pos.y == pos_.y + direction) {
             if (piece.type != Type::none)
-                return piece.color != color_; // for eating
+                return piece.color != color_;
             auto pawn = board[pos.x][pos_.y];
             if (board[pos.x][pos_.y].type == Type::pawn && pawn.color != color_ && pawn.first == 1)
                 return true;

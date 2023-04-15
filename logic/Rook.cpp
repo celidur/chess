@@ -42,10 +42,6 @@ namespace chess {
         return true;
     }
 
-    bool Rook::getFirst() const {
-        return first_;
-    }
-
     bool Rook::move(const TypePiece board[8][8], const Coord &pos) {
         bool res = Piece::move(board, pos);
         if (res)

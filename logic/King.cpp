@@ -64,7 +64,6 @@ namespace chess{
     }
 
     bool King::move(const TypePiece board[8][8], const Coord &pos) {
-        Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
             return false;

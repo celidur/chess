@@ -29,11 +29,13 @@ namespace chess {
 
         Coord updateBoard(TypePiece board[8][8]);
 
-        std::shared_ptr<Piece> getPiece(const Coord& pos);
+        bool move(const TypePiece board[8][8], const Coord &pos, const Coord &newPos);
+
+        void removePiece(const Coord &pos);
+
+        std::vector<Coord> getPossibleMoves(const Coord &pos);
 
         [[nodiscard]] State getState() const;
-
-        [[nodiscard]] Color getColor() const { return playerColor_; }
 
         [[nodiscard]] Coord getKingPos() const { return kingPos_; }
 

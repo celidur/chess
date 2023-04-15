@@ -117,20 +117,38 @@ namespace chess {
 
     }
 
-    std::shared_ptr<Piece> Player::getPiece(const Coord &pos) {
-        for (auto &&piece: pieces_) {
-            if (piece->getPos() == pos)
-                return piece;
-        }
-        return nullptr;
-    }
-
     bool Player::isCheck(const TypePiece board[8][8], Coord kingPos, Player &opponent) {
         for (auto &&piece: opponent.pieces_) {
             if (piece->isLegalMove(board, kingPos))
                 return true;
         }
         return false;
+    }
+
+    bool Player::move(const TypePiece (*board)[8], const Coord &pos, const Coord &newPos) {
+        for (auto &&piece: pieces_) {
+            if (piece->getPos() == pos) {
+                return piece->move(board, newPos);
+            }
+        }
+        return false;
+    }
+
+    void Player::removePiece(const Coord &pos) {
+        for (auto &&piece: pieces_) {
+            if (piece->getPos() == pos) {
+                piece->kill();
+            }
+        }
+    }
+
+    std::vector<Coord> Player::getPossibleMoves(const Coord &pos) {
+        for (auto &&piece: pieces_) {
+            if (piece->getPos() == pos) {
+                return piece->getPossibleMoves();
+            }
+        }
+        return {};
     }
 
 

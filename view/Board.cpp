@@ -3,18 +3,18 @@
 namespace screen {
 
     Board::Board(CoordF tileSize, const std::string &resFile, Mode mode, QWidget *parent) :
-    QGraphicsScene(parent), textureLoader_(), mode_(mode) {
-        tileSize_ = tileSize;
+            QGraphicsScene(parent), textureLoader_(), mode_(mode), tileSize_(tileSize), side_(true), rotation_(true),
+            selectedColor_(Color::white) {
         textureLoader_.setFileName(QString::fromStdString(resFile));
     }
 
     void Board::setLayer1(Coord selection[4]) {
         // Cases grises-blanches
-        auto greyImg = getImage({6,1});
+        auto greyImg = getImage({6, 1});
 
-        auto whiteImg = getImage({6,0});
+        auto whiteImg = getImage({6, 0});
 
-        auto selectedImg = getImage({7,1});
+        auto selectedImg = getImage({7, 1});
 
         QImage checkImg((int) tileSize_.x, (int) tileSize_.y, QImage::Format::Format_ARGB32);
         QPainter red(&checkImg);
@@ -83,7 +83,7 @@ namespace screen {
     }
 
     void Board::setPossibleMoves(std::vector<Coord> &piecePossibleMove) {
-        auto possibleMoveImg = getImage({7,0});
+        auto possibleMoveImg = getImage({7, 0});
         for (Coord &possibleCoord: piecePossibleMove)
             addImage(possibleMoveImg, possibleCoord, ZLayer::middle);
     }
@@ -97,8 +97,8 @@ namespace screen {
                 std::pair<Type, Coord>{Type::bishop, {3, 4}},
                 std::pair<Type, Coord>{Type::knight, {4, 4}}};
         QImage img;
-        for (auto&& [promotablePiece, coord]: promotablePieces){
-            img = getImage({(int) promotablePiece,(int) promoteColor_});
+        for (auto &&[promotablePiece, coord]: promotablePieces) {
+            img = getImage({(int) promotablePiece, (int) promoteColor_});
             drawRect(r, coord, ZLayer::top, true);
             addImage(img, coord, ZLayer::top, true);
         }
@@ -134,11 +134,11 @@ namespace screen {
     }
 
 
-    void Board::handleGameMode(Coord& pos){
+    void Board::handleGameMode(Coord &pos) {
         if (side_ && promoteColor_ == Color::none)
             pos = {7 - pos.x, 7 - pos.y};
 
-        if (promoteColor_ != Color::none){
+        if (promoteColor_ != Color::none) {
             TypePiece type = getPieceToPromote(pos);
             if (type.type != Type::none) {
                 emit promoteClicked(type, *this);
@@ -191,7 +191,7 @@ namespace screen {
             side_ = !side_;
             emit playerSwitched(side_ ? Color::white : Color::black, *this);
         } else if (pos.x == 9 && pos.y == 4) {
-            rotation = !rotation;
+            rotation_ = !rotation_;
             emit rotationSwitched(*this);
         }
     }
@@ -203,10 +203,10 @@ namespace screen {
     void Board::showPersonnalisationMenu() {
         for (int i = 0; i < 7; i++) {
             auto r = (selectedCoord_.y == i + 1) ? QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
-            drawRect(r,Coord{8, i + 1}, ZLayer::top, true);
+            drawRect(r, Coord{8, i + 1}, ZLayer::top, true);
             if (i == 6)
                 continue;
-            QImage img = getImage({i,(int)selectedColor_});
+            QImage img = getImage({i, (int) selectedColor_});
             addImage(img, Coord{8, i + 1}, ZLayer::top, true);
         }
         drawRect(QColor::fromRgb(70, 100, 130), {8, 0}, ZLayer::top, true);
@@ -215,11 +215,13 @@ namespace screen {
         int size = 17;
         img = img.scaled((int) tileSize_.x - size * 2, (int) tileSize_.y - size * 2, Qt::KeepAspectRatio);
         addImage(img, CoordF{8 + size / tileSize_.x, size / tileSize_.y}, ZLayer::top, true);
-        drawRect(QColor::fromRgb(100, 70, 80),Coord{9, 0}, ZLayer::top, true, "Play");
-        drawRect(QColor::fromRgb(180, 150, 140),Coord{9, 1}, ZLayer::top, true, "Default");
-        drawRect(QColor::fromRgb(100, 200, 80),Coord{9, 2}, ZLayer::top, true, "Reset");
-        drawRect(QColor::fromRgb(100, 70, 200),Coord{9, 3}, ZLayer::top, true, side_? "Set\nblack\nfirst" : "Set\nwhite\nfirst");
-        drawRect(QColor::fromRgb(150, 20, 200),Coord{9, 4}, ZLayer::top, true, rotation? "Disable\nrotation" : "Enable\nrotation");
+        drawRect(QColor::fromRgb(100, 70, 80), Coord{9, 0}, ZLayer::top, true, "Play");
+        drawRect(QColor::fromRgb(180, 150, 140), Coord{9, 1}, ZLayer::top, true, "Default");
+        drawRect(QColor::fromRgb(100, 200, 80), Coord{9, 2}, ZLayer::top, true, "Reset");
+        drawRect(QColor::fromRgb(100, 70, 200), Coord{9, 3}, ZLayer::top, true,
+                 side_ ? "Set\nblack\nfirst" : "Set\nwhite\nfirst");
+        drawRect(QColor::fromRgb(150, 20, 200), Coord{9, 4}, ZLayer::top, true,
+                 rotation_ ? "Disable\nrotation" : "Enable\nrotation");
     }
 
     void Board::addImage(QImage &img, CoordF coord, ZLayer zLayer, bool isPromote) {
@@ -233,13 +235,13 @@ namespace screen {
 
     }
 
-    void Board::displayMessage(const QString& s) {
+    void Board::displayMessage(const QString &s) {
         QMessageBox msgBox;
         msgBox.setInformativeText(s);
         msgBox.exec();
     }
 
-    QImage Board::getImage(Coord pos){
+    QImage Board::getImage(Coord pos) {
         return getPieceImg(
                 {
                         (int) tileSize_.x * pos.x,
@@ -249,7 +251,7 @@ namespace screen {
                 });
     }
 
-    void Board::drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string& text){
+    void Board::drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string &text) {
         QImage interfaceImg((int) (tileSize_.x), (int) (tileSize_.y), QImage::Format::Format_ARGB32);
         QPainter interface(&interfaceImg);
         interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), color);

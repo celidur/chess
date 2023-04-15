@@ -94,15 +94,15 @@ namespace screen {
 
         [[nodiscard]] TypePiece getPieceToPromote(const Coord &pos) const;
 
-        inline static CoordF tileSize_ = {0, 0};
+        CoordF tileSize_;
         QImageReader textureLoader_;
-        bool side_ = true;
-        TypePiece selectedPiece_ = {Color::none, Type::none};
-        Color selectedColor_ = Color::white;
+        bool side_;
+        TypePiece selectedPiece_;
+        Color selectedColor_;
         Coord selectedCoord_ = {8, 7};
-        Color promoteColor_ = Color::none;
+        Color promoteColor_;
         Mode mode_;
-        bool rotation = true;
+        bool rotation_;
     };
 
 }

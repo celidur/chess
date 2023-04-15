@@ -16,8 +16,6 @@ namespace chess {
     public:
         Rook(const Coord& pos, Color color);
 
-        [[nodiscard]] bool getFirst() const;
-
         bool move(const TypePiece board[8][8], const Coord &pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;

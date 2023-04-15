@@ -23,19 +23,15 @@ namespace chess{
 
         [[nodiscard]] virtual TypePiece getType() = 0;
 
-        [[nodiscard]] Color getColor() const { return color_; }
+        [[nodiscard]] bool isAlive() const;
 
-        [[nodiscard]] bool isAlive() const { return isAlive_; }
+        void kill();
 
-        void kill() { isAlive_ = false; }
+        [[nodiscard]] Coord getPos() const;
 
-        [[nodiscard]] size_t nbMove() const { return possibleMoves_.size(); }
+        [[nodiscard]] std::vector<Coord> getPossibleMoves() const;
 
-        [[nodiscard]] Coord getPos() const { return pos_; }
-
-        [[nodiscard]] std::vector<Coord> getPossibleMoves() const { return possibleMoves_; }
-
-        void setMove(std::vector<Coord>& move) { possibleMoves_ = move; }
+        void setMove(std::vector<Coord>& move);
 
     protected:
         inline static Piece* whiteKing{};
@@ -44,7 +40,7 @@ namespace chess{
         std::vector<Coord> possibleMoves_;
         Coord pos_;
         Color color_;
-        bool isAlive_ = true;
+        bool isAlive_;
     };
 }
 

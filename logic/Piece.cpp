@@ -2,7 +2,7 @@
 
 namespace chess {
 
-    Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color) {}
+    Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
 
     bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
         for (const auto& move: possibleMoves_) {
@@ -28,4 +28,14 @@ namespace chess {
         whiteKing = nullptr;
         blackKing = nullptr;
     }
+
+    bool Piece::isAlive() const { return isAlive_; }
+
+    void Piece::kill() { isAlive_ = false; }
+
+    std::vector<Coord> Piece::getPossibleMoves() const { return possibleMoves_; }
+
+    Coord Piece::getPos() const { return pos_; }
+
+    void Piece::setMove(std::vector<Coord> &move) { possibleMoves_ = move; }
 }
