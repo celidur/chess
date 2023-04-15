@@ -11,7 +11,6 @@
 #include <QObject>
 #include <QMessageBox>
 #include "logic/Game.h"
-#include "view/Board.h"
 
 
 namespace chess {
@@ -20,6 +19,13 @@ namespace chess {
 
     protected:
         void displayMessage(const std::string &msg) override; // Addition to display the message in a system box
+
+        void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
+                             Color color, std::vector<TypePiece> deadPieces[2]) override;
+
+        void viewBoard(Color color) override;
+
+        void updatePersonalizationBoard(TypePiece boardGame[8][8]) override;
 
     public:
         QtGame();
@@ -32,23 +38,32 @@ namespace chess {
 
         QEvent *displayQtMessage(const QString &s);
 
+        QEvent *updateGameQt(Coord selection[4],
+                             TypePiece boardGame[8][8],
+                             std::vector<Coord> &piecePossibleMove,
+                             Color color, std::vector<TypePiece> deadPieces[2]);
+
+        QEvent *updatePersonalizationQt(TypePiece boardGame[8][8]);
+
+        QEvent* viewBoardQt(Color color);
+
     public slots:
 
-        void doUpdateGame(Coord &coord, screen::Board &board);
+        void doUpdateGame(Coord &coord);
 
-        void doPromotePiece(TypePiece &promotePiece, screen::Board &board);
+        void doPromotePiece(TypePiece &promotePiece);
 
-        void doAddPiece(TypePiece &typePiece, Coord &pos, screen::Board &board);
+        void doAddPiece(TypePiece &typePiece, Coord &pos);
 
-        void doLoadGame(screen::Board &board);
+        void doLoadGame();
 
-        void doSwitchPlayer(Color color, screen::Board &board);
+        void doSwitchPlayer(Color color);
 
-        void doSetDefaultBoard(screen::Board &board);
+        void doSetDefaultBoard();
 
-        void doResetBoard(screen::Board &board);
+        void doResetBoard();
 
-        void doSwitchRotation(screen::Board& board);
+        void doSwitchRotation();
     };
 }
 #endif //CHESS_QTGAME_H

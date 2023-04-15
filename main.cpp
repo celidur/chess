@@ -60,7 +60,22 @@ int main(int argc, char *argv[]) {
                      &board,
                      &screen::Board::displayMessage);
 
-    game.updateBoard(board);
+    QWidget::connect(&game,
+                     &chess::QtGame::updateGameQt,
+                     &board,
+                     &screen::Board::updateGame);
+
+    QWidget::connect(&game,
+                     &chess::QtGame::updatePersonalizationQt,
+                     &board,
+                     &screen::Board::updatePersonalization);
+
+    QWidget::connect(&game,
+                     &chess::QtGame::viewBoardQt,
+                     &board,
+                     &screen::Board::viewBoard);
+
+    game.updateBoard();
 
     auto boardView = QGraphicsView(&board);
     boardView.setFixedSize(screenSize.x, screenSize.y);

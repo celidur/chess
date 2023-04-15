@@ -13,47 +13,60 @@ namespace chess {
     QtGame::QtGame(const TypePiece (*board)[8], Color color) : QObject(nullptr), Game(board, color) {}
     QtGame::~QtGame() = default;
 
-    void QtGame::doUpdateGame(Coord& coord, screen::Board& board) {
+    void QtGame::doUpdateGame(Coord& coord) {
         selectionCase(coord);
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doPromotePiece(TypePiece& promotePiece, screen::Board &board) {
+    void QtGame::doPromotePiece(TypePiece& promotePiece) {
         promotion(promotePiece.type);
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos, screen::Board& board){
+    void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos){
         addPiece(pos, typePiece);
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doLoadGame(screen::Board& board){
+    void QtGame::doLoadGame(){
         loadGame();
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doSwitchPlayer(Color color, screen::Board& board) {
+    void QtGame::doSwitchPlayer(Color color) {
         setPlayerRound(color);
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doSetDefaultBoard(screen::Board &board) {
+    void QtGame::doSetDefaultBoard() {
         setDefaultBoard();
-        updateBoard(board);
+        updateBoard();
     }
 
-    void QtGame::doResetBoard(screen::Board &board) {
+    void QtGame::doResetBoard() {
         resetBoard();
-        updateBoard(board);
+        updateBoard();
     }
 
     void QtGame::displayMessage(const std::string& msg) {
         emit displayQtMessage(QString::fromStdString(msg));
     }
 
-    void QtGame::doSwitchRotation(screen::Board& board) {
+    void QtGame::doSwitchRotation() {
         setRotation(!isRotation());
-        updateBoard(board);
+        updateBoard();
+    }
+
+    void QtGame::updateGameBoard(Coord *selection, TypePiece (*boardGame)[8], std::vector<Coord> &piecePossibleMove,
+                                 Color color, std::vector<TypePiece> *deadPieces) {
+        emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces);
+    }
+
+    void QtGame::viewBoard(Color color) {
+        emit viewBoardQt(color);
+    }
+
+    void QtGame::updatePersonalizationBoard(TypePiece boardGame[8][8]) {
+        emit updatePersonalizationQt(boardGame);
     }
 }

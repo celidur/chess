@@ -110,19 +110,16 @@ namespace chess {
         }
     }
 
-    void Game::updateBoard(screen::BoardBase &board) {
+    void Game::updateBoard() {
         if (mode_ == Mode::game) {
             if (rotation_)
-                board.viewBoard(playerRound_);
+                viewBoard(playerRound_);
             auto movePossible = player_[(int) playerRound_].getPossibleMoves(selection_[0]);
             std::vector<TypePiece> deadPieces[2] = {player_[0].getDeadPieces(), player_[1].getDeadPieces()};
-            board.updateGame(
-                    selection_,
-                    board_,
-                    movePossible,
-                    promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none, deadPieces);
+            updateGameBoard(selection_, board_, movePossible,
+                            promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none, deadPieces);
         } else {
-            board.updatePersonalization(board_);
+            updatePersonalizationBoard(board_);
         }
     }
 

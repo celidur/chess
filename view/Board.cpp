@@ -291,6 +291,8 @@ namespace screen {
                     x = 0;
                     y++;
                 }
+                if (y == 4)
+                    break;
                 addImage(img, CoordF{8 + (x * (size * 0.67f)) / tileSize_.x,
                                      (float) ((i == 0 == side_ ? 1 : 0) * 6) + (y * size * 0.9f + 40) / tileSize_.y},
                          ZLayer::top,

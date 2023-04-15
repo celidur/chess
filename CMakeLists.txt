@@ -33,7 +33,7 @@ add_executable(chess
         logic/Bishop.cpp
         logic/Bishop.h
         logic/Knight.cpp
-        logic/Knight.h common/function.cpp)
+        logic/Knight.h common/function.cpp view/BoardBase.h)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
 target_link_libraries(chess Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.

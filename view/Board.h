@@ -8,7 +8,7 @@
 #ifndef BOARD
 #define BOARD
 
-#include "common/function.h"
+#include "BoardBase.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -41,16 +41,6 @@ namespace screen {
 
         ~Board() override = default;
 
-        void updateGame(
-                Coord selection[4],
-                TypePiece boardGame[8][8],
-                std::vector<Coord> &piecePossibleMove,
-                Color color,std::vector<TypePiece> deadPieces[2]) override;
-
-        void updatePersonalization(TypePiece boardGame[8][8]) override;
-
-        void viewBoard(Color color) override;
-
         QImage getImage(Coord pos);
 
         void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string &text = "");
@@ -76,6 +66,16 @@ namespace screen {
     public slots:
 
         static void displayMessage(const QString &s);
+
+        void updateGame(
+                Coord selection[4],
+                TypePiece boardGame[8][8],
+                std::vector<Coord> &piecePossibleMove,
+                Color color,std::vector<TypePiece> deadPieces[2]) override;
+
+        void viewBoard(Color color) override;
+
+        void updatePersonalization(TypePiece boardGame[8][8]) override;
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
