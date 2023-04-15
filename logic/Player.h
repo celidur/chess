@@ -42,7 +42,7 @@ namespace chess {
 
         std::vector<Coord> getPossibleMoves(const Coord &pos);
 
-        std::vector<TypePiece> getDeadPieces() const;
+        [[nodiscard]] std::vector<TypePiece> getDeadPieces() const;
 
         [[nodiscard]] State getState() const;
 

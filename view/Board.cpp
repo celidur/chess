@@ -267,31 +267,32 @@ namespace screen {
         QImage interfaceImg((int) (tileSize_.x) * 2, (int) (tileSize_.y) * 8, QImage::Format::Format_ARGB32);
         QPainter interface(&interfaceImg);
         interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), QColor::fromRgb(209, 207, 206));
-        interface.drawText(QRectF{50, (float) (side_ ? 0 : 1) * 5 * tileSize_.y + 30, tileSize_.x * 2, tileSize_.y},
+        interface.drawText(QRectF{50, (float) (side_ ? 0 : 1) * 6 * tileSize_.y + 15, tileSize_.x * 2, tileSize_.y},
                            Qt::AlignLeft, "player 2");
-        interface.drawText(QRectF{50, (float) (side_ ? 1 : 0) * 5 * tileSize_.y + 30, tileSize_.x * 2, tileSize_.y},
+        interface.drawText(QRectF{50, (float) (side_ ? 1 : 0) * 6 * tileSize_.y + 15, tileSize_.x * 2, tileSize_.y},
                            Qt::AlignLeft, "player 1");
         addImage(interfaceImg, Coord{8, 0}, ZLayer::top, true);
         float size = 17;
         QImage img = getImage({5, side_ ? 0 : 1}).scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
                                                          Qt::KeepAspectRatio);
-        addImage(img, CoordF{8, size / tileSize_.y}, ZLayer::top, true);
+        addImage(img, CoordF{8, 0}, ZLayer::top, true);
         img = getImage({5, side_ ? 1 : 0}).scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
                                                   Qt::KeepAspectRatio);
-        addImage(img, CoordF{8, 5 + size / tileSize_.y}, ZLayer::top, true);
+        addImage(img, CoordF{8, 6}, ZLayer::top, true);
         for (int i = 0; i < 2; ++i) {
             float x = 0;
             float y = 0;
+            size = 26;
             for (auto &piece: deadPieces[i]) {
                 img = getImage({(int) piece.type, i}).scaled((int) (tileSize_.x - size * 2),
                                                              (int) (tileSize_.y - size * 2),
                                                              Qt::KeepAspectRatio);
-                if (x == 5) {
+                if (x == 8) {
                     x = 0;
                     y++;
                 }
-                addImage(img, CoordF{8 + (x * (size * 1.6f)) / tileSize_.x,
-                                     (float) ((i == 0 ? 1 : 0) * 5) + (y * (size * 2) + size * 3.5f) / tileSize_.y},
+                addImage(img, CoordF{8 + (x * (size * 0.67f)) / tileSize_.x,
+                                     (float) ((i == 0 == side_ ? 1 : 0) * 6) + (y * size * 0.9f + 40) / tileSize_.y},
                          ZLayer::top,
                          true);
                 x++;
