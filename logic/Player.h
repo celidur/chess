@@ -8,6 +8,7 @@
 #ifndef PLAYER
 #define PLAYER
 
+#include "algorithm"
 #include "logic/Queen.h"
 #include "logic/Pawn.h"
 #include "logic/Knight.h"
