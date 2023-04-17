@@ -9,8 +9,10 @@ TEST (BaseTest, base) {
 
 TEST(INIT_GAME, initNormal){
     logic::Game game;
-
     EXPECT_EQ(game.getMode(), (Mode::personalisation));
+
+    game.loadGame();
+    EXPECT_EQ(game.getMode(), (Mode::game));
 }
 
 //TEST (SquareRootTest, ZeroAndNegativeNos) {
