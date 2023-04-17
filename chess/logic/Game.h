@@ -27,11 +27,9 @@ namespace logic {
 
         void selectionCase(Coord pos);
 
-        void updateBoard();
-
         virtual void resetBoard();
 
-        virtual void setDefaultBoard();
+        void setDefaultBoard();
 
         [[nodiscard]] Mode getMode();
 
@@ -44,19 +42,11 @@ namespace logic {
     protected:
         virtual void displayMessage(const std::string &msg);
 
-        virtual void
-        updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
-                        Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
-
-        virtual void viewBoard(Color color) = 0;
-
-        virtual void updatePersonalizationBoard(TypePiece boardGame[8][8]) = 0;
-
         void promotion(Type type);
 
         void addPiece(Coord &pos, TypePiece &type);
 
-    private:
+    protected:
         bool isKingDefined();
 
         void checkGameState();

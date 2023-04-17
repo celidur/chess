@@ -21,11 +21,11 @@ namespace controller {
         void displayMessage(const std::string &msg) override; // Addition to display the message in a system box
 
         void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
-                             Color color, std::vector<TypePiece> deadPieces[2], int point) override;
+                             Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        void viewBoard(Color color) override;
+        void viewBoard(Color color);
 
-        void updatePersonalizationBoard(TypePiece boardGame[8][8]) override;
+        void updatePersonalizationBoard(TypePiece boardGame[8][8]);
 
     public:
         QtGame();
@@ -33,6 +33,8 @@ namespace controller {
         explicit QtGame(const TypePiece board[8][8], Color color = Color::white);
 
         ~QtGame() override;
+
+        void updateBoard();
 
     signals:
 

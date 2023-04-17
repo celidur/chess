@@ -9,10 +9,10 @@
 #define PLAYER
 
 #include "algorithm"
-#include "logic/Queen.h"
-#include "logic/Pawn.h"
-#include "logic/Knight.h"
-#include "logic/King.h"
+#include "Queen.h"
+#include "Pawn.h"
+#include "Knight.h"
+#include "King.h"
 
 
 namespace logic {
