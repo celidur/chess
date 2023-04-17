@@ -25,6 +25,14 @@ struct Coord {
         return x != b.x || y != b.y;
     }
 
+    bool operator<(const int b) const {
+        return x < b || y < b;
+    }
+
+    bool operator>(const int b) const {
+        return x > b || y > b;
+    }
+
     Coord operator+(const Coord &b) const {
         return Coord{x + b.x, y + b.y};
     }

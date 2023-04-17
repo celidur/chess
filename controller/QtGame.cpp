@@ -58,8 +58,8 @@ namespace controller {
     }
 
     void QtGame::updateGameBoard(Coord *selection, TypePiece (*boardGame)[8], std::vector<Coord> &piecePossibleMove,
-                                 Color color, std::vector<TypePiece> *deadPieces) {
-        emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces);
+                                 Color color, std::vector<TypePiece> *deadPieces, int point) {
+        emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
 
     void QtGame::viewBoard(Color color) {

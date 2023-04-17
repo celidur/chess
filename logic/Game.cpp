@@ -116,8 +116,9 @@ namespace logic {
                 viewBoard(playerRound_);
             auto movePossible = player_[(int) playerRound_].getPossibleMoves(selection_[0]);
             std::vector<TypePiece> deadPieces[2] = {player_[0].getDeadPieces(), player_[1].getDeadPieces()};
+            int points = getPieceValue(deadPieces[0]) - getPieceValue(deadPieces[1]);
             updateGameBoard(selection_, board_, movePossible,
-                            promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none, deadPieces);
+                            promotionPos_ != Coord{-1, -1} ? playerRound_ : Color::none, deadPieces, points);
         } else {
             updatePersonalizationBoard(board_);
         }

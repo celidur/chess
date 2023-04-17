@@ -19,3 +19,30 @@ void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swa
         boardCopy[swap2.x][swap2.y] = {};
     }
 }
+
+int getPieceValue(TypePiece piece) {
+    switch (piece.type) {
+        case Type::pawn:
+            return 1;
+        case Type::knight:
+            return 3;
+        case Type::bishop:
+            return 3;
+        case Type::rook:
+            return 5;
+        case Type::queen:
+            return 9;
+        case Type::king:
+            return 100;
+        default:
+            return 0;
+    }
+}
+
+int getPieceValue(std::vector<TypePiece> pieces) {
+    int value = 0;
+    for (auto &piece : pieces) {
+        value += getPieceValue(piece);
+    }
+    return value;
+}

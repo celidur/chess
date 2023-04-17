@@ -32,13 +32,10 @@ namespace logic {
 
     Player::Player(Color color, TypePiece board[8][8]) : isCheck_(false), nbMove_(0), playerColor_(color),
                                                          kingPos_({-1, -1}) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                if (board[i][j].color == color) {
+        for (int i = 0; i < 8; ++i)
+            for (int j = 0; j < 8; ++j)
+                if (board[i][j].color == color)
                     addPiece(board[i][j].type, Coord{i, j});
-                }
-            }
-        }
     }
 
     State Player::getState() const {
@@ -56,7 +53,7 @@ namespace logic {
         for (auto &&piece: pieces_) {
             piece->update(board);
             auto move = piece->getPossibleMoves();
-            std::vector<Coord> mv;
+            std::vector<Coord> checkMove;
             for (auto &&m: move) {
                 // verify if the move is valid
                 TypePiece tmpBoard[8][8];
@@ -65,11 +62,11 @@ namespace logic {
                 tmpBoard[m.x][m.y] = piece->getType();
                 Coord kingPos = piece->getType().type == Type::king ? m : kingPos_;
                 if (!isCheck(tmpBoard, kingPos, opponent)) {
-                    mv.push_back(m);
+                    checkMove.push_back(m);
                 }
             }
-            nbMove_ += mv.size();
-            piece->setMove(mv);
+            nbMove_ += checkMove.size();
+            piece->setMove(checkMove);
             auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
                 isCheck_ = isCheck(board, king->getPos(), opponent);
@@ -79,8 +76,8 @@ namespace logic {
     }
 
     Coord Player::updateBoard(TypePiece board[8][8]) {
-        Coord pos = {-1, -1};
-        for (auto it = pieces_.begin(); it != pieces_.end();) {
+        Coord pos;
+        for (auto it = pieces_.begin(); it != pieces_.end();++it) {
             auto posPiece = (*it)->getPos();
             board[posPiece.x][posPiece.y] = (*it)->getType();
             if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == 7)) {
@@ -88,7 +85,6 @@ namespace logic {
                 pieces_.erase(it);
                 --it;
             }
-            ++it;
         }
         return pos;
     }

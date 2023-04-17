@@ -33,19 +33,16 @@ namespace logic{
     }
 
     bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos == pos_)
+        if (pos == pos_ || pos > 7 || pos < 0)
             return false;
-        if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
-            return false;
-        }
         auto piece = board[pos.x][pos.y];
         if (piece.type != Type::none && piece.color == color_) {
             return false;
         }
-        if (pos.x - pos_.x > 2 || pos.x - pos_.x < -2 || pos.y - pos_.y > 1 || pos.y - pos_.y < -1) {
+        if (abs(pos.x - pos_.x) > 2 || abs(pos.y - pos_.y) > 1) {
             return false;
         }
-        if (pos.x - pos_.x == 2 || pos.x - pos_.x == -2) {
+        if (abs(pos.x - pos_.x) == 2) {
             if (!first_ || piece.type != Type::none || pos.y != pos_.y)
                 return false;
             int direction = pos.x - pos_.x == 2 ? -1 : 1;
@@ -53,8 +50,7 @@ namespace logic{
                 return false;
             if (direction == -1 && board[pos_.x + 2][pos.y].type != Type::none)
                 return false;
-            int xRook = (direction == -1 ? 4 : -3) + pos_.x;
-            auto rook = board[xRook][pos.y];
+            auto rook = board[(direction == -1 ? 4 : -3) + pos_.x][pos.y];
             if (rook.type != Type::rook || rook.color != color_ || !rook.first)
                 return false;
         }

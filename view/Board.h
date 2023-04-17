@@ -71,7 +71,7 @@ namespace view {
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
-                Color color,std::vector<TypePiece> deadPieces[2]) override;
+                Color color,std::vector<TypePiece> deadPieces[2], int point) override;
 
         void viewBoard(Color color) override;
 
@@ -91,7 +91,7 @@ namespace view {
 
         void setLayer2(TypePiece board[8][8]);
 
-        void showPanel(std::vector<TypePiece> deadPieces[2]);
+        void showPanel(std::vector<TypePiece> deadPieces[2], int point);
 
         void showPersonalizationMenu();
 

@@ -5,7 +5,7 @@
 #ifndef CHESS_BOARDBASE_H
 #define CHESS_BOARDBASE_H
 
-#include "common/struct.h"
+#include "common/function.h"
 
 namespace view {
 
@@ -18,7 +18,7 @@ namespace view {
                 Coord selection[4],
                 TypePiece boardGame[8][8],
                 std::vector<Coord> &piecePossibleMove,
-                Color color, std::vector<TypePiece> deadPieces[2]) = 0;
+                Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
 
         virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;
 

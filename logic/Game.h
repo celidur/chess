@@ -46,7 +46,7 @@ namespace logic {
 
         virtual void
         updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
-                        Color color, std::vector<TypePiece> deadPieces[2]) = 0;
+                        Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
 
         virtual void viewBoard(Color color) = 0;
 

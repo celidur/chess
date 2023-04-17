@@ -20,14 +20,11 @@ namespace logic {
     }
 
     bool Knight::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
+        if (pos < 0 || pos > 7 || pos == pos_) {
             return false;
         }
         auto piece = board[pos.x][pos.y];
         if (piece.type != Type::none && piece.color == color_) {
-            return false;
-        }
-        if (pos.x == pos_.x && pos.y == pos_.y) {
             return false;
         }
         if (abs(pos.x - pos_.x) == 2 && abs(pos.y - pos_.y) == 1) {

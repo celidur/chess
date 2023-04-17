@@ -21,7 +21,7 @@ namespace logic {
     bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
         int direction = color_ == Color::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
-        if (pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0) {
+        if (pos < 0 || pos > 7 || pos == pos_) {
             return false;
         }
         if (pos.x == pos_.x && pos.y == pos_.y + direction) {
@@ -30,7 +30,7 @@ namespace logic {
         if (pos.x == pos_.x && pos.y == pos_.y + 2 * direction && first_ == 0) {
             return piece.type == Type::none && board[pos.x][pos.y - direction].type == Type::none;
         }
-        if ((pos.x == pos_.x + 1 || pos.x == pos_.x - 1) && pos.y == pos_.y + direction) {
+        if (abs(pos.x - pos_.x) == 1 && pos.y == pos_.y + direction) {
             if (piece.type != Type::none)
                 return piece.color != color_;
             auto pawn = board[pos.x][pos_.y];

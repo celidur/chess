@@ -69,13 +69,14 @@ namespace view {
     }
 
     void Board::updateGame(Coord selection[4], TypePiece boardGame[8][8],
-                           std::vector<Coord> &piecePossibleMove, Color color, std::vector<TypePiece> deadPieces[2]) {
+                           std::vector<Coord> &piecePossibleMove, Color color, std::vector<TypePiece> deadPieces[2],
+                           int point) {
         mode_ = Mode::game;
         clear(); // Clear all items
         setLayer1(selection);
         setLayer2(boardGame);
         setPossibleMoves(piecePossibleMove);
-        showPanel(deadPieces);
+        showPanel(deadPieces, point);
         if (color != Color::none) {
             promoteColor_ = color;
             promote();
@@ -263,7 +264,7 @@ namespace view {
         addImage(interfaceImg, pos, zLayer, isPromote);
     }
 
-    void Board::showPanel(std::vector<TypePiece> deadPieces[2]) {
+    void Board::showPanel(std::vector<TypePiece> deadPieces[2], int point) {
         QImage interfaceImg((int) (tileSize_.x) * 2, (int) (tileSize_.y) * 8, QImage::Format::Format_ARGB32);
         QPainter interface(&interfaceImg);
         interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(), QColor::fromRgb(209, 207, 206));
@@ -271,6 +272,12 @@ namespace view {
                            Qt::AlignLeft, "player 2");
         interface.drawText(QRectF{50, (float) (side_ ? 1 : 0) * 6 * tileSize_.y + 15, tileSize_.x * 2, tileSize_.y},
                            Qt::AlignLeft, "player 1");
+        auto p = (point<=0?"+":"")+std::to_string(point*-1);
+        interface.drawText(QRectF{110, (float) (side_ ? 0 : 1) * 6 * tileSize_.y + 15, tileSize_.x * 2, tileSize_.y},
+                           Qt::AlignLeft, p.c_str());
+        p = (point>=0?"+":"")+std::to_string(point);
+        interface.drawText(QRectF{110, (float) (side_ ? 1 : 0) * 6 * tileSize_.y + 15, tileSize_.x * 2, tileSize_.y},
+                           Qt::AlignLeft, p.c_str());
         addImage(interfaceImg, Coord{8, 0}, ZLayer::top, true);
         float size = 17;
         QImage img = getImage({5, side_ ? 0 : 1}).scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
