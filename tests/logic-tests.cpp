@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
-#include "chess/logic/Game.h"
+#include "common/struct.h"
+#include "logic/Game.h"
 
 
 TEST (BaseTest, base) {
@@ -9,7 +10,7 @@ TEST (BaseTest, base) {
 TEST(INIT_GAME, initNormal){
     logic::Game game;
 
-    EXPECT_EQ(game.getMode() ,(Mode::personalisation));
+    EXPECT_EQ(game.getMode(), (Mode::personalisation));
 }
 
 //TEST (SquareRootTest, ZeroAndNegativeNos) {

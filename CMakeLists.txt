@@ -5,5 +5,5 @@ if (DEFINED ENV{VCPKG_ROOT})
 endif()
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(chess)
-include_directories(tests)
+add_subdirectory(chess)
+add_subdirectory(tests)

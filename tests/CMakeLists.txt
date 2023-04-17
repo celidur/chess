@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.25)
-project(chess)
+project(chess-tests)
 if (DEFINED ENV{VCPKG_ROOT})
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 endif()
 set(CMAKE_CXX_STANDARD 20)
 
 
-include_directories(..)
+include_directories(../chess)
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -39,7 +39,31 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-# Now simply link against gtest or gtest_main as needed. Eg
-add_executable(${PROJECT_NAME}-tests logic-tests.cpp)
-target_link_libraries(${PROJECT_NAME}-tests gtest_main)
+add_executable(${PROJECT_NAME}
+        logic-tests.cpp
+        ../chess/logic/Piece.cpp
+        ../chess/logic/Player.cpp
+        ../chess/logic/Game.h
+        ../chess/logic/Game.cpp
+        ../chess/common/struct.h
+        ../chess/logic/King.cpp
+        ../chess/logic/King.h
+        ../chess/logic/Queen.cpp
+        ../chess/logic/Queen.h
+        ../chess/logic/Pawn.cpp
+        ../chess/logic/Pawn.h
+        ../chess/logic/Rook.cpp
+        ../chess/logic/Rook.h
+        ../chess/logic/Bishop.cpp
+        ../chess/logic/Bishop.h
+        ../chess/logic/Knight.cpp
+        ../chess/logic/Knight.h
+        ../chess/common/function.cpp)
+target_link_libraries(${PROJECT_NAME} gtest_main)
 add_test(NAME BaseTests COMMAND base)
+
+# Pour Google Test (basé sur https://stackoverflow.com/questions/1620918/cmake-and-libpthread )
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} Threads::Threads)
+add_compile_definitions(_POSIX_C_SOURCE=200809L)  # Requis pour compiler GoogleTest sous Cygiwin, voir https://github.com/google/googletest/issues/813
