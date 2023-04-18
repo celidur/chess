@@ -7,6 +7,7 @@
 
 #ifndef CHESS_ROOK_H
 #define CHESS_ROOK_H
+
 #include "Piece.h"
 
 
@@ -15,7 +16,7 @@ namespace logic {
     public:
         Rook(const Coord& pos, Color color);
 
-        bool move(const TypePiece board[8][8], const Coord &pos) override;
+        bool move(const TypePiece board[8][8], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 

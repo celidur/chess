@@ -7,9 +7,9 @@
 
 #include "King.h"
 
-namespace logic{
+namespace logic {
 
-    King::King(const Coord &pos, Color color) : Piece(pos, color) {
+    King::King(const Coord& pos, Color color) : Piece(pos, color) {
         if (color == Color::white) {
             if (whiteKing != nullptr)
                 throw std::runtime_error("White king already exists");
@@ -57,7 +57,7 @@ namespace logic{
         return true;
     }
 
-    bool King::move(const TypePiece board[8][8], const Coord &pos) {
+    bool King::move(const TypePiece board[8][8], const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
@@ -67,7 +67,7 @@ namespace logic{
 
     void King::update(const TypePiece board[8][8]) {
         possibleMoves_.clear();
-        for (auto &move: legalMoves_) {
+        for (auto& move: legalMoves_) {
             auto pos = Coord{pos_.x + move.x, pos_.y + move.y};
             if (isLegalMove(board, pos)) {
                 possibleMoves_.emplace_back(pos);

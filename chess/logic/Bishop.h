@@ -7,9 +7,10 @@
 
 #ifndef CHESS_BISHOP_H
 #define CHESS_BISHOP_H
+
 #include "Piece.h"
 
-namespace logic{
+namespace logic {
     class Bishop : virtual public Piece {
     public:
         Bishop(const Coord& pos, Color color);

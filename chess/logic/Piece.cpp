@@ -9,10 +9,10 @@
 
 namespace logic {
 
-    Piece::Piece(const Coord &pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
+    Piece::Piece(const Coord& pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
 
-    bool Piece::move(const TypePiece board[8][8], const Coord &pos) {
-        for (const auto& move: possibleMoves_) {
+    bool Piece::move(const TypePiece board[8][8], const Coord& pos) {
+        for (auto move: possibleMoves_) {
             if (move == pos) {
                 pos_ = pos;
                 return true;
@@ -23,11 +23,10 @@ namespace logic {
 
     void Piece::update(const TypePiece board[8][8]) {
         possibleMoves_.clear();
-        for (const auto &move: legalMoves_) {
+        for (const auto& move: legalMoves_) {
             Coord pos = pos_ + move;
-            if (isLegalMove(board, pos)) {
+            if (isLegalMove(board, pos))
                 possibleMoves_.push_back(pos);
-            }
         }
     }
 
@@ -40,5 +39,5 @@ namespace logic {
 
     Coord Piece::getPos() const { return pos_; }
 
-    void Piece::setMove(std::vector<Coord> &move) { possibleMoves_ = move; }
+    void Piece::setMove(std::vector<Coord>& move) { possibleMoves_ = move; }
 }

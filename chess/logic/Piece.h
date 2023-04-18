@@ -14,7 +14,7 @@
 #include <memory>
 #include "common/function.h"
 
-namespace logic{
+namespace logic {
 
     class Piece {
     public:
@@ -22,7 +22,7 @@ namespace logic{
 
         static void reset();
 
-        virtual bool move(const TypePiece board[8][8], const Coord &pos);
+        virtual bool move(const TypePiece board[8][8], const Coord& pos);
 
         virtual void update(const TypePiece board[8][8]);
 

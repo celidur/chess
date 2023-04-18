@@ -7,8 +7,8 @@
 
 #include "Bishop.h"
 
-namespace logic{
-    Bishop::Bishop(const Coord &pos, Color color) : Piece(pos, color) {
+namespace logic {
+    Bishop::Bishop(const Coord& pos, Color color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, i});
             legalMoves_.emplace_back(Coord{-i, i});
@@ -30,7 +30,7 @@ namespace logic{
         }
         int x = pos.x - pos_.x;
         int y = pos.y - pos_.y;
-        for (int i = 1;i < abs(x);++i) {
+        for (int i = 1; i < abs(x); ++i) {
             if (board[pos_.x + i * x / abs(x)][pos_.y + i * y / abs(y)].type != Type::none)
                 return false;
         }

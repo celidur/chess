@@ -13,7 +13,7 @@
 constexpr view::CoordF tileSize{72, 72};
 constexpr view::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     controller::QtGame game;
 

@@ -84,8 +84,8 @@ namespace logic {
     }
 
     void Game::clearTypePieceBoard() {
-        for (auto &&pieces: board_) {
-            for (auto &&piece: pieces) {
+        for (auto&& pieces: board_) {
+            for (auto&& piece: pieces) {
                 piece = {};
             }
         }
@@ -111,7 +111,7 @@ namespace logic {
     }
 
 
-    void Game::displayMessage(const std::string &msg) {
+    void Game::displayMessage(const std::string& msg) {
         std::cout << msg << std::endl;
     }
 
@@ -136,8 +136,8 @@ namespace logic {
     }
 
     void Game::resetBoard() {
-        for (auto &&line: board_) {
-            for (auto &&boardCase: line) {
+        for (auto&& line: board_) {
+            for (auto&& boardCase: line) {
                 boardCase.color = Color::none;
                 boardCase.type = Type::none;
             }
@@ -146,7 +146,7 @@ namespace logic {
 
     void Game::setDefaultBoard() {
         resetBoard();
-        for (auto &column: board_) {
+        for (auto& column: board_) {
             column[1] = {Color::white, Type::pawn};
             column[6] = {Color::black, Type::pawn};
         }
@@ -171,8 +171,8 @@ namespace logic {
     bool Game::isKingDefined() {
         int white = 0;
         int black = 0;
-        for (auto &&col: board_) {
-            for (auto &&boardCase: col) {
+        for (auto&& col: board_) {
+            for (auto&& boardCase: col) {
                 if (boardCase.type == Type::king) {
                     if (boardCase.color == Color::white)
                         ++white;
@@ -188,7 +188,7 @@ namespace logic {
         return mode_;
     }
 
-    void Game::addPiece(Coord &pos, TypePiece &type) {
+    void Game::addPiece(Coord& pos, TypePiece& type) {
         board_[pos.x][pos.y] = type;
     }
 

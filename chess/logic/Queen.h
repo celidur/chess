@@ -7,6 +7,7 @@
 
 #ifndef CHESS_QUEEN_H
 #define CHESS_QUEEN_H
+
 #include "Rook.h"
 #include "Bishop.h"
 #include "common/struct.h"
@@ -14,7 +15,7 @@
 namespace logic {
     class Queen : public Rook, Bishop {
     public:
-        Queen(const Coord &pos, Color color);
+        Queen(const Coord& pos, Color color);
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 

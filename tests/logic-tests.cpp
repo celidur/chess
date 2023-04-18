@@ -7,7 +7,7 @@ TEST (BaseTest, base) {
     EXPECT_EQ (1 + 1, (2));
 }
 
-TEST(INIT_GAME, initNormal){
+TEST(INIT_GAME, initNormal) {
     logic::Game game;
     EXPECT_EQ(game.getMode(), (Mode::personalisation));
 

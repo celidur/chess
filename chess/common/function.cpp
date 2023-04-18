@@ -25,7 +25,6 @@ int getPieceValue(TypePiece piece) {
         case Type::pawn:
             return 1;
         case Type::knight:
-            return 3;
         case Type::bishop:
             return 3;
         case Type::rook:
@@ -39,9 +38,9 @@ int getPieceValue(TypePiece piece) {
     }
 }
 
-int getPieceValue(std::vector<TypePiece> pieces) {
+int getPieceValue(std::vector<TypePiece>& pieces) {
     int value = 0;
-    for (auto &piece : pieces) {
+    for (auto& piece: pieces) {
         value += getPieceValue(piece);
     }
     return value;

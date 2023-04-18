@@ -8,7 +8,7 @@
 #include "Pawn.h"
 
 namespace logic {
-    Pawn::Pawn(const Coord &pos, Color color) : Piece(pos, color) {
+    Pawn::Pawn(const Coord& pos, Color color) : Piece(pos, color) {
         int direction = color == Color::white ? 1 : -1;
         int pawnLine = color == Color::white ? 1 : 6;
         first_ = pos.y == pawnLine ? 0 : -1;
@@ -40,7 +40,7 @@ namespace logic {
         return false;
     }
 
-    bool Pawn::move(const TypePiece board[8][8], const Coord &pos) {
+    bool Pawn::move(const TypePiece board[8][8], const Coord& pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)

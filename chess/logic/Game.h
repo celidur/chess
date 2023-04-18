@@ -40,11 +40,11 @@ namespace logic {
         void setPlayerRound(Color playerRound);
 
     protected:
-        virtual void displayMessage(const std::string &msg);
+        virtual void displayMessage(const std::string& msg);
 
         void promotion(Type type);
 
-        void addPiece(Coord &pos, TypePiece &type);
+        void addPiece(Coord& pos, TypePiece& type);
 
     protected:
         bool isKingDefined();

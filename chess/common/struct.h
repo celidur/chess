@@ -15,13 +15,13 @@
 struct Coord {
     int x = -1, y = -1;
 
-    Coord &operator=(const Coord &b) = default;
+    Coord& operator=(const Coord& b) = default;
 
-    bool operator==(const Coord &b) const {
+    bool operator==(const Coord& b) const {
         return x == b.x && y == b.y;
     }
 
-    bool operator!=(const Coord &b) const {
+    bool operator!=(const Coord& b) const {
         return x != b.x || y != b.y;
     }
 
@@ -33,15 +33,15 @@ struct Coord {
         return x > b || y > b;
     }
 
-    Coord operator+(const Coord &b) const {
+    Coord operator+(const Coord& b) const {
         return Coord{x + b.x, y + b.y};
     }
 
-    Coord operator-(const Coord &b) const {
+    Coord operator-(const Coord& b) const {
         return Coord{x - b.x, y - b.y};
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Coord &coord) {
+    friend std::ostream& operator<<(std::ostream& os, const Coord& coord) {
         return os << coord.x << " " << coord.y;
     }
 };

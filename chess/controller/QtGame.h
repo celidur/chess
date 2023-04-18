@@ -18,9 +18,9 @@ namespace controller {
     Q_OBJECT
 
     protected:
-        void displayMessage(const std::string &msg) override; // Addition to display the message in a system box
+        void displayMessage(const std::string& msg) override; // Addition to display the message in a system box
 
-        void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord> &piecePossibleMove,
+        void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
         void viewBoard(Color color);
@@ -38,24 +38,24 @@ namespace controller {
 
     signals:
 
-        QEvent *displayQtMessage(const QString &s);
+        QEvent* displayQtMessage(const QString& s);
 
-        QEvent *updateGameQt(Coord selection[4],
+        QEvent* updateGameQt(Coord selection[4],
                              TypePiece boardGame[8][8],
-                             std::vector<Coord> &piecePossibleMove,
+                             std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        QEvent *updatePersonalizationQt(TypePiece boardGame[8][8]);
+        QEvent* updatePersonalizationQt(TypePiece boardGame[8][8]);
 
         QEvent* viewBoardQt(Color color);
 
     public slots:
 
-        void doUpdateGame(Coord &coord);
+        void doUpdateGame(Coord& coord);
 
-        void doPromotePiece(TypePiece &promotePiece);
+        void doPromotePiece(TypePiece& promotePiece);
 
-        void doAddPiece(TypePiece &typePiece, Coord &pos);
+        void doAddPiece(TypePiece& typePiece, Coord& pos);
 
         void doLoadGame();
 

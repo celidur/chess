@@ -8,7 +8,7 @@
 #include "Rook.h"
 
 namespace logic {
-    Rook::Rook(const Coord &pos, Color color) : Piece(pos, color) {
+    Rook::Rook(const Coord& pos, Color color) : Piece(pos, color) {
         for (int i = 0; i < 8; i++) {
             legalMoves_.emplace_back(Coord{i, 0});
             legalMoves_.emplace_back(Coord{0, i});
@@ -30,7 +30,7 @@ namespace logic {
         }
         int x = pos.x - pos_.x;
         int y = pos.y - pos_.y;
-        for (int i = 1;i < abs(x) + abs(y);++i) {
+        for (int i = 1; i < abs(x) + abs(y); ++i) {
             if (x != 0) {
                 if (board[pos_.x + i * x / abs(x)][pos.y].type != Type::none) {
                     return false;
@@ -44,7 +44,7 @@ namespace logic {
         return true;
     }
 
-    bool Rook::move(const TypePiece board[8][8], const Coord &pos) {
+    bool Rook::move(const TypePiece board[8][8], const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (res)
             first_ = false;

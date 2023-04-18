@@ -13,11 +13,11 @@
 namespace logic {
     class Pawn : public Piece {
     public:
-        Pawn(const Coord &pos, Color color);
+        Pawn(const Coord& pos, Color color);
 
         void update(const TypePiece board[8][8]) override;
 
-        bool move(const TypePiece board[8][8], const Coord &pos) override;
+        bool move(const TypePiece board[8][8], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
 

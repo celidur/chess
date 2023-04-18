@@ -17,7 +17,7 @@ namespace view {
         virtual void updateGame(
                 Coord selection[4],
                 TypePiece boardGame[8][8],
-                std::vector<Coord> &piecePossibleMove,
+                std::vector<Coord>& piecePossibleMove,
                 Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
 
         virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;

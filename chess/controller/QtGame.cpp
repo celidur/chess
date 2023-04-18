@@ -10,7 +10,9 @@
 namespace controller {
 
     QtGame::QtGame() : QObject(nullptr) {}
-    QtGame::QtGame(const TypePiece (*board)[8], Color color) : QObject(nullptr), Game(board, color) {}
+
+    QtGame::QtGame(const TypePiece (* board)[8], Color color) : QObject(nullptr), Game(board, color) {}
+
     QtGame::~QtGame() = default;
 
     void QtGame::doUpdateGame(Coord& coord) {
@@ -23,12 +25,12 @@ namespace controller {
         updateBoard();
     }
 
-    void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos){
+    void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos) {
         addPiece(pos, typePiece);
         updateBoard();
     }
 
-    void QtGame::doLoadGame(){
+    void QtGame::doLoadGame() {
         loadGame();
         updateBoard();
     }
@@ -57,8 +59,8 @@ namespace controller {
         updateBoard();
     }
 
-    void QtGame::updateGameBoard(Coord *selection, TypePiece (*boardGame)[8], std::vector<Coord> &piecePossibleMove,
-                                 Color color, std::vector<TypePiece> *deadPieces, int point) {
+    void QtGame::updateGameBoard(Coord* selection, TypePiece (* boardGame)[8], std::vector<Coord>& piecePossibleMove,
+                                 Color color, std::vector<TypePiece>* deadPieces, int point) {
         emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
 
