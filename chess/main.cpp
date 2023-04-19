@@ -10,14 +10,15 @@
 #include <QApplication>
 #include <QGraphicsView>
 
-constexpr view::CoordF tileSize{72, 72};
-constexpr view::CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
+constexpr CoordF tileSize{72, 72};
+constexpr CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     controller::QtGame game;
 
-    view::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
+
+    view::Board board(tileSize,"res/chess.png", game.getMode(), nullptr);
 
     QWidget::connect(
             &board,
@@ -74,6 +75,46 @@ int main(int argc, char* argv[]) {
                      &controller::QtGame::viewBoardQt,
                      &board,
                      &view::Board::viewBoard);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::updatePersonalizationMenu,
+                     &board,
+                     &view::Board::updatePersonalizationMenu);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::updatePiece,
+                     &board,
+                     &view::Board::updatePiece);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::addPieceQt,
+                     &board,
+                     &view::Board::addPiece);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::killPieceQt,
+                     &board,
+                     &view::Board::killPiece);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::movePieceQt,
+                     &board,
+                     &view::Board::movePiece);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::updateSelectionQt,
+                     &board,
+                     &view::Board::selectPiece);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::updateCheckStateQt,
+                     &board,
+                     &view::Board::updateCheckState);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::updatePanelQt,
+                     &board,
+                     &view::Board::updatePanel);
 
     game.updateBoard();
 

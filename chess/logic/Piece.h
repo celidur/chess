@@ -36,6 +36,10 @@ namespace logic {
 
         void setMove(std::vector<Coord>& move);
 
+        void setPromotion();
+
+        bool getPromotion() const;
+
     protected:
         inline static Piece* whiteKing{};
         inline static Piece* blackKing{};
@@ -44,6 +48,7 @@ namespace logic {
         Coord pos_;
         Color color_;
         bool isAlive_;
+        bool promotion_;
     };
 }
 

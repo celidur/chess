@@ -46,6 +46,10 @@ struct Coord {
     }
 };
 
+struct CoordF {
+    float x, y;
+};
+
 enum class Color {
     black = 0,
     white = 1,

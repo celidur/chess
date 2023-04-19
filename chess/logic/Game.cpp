@@ -10,7 +10,7 @@
 
 namespace logic {
 
-    Game::Game() : playerRound_(Color::white), rotation_(true), mode_(Mode::personalisation), selection_{{-1, -1},
+    Game::Game() : playerRound_(Color::white), rotation_(false), mode_(Mode::personalisation), selection_{{-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1}} {
@@ -40,6 +40,8 @@ namespace logic {
 
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
             selection_[0] = pos;
+            auto moves = player_[(int) playerRound_].getPossibleMoves(pos);
+            updateSelection(pos,moves);
         } else if (selection_[0] != Coord{-1, -1}) {
             if (player_[(int) playerRound_].move(board_, selection_[0], pos)) {
                 promotionPos_ = {};
@@ -52,10 +54,13 @@ namespace logic {
                     Coord rookPos = {pos.x == 5 ? 7 : 0, pos.y};
                     Coord rookNewPos = {pos.x == 5 ? 4 : 2, pos.y};
                     player_[(int) playerRound_].move(board_, rookPos, rookNewPos);
+                    movePiece(rookPos, rookNewPos);
                 }
-                if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
+                else if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
                     board_[pos.x][pos.y].type == Type::none) {
-                    player_[(int) other].removePiece({pos.x, selection_[0].y});
+                    auto pos_ = Coord{pos.x, selection_[0].y};
+                    player_[(int) other].removePiece(pos_);
+                    killPiece(pos_);
                 }
                 playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
                 if (piece.type == Type::pawn && (pos.y == 0 || pos.y == 7)) {
@@ -64,9 +69,12 @@ namespace logic {
                 }
                 selection_[1] = selection_[0];
                 selection_[2] = pos;
+                movePiece(selection_[0], pos);
                 update();
             }
             selection_[0] = {-1, -1};
+            std::vector<Coord> moves;
+            updateSelection(selection_[0], moves);
         }
     }
 
@@ -78,9 +86,10 @@ namespace logic {
 
         Color other = (playerRound_ == Color::white ? Color::black : Color::white);
         player_[(int) playerRound_].update(board_, player_[(int) other]);
-
         selection_[3] = {-1, -1};
         checkGameState();
+        if (rotation_)
+            viewBoard(playerRound_);
     }
 
     void Game::clearTypePieceBoard() {
@@ -102,12 +111,13 @@ namespace logic {
                 displayMessage("Pat");
                 break;
             case State::check:
-                displayMessage("Echec");
+                // displayMessage("Echec");
                 selection_[3] = kingPos;
                 break;
             case State::normal:
                 break;
         }
+        updateCheck();
     }
 
 
@@ -116,7 +126,7 @@ namespace logic {
     }
 
     void Game::promotion(Type type) {
-        player_[(int) playerRound_].addPiece(type, promotionPos_);
+        player_[(int) playerRound_].addPiece(type, promotionPos_, true);
         playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
         promotionPos_ = {};
         update();
@@ -203,4 +213,5 @@ namespace logic {
     void Game::setPlayerRound(Color playerRound) {
         playerRound_ = playerRound;
     }
+
 }

@@ -23,9 +23,19 @@ namespace controller {
         void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        void viewBoard(Color color);
+        void viewBoard(Color color) override;
 
         void updatePersonalizationBoard(TypePiece boardGame[8][8]);
+
+        void killPiece(Coord& pos) override;
+
+        void movePiece(Coord& pos1, Coord& pos2) override;
+
+        void updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) override;
+
+        void updateCheck() override;
+
+        void updatePanel() override;
 
     public:
         QtGame();
@@ -48,6 +58,22 @@ namespace controller {
         QEvent* updatePersonalizationQt(TypePiece boardGame[8][8]);
 
         QEvent* viewBoardQt(Color color);
+
+        QEvent* updatePersonalizationMenu();
+
+        QEvent* updatePiece();
+
+        QEvent* addPieceQt(TypePiece& typePiece, Coord& pos);
+
+        QEvent* movePieceQt(Coord& pos1, Coord& pos2);
+
+        QEvent* killPieceQt(Coord& pos);
+
+        QEvent* updateSelectionQt(Coord& pos, std::vector<Coord>& piecePossibleMove);
+
+        QEvent* updateCheckStateQt(Coord& pos);
+
+        QEvent* updatePanelQt(std::vector<TypePiece> deadPieces[2], int point);
 
     public slots:
 

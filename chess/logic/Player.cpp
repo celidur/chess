@@ -89,31 +89,32 @@ namespace logic {
         return pos;
     }
 
-    void Player::addPiece(Type type, const Coord& pos) {
+    void Player::addPiece(Type type, const Coord& pos, bool isPromotion) {
         switch (type) {
             case Type::pawn:
-                pieces_.push_back(std::make_unique<Pawn>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<Pawn>(pos, playerColor_));
                 break;
             case Type::rook:
-                pieces_.push_back(std::make_unique<Rook>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<Rook>(pos, playerColor_));
                 break;
             case Type::knight:
-                pieces_.push_back(std::make_unique<Knight>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<Knight>(pos, playerColor_));
                 break;
             case Type::bishop:
-                pieces_.push_back(std::make_unique<Bishop>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<Bishop>(pos, playerColor_));
                 break;
             case Type::queen:
-                pieces_.push_back(std::make_unique<Queen>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<Queen>(pos, playerColor_));
                 break;
             case Type::king:
-                pieces_.push_back(std::make_unique<King>(pos, playerColor_));
+                pieces_.emplace_back(std::make_unique<King>(pos, playerColor_));
                 kingPos_ = pos;
                 break;
             case Type::none:
-                break;
+                return;
         }
-
+        if (isPromotion)
+             pieces_[pieces_.size() - 1]->setPromotion();
     }
 
     bool Player::isCheck(const TypePiece board[8][8], Coord kingPos, Player& opponent) {
@@ -138,7 +139,8 @@ namespace logic {
     void Player::removePiece(const Coord& pos) {
         for (auto&& piece: pieces_) {
             if (piece->getPos() == pos) {
-                deadPieces_.push_back(piece->getType());
+                TypePiece type = piece->getPromotion() ? TypePiece{playerColor_, Type::pawn} : piece->getType();
+                deadPieces_.push_back(type);
                 pieces_.erase(std::remove(pieces_.begin(), pieces_.end(), piece), pieces_.end());
                 return;
             }

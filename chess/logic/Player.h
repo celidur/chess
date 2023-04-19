@@ -33,7 +33,7 @@ namespace logic {
 
         void update(const TypePiece board[8][8], Player& opponent);
 
-        void addPiece(Type type, const Coord& pos);
+        void addPiece(Type type, const Coord& pos, bool isPromotion = false);
 
         Coord updateBoard(TypePiece board[8][8]);
 

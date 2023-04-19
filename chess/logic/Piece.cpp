@@ -9,7 +9,7 @@
 
 namespace logic {
 
-    Piece::Piece(const Coord& pos, Color color) : pos_(pos), color_(color), isAlive_(true) {}
+    Piece::Piece(const Coord& pos, Color color) : pos_(pos), color_(color), isAlive_(true), promotion_(false) {}
 
     bool Piece::move(const TypePiece board[8][8], const Coord& pos) {
         for (auto move: possibleMoves_) {
@@ -40,4 +40,8 @@ namespace logic {
     Coord Piece::getPos() const { return pos_; }
 
     void Piece::setMove(std::vector<Coord>& move) { possibleMoves_ = move; }
+
+    void Piece::setPromotion() { promotion_ = true; }
+
+    bool Piece::getPromotion() const { return promotion_; }
 }

@@ -17,17 +17,20 @@ namespace controller {
 
     void QtGame::doUpdateGame(Coord& coord) {
         selectionCase(coord);
-        updateBoard();
+        if (mode_ == Mode::personalisation) {
+            emit updatePersonalizationMenu();
+        }
     }
 
     void QtGame::doPromotePiece(TypePiece& promotePiece) {
+        auto pos = promotionPos_;
         promotion(promotePiece.type);
-        updateBoard();
+        emit addPieceQt(promotePiece, pos);
     }
 
     void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos) {
         addPiece(pos, typePiece);
-        updateBoard();
+        emit addPieceQt(typePiece, pos);
     }
 
     void QtGame::doLoadGame() {
@@ -37,7 +40,8 @@ namespace controller {
 
     void QtGame::doSwitchPlayer(Color color) {
         setPlayerRound(color);
-        updateBoard();
+        emit updatePiece();
+        emit updatePersonalizationMenu();
     }
 
     void QtGame::doSetDefaultBoard() {
@@ -56,7 +60,7 @@ namespace controller {
 
     void QtGame::doSwitchRotation() {
         setRotation(!isRotation());
-        updateBoard();
+        emit updatePersonalizationMenu();
     }
 
     void QtGame::updateGameBoard(Coord* selection, TypePiece (* boardGame)[8], std::vector<Coord>& piecePossibleMove,
@@ -85,5 +89,29 @@ namespace controller {
         } else {
             updatePersonalizationBoard(board_);
         }
+    }
+
+    void QtGame::killPiece(Coord& pos) {
+        updatePanel();
+        emit killPieceQt(pos);
+    }
+
+    void QtGame::movePiece(Coord& pos1, Coord& pos2) {
+        updatePanel();
+        emit movePieceQt(pos1, pos2);
+    }
+
+    void QtGame::updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) {
+        emit updateSelectionQt(pos, piecePossibleMove);
+    }
+
+    void QtGame::updateCheck() {
+        emit updateCheckStateQt(selection_[3]);
+    }
+
+    void QtGame::updatePanel() {
+        std::vector<TypePiece> deadPieces[2] = {player_[0].getDeadPieces(), player_[1].getDeadPieces()};
+        int points = getPieceValue(deadPieces[0]) - getPieceValue(deadPieces[1]);
+        emit updatePanelQt(deadPieces, points);
     }
 }

@@ -39,12 +39,24 @@ namespace logic {
 
         void setPlayerRound(Color playerRound);
 
+        virtual void viewBoard(Color color) = 0;
+
+        virtual void updateCheck() = 0;
+
+        virtual void updatePanel() = 0;
+
     protected:
         virtual void displayMessage(const std::string& msg);
+
+        virtual void killPiece(Coord& pos) = 0;
+
+        virtual void movePiece(Coord& pos1, Coord& pos2) = 0;
 
         void promotion(Type type);
 
         void addPiece(Coord& pos, TypePiece& type);
+
+        virtual void updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) = 0;
 
     protected:
         bool isKingDefined();

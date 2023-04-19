@@ -15,6 +15,6 @@ void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swa
 
 int getPieceValue(TypePiece piece);
 
-int getPieceValue(std::vector<TypePiece> pieces);
+int getPieceValue(std::vector<TypePiece>& pieces);
 
 #endif //CHESS_FUNCTION_H

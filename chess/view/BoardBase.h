@@ -9,7 +9,6 @@
 
 namespace view {
 
-
     class BoardBase {
     public:
         virtual ~BoardBase() = default;
@@ -23,6 +22,24 @@ namespace view {
         virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;
 
         virtual void viewBoard(Color color) = 0;
+
+        virtual void updateDeadPieces(std::vector<TypePiece> deadPieces[2], int point) = 0;
+
+        virtual void movePiece(Coord& older, Coord& newer) = 0;
+
+        virtual void selectPiece(Coord& pos, std::vector<Coord>& piecePossibleMove) = 0;
+
+        virtual void updatePersonalizationMenu() = 0;
+
+        virtual void updatePiece() = 0;
+
+        virtual void addPiece(TypePiece& typePiece, Coord& pos) = 0;
+
+        virtual void killPiece(Coord& pos) = 0;
+
+        virtual void updateCheckState(Coord& pos) = 0;
+
+        virtual void updatePanel(std::vector<TypePiece> deadPieces[2], int point)=0;
     };
 }
 
