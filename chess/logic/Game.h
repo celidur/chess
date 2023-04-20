@@ -27,9 +27,9 @@ namespace logic {
 
         void selectionCase(Coord pos);
 
-        virtual void resetBoard();
+        static void resetBoard(TypePiece board[8][8]);
 
-        void setDefaultBoard();
+        static void setDefaultBoard(TypePiece board[8][8]);
 
         [[nodiscard]] Mode getMode();
 

@@ -14,7 +14,7 @@ namespace logic {
                                                                                                          {-1, -1},
                                                                                                          {-1, -1},
                                                                                                          {-1, -1}} {
-        setDefaultBoard();
+        setDefaultBoard(board_);
         if (Mode::game == mode_) {
             player_.emplace_back(Color::black, board_);
             player_.emplace_back(Color::white, board_);
@@ -145,37 +145,37 @@ namespace logic {
         update();
     }
 
-    void Game::resetBoard() {
-        for (auto&& line: board_) {
-            for (auto&& boardCase: line) {
-                boardCase.color = Color::none;
-                boardCase.type = Type::none;
+    void Game::resetBoard(TypePiece board[8][8]) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                board[i][j].color = Color::none;
+                board[i][j].type = Type::none;
             }
         }
     }
 
-    void Game::setDefaultBoard() {
-        resetBoard();
-        for (auto& column: board_) {
-            column[1] = {Color::white, Type::pawn};
-            column[6] = {Color::black, Type::pawn};
+    void Game::setDefaultBoard(TypePiece board[8][8]) {
+        resetBoard(board);
+        for (int i = 0; i < 8; ++i) {
+            board[i][1] = {Color::white, Type::pawn};
+            board[i][6] = {Color::black, Type::pawn};
         }
-        board_[0][0] = {Color::white, Type::rook};
-        board_[1][0] = {Color::white, Type::knight};
-        board_[2][0] = {Color::white, Type::bishop};
-        board_[3][0] = {Color::white, Type::king};
-        board_[4][0] = {Color::white, Type::queen};
-        board_[5][0] = {Color::white, Type::bishop};
-        board_[6][0] = {Color::white, Type::knight};
-        board_[7][0] = {Color::white, Type::rook};
-        board_[0][7] = {Color::black, Type::rook};
-        board_[1][7] = {Color::black, Type::knight};
-        board_[2][7] = {Color::black, Type::bishop};
-        board_[3][7] = {Color::black, Type::king};
-        board_[4][7] = {Color::black, Type::queen};
-        board_[5][7] = {Color::black, Type::bishop};
-        board_[6][7] = {Color::black, Type::knight};
-        board_[7][7] = {Color::black, Type::rook};
+        board[0][0] = {Color::white, Type::rook};
+        board[1][0] = {Color::white, Type::knight};
+        board[2][0] = {Color::white, Type::bishop};
+        board[3][0] = {Color::white, Type::king};
+        board[4][0] = {Color::white, Type::queen};
+        board[5][0] = {Color::white, Type::bishop};
+        board[6][0] = {Color::white, Type::knight};
+        board[7][0] = {Color::white, Type::rook};
+        board[0][7] = {Color::black, Type::rook};
+        board[1][7] = {Color::black, Type::knight};
+        board[2][7] = {Color::black, Type::bishop};
+        board[3][7] = {Color::black, Type::king};
+        board[4][7] = {Color::black, Type::queen};
+        board[5][7] = {Color::black, Type::bishop};
+        board[6][7] = {Color::black, Type::knight};
+        board[7][7] = {Color::black, Type::rook};
     }
 
     bool Game::isKingDefined() {

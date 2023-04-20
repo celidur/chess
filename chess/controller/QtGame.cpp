@@ -45,12 +45,12 @@ namespace controller {
     }
 
     void QtGame::doSetDefaultBoard() {
-        setDefaultBoard();
+        setDefaultBoard(board_);
         updateBoard();
     }
 
     void QtGame::doResetBoard() {
-        resetBoard();
+        resetBoard(board_);
         updateBoard();
     }
 
