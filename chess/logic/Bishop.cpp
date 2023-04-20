@@ -9,7 +9,7 @@
 
 namespace logic {
     Bishop::Bishop(const Coord& pos, Color color) : Piece(pos, color) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < maxBoard; i++) {
             legalMoves_.emplace_back(Coord{i, i});
             legalMoves_.emplace_back(Coord{-i, i});
             legalMoves_.emplace_back(Coord{i, -i});
@@ -17,12 +17,9 @@ namespace logic {
         }
     }
 
-    bool Bishop::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos < 0 || pos > 7 || pos == pos_) {
-            return false;
-        }
-        auto piece = board[pos.x][pos.y];
-        if (piece.type != Type::none && piece.color == color_) {
+    bool Bishop::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+        auto res = Piece::isLegalMove(board, pos);
+        if (!res) {
             return false;
         }
         if (abs(pos.x - pos_.x) != abs(pos.y - pos_.y)) {

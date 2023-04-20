@@ -15,11 +15,11 @@ namespace view {
 
         virtual void updateGame(
                 Coord selection[4],
-                TypePiece boardGame[8][8],
+                TypePiece boardGame[xBoard][yBoard],
                 std::vector<Coord>& piecePossibleMove,
                 Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
 
-        virtual void updatePersonalization(TypePiece boardGame[8][8]) = 0;
+        virtual void updatePersonalization(TypePiece boardGame[xBoard][yBoard]) = 0;
 
         virtual void viewBoard(Color color) = 0;
 
@@ -39,7 +39,9 @@ namespace view {
 
         virtual void updateCheckState(Coord& pos) = 0;
 
-        virtual void updatePanel(std::vector<TypePiece> deadPieces[2], int point)=0;
+        virtual void updatePanel(std::vector<TypePiece> deadPieces[2], int point) = 0;
+
+        virtual void promote(Color color) = 0;
     };
 }
 

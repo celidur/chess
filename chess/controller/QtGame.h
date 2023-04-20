@@ -20,12 +20,13 @@ namespace controller {
     protected:
         void displayMessage(const std::string& msg) override; // Addition to display the message in a system box
 
-        void updateGameBoard(Coord selection[4], TypePiece boardGame[8][8], std::vector<Coord>& piecePossibleMove,
-                             Color color, std::vector<TypePiece> deadPieces[2], int point);
+        void
+        updateGameBoard(Coord selection[4], TypePiece boardGame[xBoard][yBoard], std::vector<Coord>& piecePossibleMove,
+                        Color color, std::vector<TypePiece> deadPieces[2], int point);
 
         void viewBoard(Color color) override;
 
-        void updatePersonalizationBoard(TypePiece boardGame[8][8]);
+        void updatePersonalizationBoard(TypePiece boardGame[xBoard][yBoard]);
 
         void killPiece(Coord& pos) override;
 
@@ -37,10 +38,10 @@ namespace controller {
 
         void updatePanel() override;
 
+        void showPromotion() override;
+
     public:
         QtGame();
-
-        explicit QtGame(const TypePiece board[8][8], Color color = Color::white);
 
         ~QtGame() override;
 
@@ -51,11 +52,11 @@ namespace controller {
         QEvent* displayQtMessage(const QString& s);
 
         QEvent* updateGameQt(Coord selection[4],
-                             TypePiece boardGame[8][8],
+                             TypePiece boardGame[xBoard][yBoard],
                              std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        QEvent* updatePersonalizationQt(TypePiece boardGame[8][8]);
+        QEvent* updatePersonalizationQt(TypePiece boardGame[xBoard][yBoard]);
 
         QEvent* viewBoardQt(Color color);
 
@@ -74,6 +75,8 @@ namespace controller {
         QEvent* updateCheckStateQt(Coord& pos);
 
         QEvent* updatePanelQt(std::vector<TypePiece> deadPieces[2], int point);
+
+        QEvent* showPromotionQt(Color color);
 
     public slots:
 

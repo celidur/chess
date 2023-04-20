@@ -17,8 +17,6 @@ namespace logic {
     public:
         Game();
 
-        explicit Game(const TypePiece board[8][8], Color color = Color::white);
-
         virtual ~Game() = default;
 
         void update();
@@ -27,9 +25,9 @@ namespace logic {
 
         void selectionCase(Coord pos);
 
-        static void resetBoard(TypePiece board[8][8]);
+        static void resetBoard(TypePiece board[xBoard][yBoard]);
 
-        static void setDefaultBoard(TypePiece board[8][8]);
+        static void setDefaultBoard(TypePiece board[xBoard][yBoard]);
 
         [[nodiscard]] Mode getMode();
 
@@ -52,6 +50,8 @@ namespace logic {
 
         virtual void movePiece(Coord& pos1, Coord& pos2) = 0;
 
+        virtual void showPromotion() = 0;
+
         void promotion(Type type);
 
         void addPiece(Coord& pos, TypePiece& type);
@@ -66,7 +66,7 @@ namespace logic {
         void clearTypePieceBoard();
 
         std::vector<Player> player_;
-        TypePiece board_[8][8];
+        TypePiece board_[xBoard][yBoard];
         Color playerRound_;
         Coord selection_[4];
         bool rotation_;

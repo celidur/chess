@@ -39,6 +39,7 @@ namespace view {
         piece,
         move,
         top,
+        promote,
     };
 
     class Board : public QGraphicsScene, public BoardBase {
@@ -76,7 +77,7 @@ namespace view {
 
         void updateGame(
                 Coord selection[4],
-                TypePiece boardGame[8][8],
+                TypePiece boardGame[xBoard][yBoard],
                 std::vector<Coord>& piecePossibleMove,
                 Color color, std::vector<TypePiece> deadPieces[2], int point) override;
 
@@ -88,7 +89,7 @@ namespace view {
 
         void viewBoard(Color color) override;
 
-        void updatePersonalization(TypePiece boardGame[8][8]) override;
+        void updatePersonalization(TypePiece boardGame[xBoard][yBoard]) override;
 
         void updatePersonalizationMenu() override;
 
@@ -101,6 +102,8 @@ namespace view {
         void updateCheckState(Coord& pos) override;
 
         void updatePanel(std::vector<TypePiece> deadPieces[2], int point) override;
+
+        void promote(Color color) override;
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -116,9 +119,7 @@ namespace view {
 
         void removeLayer(ZLayer zLayer);
 
-        void setLayer2(TypePiece board[8][8]);
-
-        void promote();
+        void setLayer2(TypePiece board[xBoard][yBoard]);
 
         QGraphicsPixmapItem* addCase(Coord pos, ZLayer zLayer);
 
@@ -128,7 +129,7 @@ namespace view {
 
         [[nodiscard]] TypePiece getPieceToPromote(const Coord& pos) const;
 
-        std::unique_ptr<Piece> board_[8][8];
+        std::unique_ptr<Piece> board_[xBoard][yBoard];
         QGraphicsPixmapItem* case_[4];
         QImageReader textureLoader_;
         bool side_;

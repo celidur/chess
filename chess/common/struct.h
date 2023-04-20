@@ -11,6 +11,9 @@
 #include <iostream>
 #include <vector>
 
+constexpr int xBoard = 8;
+constexpr int yBoard = 8;
+constexpr int maxBoard = xBoard > yBoard ? xBoard : yBoard;
 
 struct Coord {
     int x = -1, y = -1;
@@ -31,6 +34,10 @@ struct Coord {
 
     bool operator>(const int b) const {
         return x > b || y > b;
+    }
+
+    bool operator>=(const Coord& b) const {
+        return x >= b.x || y >= b.y;
     }
 
     Coord operator+(const Coord& b) const {

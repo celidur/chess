@@ -28,17 +28,16 @@ namespace logic {
         }
         legalMoves_.emplace_back(Coord{2, 0});
         legalMoves_.emplace_back(Coord{-2, 0});
-        int kingLine = color == Color::white ? 0 : 7;
+        int kingLine = color == Color::white ? 0 : yBoard - 1;
         first_ = pos == Coord{3, kingLine};
     }
 
-    bool King::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos == pos_ || pos > 7 || pos < 0)
-            return false;
-        auto piece = board[pos.x][pos.y];
-        if (piece.type != Type::none && piece.color == color_) {
+    bool King::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+        auto res = Piece::isLegalMove(board, pos);
+        if (!res) {
             return false;
         }
+        auto piece = board[pos.x][pos.y];
         if (abs(pos.x - pos_.x) > 2 || abs(pos.y - pos_.y) > 1) {
             return false;
         }
@@ -57,7 +56,7 @@ namespace logic {
         return true;
     }
 
-    bool King::move(const TypePiece board[8][8], const Coord& pos) {
+    bool King::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
@@ -65,7 +64,7 @@ namespace logic {
         return true;
     }
 
-    void King::update(const TypePiece board[8][8]) {
+    void King::update(const TypePiece board[xBoard][yBoard]) {
         possibleMoves_.clear();
         for (auto& move: legalMoves_) {
             auto pos = Coord{pos_.x + move.x, pos_.y + move.y};

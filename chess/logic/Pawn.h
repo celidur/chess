@@ -15,11 +15,11 @@ namespace logic {
     public:
         Pawn(const Coord& pos, Color color);
 
-        void update(const TypePiece board[8][8]) override;
+        void update(const TypePiece board[xBoard][yBoard]) override;
 
-        bool move(const TypePiece board[8][8], const Coord& pos) override;
+        bool move(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
 
-        bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
+        bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
 
         [[nodiscard]] TypePiece getType() override;
 

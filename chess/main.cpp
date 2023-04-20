@@ -11,14 +11,14 @@
 #include <QGraphicsView>
 
 constexpr CoordF tileSize{72, 72};
-constexpr CoordF screenSize{tileSize.x * 10, tileSize.y * 8};
+constexpr CoordF screenSize{tileSize.x * (xBoard+2), tileSize.y * yBoard};
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     controller::QtGame game;
 
 
-    view::Board board(tileSize,"res/chess.png", game.getMode(), nullptr);
+    view::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
 
     QWidget::connect(
             &board,
@@ -115,6 +115,11 @@ int main(int argc, char* argv[]) {
                      &controller::QtGame::updatePanelQt,
                      &board,
                      &view::Board::updatePanel);
+
+    QWidget::connect(&game,
+                     &controller::QtGame::showPromotionQt,
+                     &board,
+                     &view::Board::promote);
 
     game.updateBoard();
 

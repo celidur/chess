@@ -29,15 +29,15 @@ namespace logic {
     public:
         explicit Player(Color color = Color::white);
 
-        Player(Color color, TypePiece board[8][8]);
+        Player(Color color, TypePiece board[xBoard][yBoard]);
 
-        void update(const TypePiece board[8][8], Player& opponent);
+        void update(const TypePiece board[xBoard][yBoard], Player& opponent);
 
         void addPiece(Type type, const Coord& pos, bool isPromotion = false);
 
-        Coord updateBoard(TypePiece board[8][8]);
+        Coord updateBoard(TypePiece board[xBoard][yBoard]);
 
-        bool move(const TypePiece board[8][8], const Coord& pos, const Coord& newPos);
+        bool move(const TypePiece board[xBoard][yBoard], const Coord& pos, const Coord& newPos);
 
         void removePiece(const Coord& pos);
 
@@ -50,7 +50,7 @@ namespace logic {
         [[nodiscard]] Coord getKingPos() const;
 
     private:
-        bool isCheck(const TypePiece board[8][8], Coord kingPos, Player& opponent);
+        bool isCheck(const TypePiece board[xBoard][yBoard], Coord kingPos, Player& opponent);
 
         std::vector<std::shared_ptr<Piece>> pieces_;
         std::vector<TypePiece> deadPieces_;

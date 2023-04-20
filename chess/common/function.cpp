@@ -7,10 +7,10 @@
 
 #include "function.h"
 
-void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap,
+void copyBoard(const TypePiece board[xBoard][yBoard], TypePiece boardCopy[xBoard][yBoard], Coord swap,
                Coord swap2) {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < xBoard; i++) {
+        for (int j = 0; j < yBoard; j++) {
             boardCopy[i][j] = board[i][j];
         }
     }

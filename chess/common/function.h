@@ -10,7 +10,7 @@
 
 #include "struct.h"
 
-void copyBoard(const TypePiece board[8][8], TypePiece boardCopy[8][8], Coord swap = Coord{-1, -1},
+ void copyBoard(const TypePiece board[xBoard][yBoard], TypePiece boardCopy[xBoard][yBoard], Coord swap = Coord{-1, -1},
                Coord swap2 = Coord{-1, -1});
 
 int getPieceValue(TypePiece piece);

@@ -15,7 +15,7 @@ namespace logic {
     public:
         Bishop(const Coord& pos, Color color);
 
-        bool isLegalMove(const TypePiece board[8][8], Coord pos) override;
+        bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
 
         [[nodiscard]] TypePiece getType() override;
     };

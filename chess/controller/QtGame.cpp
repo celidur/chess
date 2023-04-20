@@ -11,8 +11,6 @@ namespace controller {
 
     QtGame::QtGame() : QObject(nullptr) {}
 
-    QtGame::QtGame(const TypePiece (* board)[8], Color color) : QObject(nullptr), Game(board, color) {}
-
     QtGame::~QtGame() = default;
 
     void QtGame::doUpdateGame(Coord& coord) {
@@ -63,7 +61,8 @@ namespace controller {
         emit updatePersonalizationMenu();
     }
 
-    void QtGame::updateGameBoard(Coord* selection, TypePiece (* boardGame)[8], std::vector<Coord>& piecePossibleMove,
+    void QtGame::updateGameBoard(Coord* selection, TypePiece boardGame[xBoard][yBoard],
+                                 std::vector<Coord>& piecePossibleMove,
                                  Color color, std::vector<TypePiece>* deadPieces, int point) {
         emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
@@ -72,7 +71,7 @@ namespace controller {
         emit viewBoardQt(color);
     }
 
-    void QtGame::updatePersonalizationBoard(TypePiece boardGame[8][8]) {
+    void QtGame::updatePersonalizationBoard(TypePiece boardGame[xBoard][yBoard]) {
         emit updatePersonalizationQt(boardGame);
     }
 
@@ -113,5 +112,9 @@ namespace controller {
         std::vector<TypePiece> deadPieces[2] = {player_[0].getDeadPieces(), player_[1].getDeadPieces()};
         int points = getPieceValue(deadPieces[0]) - getPieceValue(deadPieces[1]);
         emit updatePanelQt(deadPieces, points);
+    }
+
+    void QtGame::showPromotion() {
+        emit showPromotionQt(playerRound_);
     }
 }

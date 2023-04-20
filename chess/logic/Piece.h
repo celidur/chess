@@ -22,11 +22,11 @@ namespace logic {
 
         static void reset();
 
-        virtual bool move(const TypePiece board[8][8], const Coord& pos);
+        virtual bool move(const TypePiece board[xBoard][yBoard], const Coord& pos);
 
-        virtual void update(const TypePiece board[8][8]);
+        virtual void update(const TypePiece board[xBoard][yBoard]);
 
-        virtual bool isLegalMove(const TypePiece board[8][8], Coord pos) = 0;
+        virtual bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos);
 
         [[nodiscard]] virtual TypePiece getType() = 0;
 

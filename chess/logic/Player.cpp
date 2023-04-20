@@ -10,30 +10,13 @@
 namespace logic {
 
     Player::Player(Color color) : isCheck_(false), nbMove_(0), playerColor_(color) {
-        int pawnLine = color == Color::white ? 1 : 6;
-        int kingLine = color == Color::white ? 0 : 7;
-        kingPos_ = {3, kingLine};
-        for (int i = 0; i < 16; i++) {
-            if (i < 8)
-                pieces_.push_back(std::make_unique<Pawn>(Coord{i, pawnLine}, playerColor_));
-            else if (i == 8 or i == 15)
-                pieces_.push_back(std::make_unique<Rook>(Coord{i % 8, kingLine}, playerColor_));
-            else if (i == 9 or i == 14)
-                pieces_.push_back(std::make_unique<Knight>(Coord{i % 8, kingLine}, playerColor_));
-            else if (i == 10 or i == 13)
-                pieces_.push_back(std::make_unique<Bishop>(Coord{i % 8, kingLine}, playerColor_));
-            else if (i == 11)
-                pieces_.push_back(std::make_unique<Queen>(Coord{4, kingLine}, playerColor_));
-            else
-                pieces_.push_back(std::make_unique<King>(Coord{3, kingLine}, playerColor_));
-        }
     }
 
 
-    Player::Player(Color color, TypePiece board[8][8]) : isCheck_(false), nbMove_(0), playerColor_(color),
+    Player::Player(Color color, TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0), playerColor_(color),
                                                          kingPos_({-1, -1}) {
-        for (int i = 0; i < 8; ++i)
-            for (int j = 0; j < 8; ++j)
+        for (int i = 0; i < xBoard; ++i)
+            for (int j = 0; j < yBoard; ++j)
                 if (board[i][j].color == color)
                     addPiece(board[i][j].type, Coord{i, j});
     }
@@ -48,21 +31,26 @@ namespace logic {
         return State::normal;
     }
 
-    void Player::update(const TypePiece board[8][8], Player& opponent) {
+    void Player::update(const TypePiece board[xBoard][yBoard], Player& opponent) {
         nbMove_ = 0;
         for (auto&& piece: pieces_) {
             piece->update(board);
-            auto move = piece->getPossibleMoves();
+            auto moves = piece->getPossibleMoves();
             std::vector<Coord> checkMove;
-            for (auto&& m: move) {
+            for (auto&& move: moves) {
                 // verify if the move is valid
-                TypePiece tmpBoard[8][8];
-                copyBoard(board, tmpBoard);
-                tmpBoard[piece->getPos().x][piece->getPos().y] = {};
-                tmpBoard[m.x][m.y] = piece->getType();
-                Coord kingPos = piece->getType().type == Type::king ? m : kingPos_;
+                TypePiece tmpBoard[xBoard][yBoard];
+                copyBoard(board, tmpBoard, move, piece->getPos());
+                Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
                 if (!isCheck(tmpBoard, kingPos, opponent)) {
-                    checkMove.push_back(m);
+                    if (kingPos == move && abs(piece->getPos().x - move.x) == 2) {
+                        auto m = piece->getPos().x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1,
+                                                                                                       kingPos.y};
+                        copyBoard(board, tmpBoard, m, piece->getPos());
+                        if (isCheck(tmpBoard, m, opponent))
+                            continue;
+                    }
+                    checkMove.push_back(move);
                 }
             }
             nbMove_ += checkMove.size();
@@ -75,12 +63,12 @@ namespace logic {
         }
     }
 
-    Coord Player::updateBoard(TypePiece board[8][8]) {
+    Coord Player::updateBoard(TypePiece board[xBoard][yBoard]) {
         Coord pos;
         for (auto it = pieces_.begin(); it != pieces_.end(); ++it) {
             auto posPiece = (*it)->getPos();
             board[posPiece.x][posPiece.y] = (*it)->getType();
-            if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == 7)) {
+            if ((*it)->getType().type == Type::pawn && (posPiece.y == 0 || posPiece.y == yBoard - 1)) {
                 pos = posPiece;
                 pieces_.erase(it);
                 --it;
@@ -114,11 +102,10 @@ namespace logic {
                 return;
         }
         if (isPromotion)
-             pieces_[pieces_.size() - 1]->setPromotion();
+            pieces_[pieces_.size() - 1]->setPromotion();
     }
 
-    bool Player::isCheck(const TypePiece board[8][8], Coord kingPos, Player& opponent) {
-        // TODO: verify some move can be done to avoid check
+    bool Player::isCheck(const TypePiece board[xBoard][yBoard], Coord kingPos, Player& opponent) {
         for (auto&& piece: opponent.pieces_) {
             auto pos = piece->getPos();
             if (piece->isLegalMove(board, kingPos) && board[pos.x][pos.y].color != playerColor_)
@@ -127,7 +114,7 @@ namespace logic {
         return false;
     }
 
-    bool Player::move(const TypePiece (* board)[8], const Coord& pos, const Coord& newPos) {
+    bool Player::move(const TypePiece board[xBoard][yBoard], const Coord& pos, const Coord& newPos) {
         for (auto&& piece: pieces_) {
             if (piece->getPos() == pos) {
                 return piece->move(board, newPos);

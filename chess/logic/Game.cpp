@@ -22,20 +22,8 @@ namespace logic {
         }
     }
 
-    Game::Game(const TypePiece board[8][8], Color color) : playerRound_(color), rotation_(true),
-                                                           mode_(Mode::game),
-                                                           selection_{{-1, -1},
-                                                                      {-1, -1},
-                                                                      {-1, -1},
-                                                                      {-1, -1}} {
-        copyBoard(board, board_);
-        player_.emplace_back(Color::black, board_);
-        player_.emplace_back(Color::white, board_);
-        update();
-    }
-
     void Game::selectionCase(Coord pos) {
-        if (pos.x < 0 || pos.x > 7 || pos.y < 0 || pos.y > 7)
+        if (pos < 0 || pos >= Coord{xBoard,yBoard})
             return;
 
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
@@ -63,9 +51,10 @@ namespace logic {
                     killPiece(pos_);
                 }
                 playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
-                if (piece.type == Type::pawn && (pos.y == 0 || pos.y == 7)) {
+                if (piece.type == Type::pawn && (pos.y == 0 || pos.y == yBoard-1)) {
                     promotionPos_ = pos;
                     playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
+                    showPromotion();
                 }
                 selection_[1] = selection_[0];
                 selection_[2] = pos;
@@ -145,37 +134,38 @@ namespace logic {
         update();
     }
 
-    void Game::resetBoard(TypePiece board[8][8]) {
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
+    void Game::resetBoard(TypePiece board[xBoard][yBoard]) {
+        for (int i = 0; i < xBoard; ++i) {
+            for (int j = 0; j < yBoard; ++j) {
                 board[i][j].color = Color::none;
                 board[i][j].type = Type::none;
             }
         }
     }
 
-    void Game::setDefaultBoard(TypePiece board[8][8]) {
+    void Game::setDefaultBoard(TypePiece board[xBoard][yBoard]) {
         resetBoard(board);
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < xBoard; ++i) {
             board[i][1] = {Color::white, Type::pawn};
-            board[i][6] = {Color::black, Type::pawn};
+            board[i][yBoard-2] = {Color::black, Type::pawn};
         }
+        int queenX = xBoard/2;
         board[0][0] = {Color::white, Type::rook};
         board[1][0] = {Color::white, Type::knight};
         board[2][0] = {Color::white, Type::bishop};
-        board[3][0] = {Color::white, Type::king};
-        board[4][0] = {Color::white, Type::queen};
-        board[5][0] = {Color::white, Type::bishop};
-        board[6][0] = {Color::white, Type::knight};
-        board[7][0] = {Color::white, Type::rook};
-        board[0][7] = {Color::black, Type::rook};
-        board[1][7] = {Color::black, Type::knight};
-        board[2][7] = {Color::black, Type::bishop};
-        board[3][7] = {Color::black, Type::king};
-        board[4][7] = {Color::black, Type::queen};
-        board[5][7] = {Color::black, Type::bishop};
-        board[6][7] = {Color::black, Type::knight};
-        board[7][7] = {Color::black, Type::rook};
+        board[queenX-1][0] = {Color::white, Type::king};
+        board[queenX][0] = {Color::white, Type::queen};
+        board[xBoard-3][0] = {Color::white, Type::bishop};
+        board[xBoard-2][0] = {Color::white, Type::knight};
+        board[xBoard-1][0] = {Color::white, Type::rook};
+        board[0][yBoard-1] = {Color::black, Type::rook};
+        board[1][yBoard-1] = {Color::black, Type::knight};
+        board[2][yBoard-1] = {Color::black, Type::bishop};
+        board[queenX-1][yBoard-1] = {Color::black, Type::king};
+        board[queenX][yBoard-1] = {Color::black, Type::queen};
+        board[xBoard-3][yBoard-1] = {Color::black, Type::bishop};
+        board[xBoard-2][yBoard-1] = {Color::black, Type::knight};
+        board[xBoard-1][yBoard-1] = {Color::black, Type::rook};
     }
 
     bool Game::isKingDefined() {

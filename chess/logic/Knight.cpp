@@ -19,12 +19,9 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, -2});
     }
 
-    bool Knight::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos < 0 || pos > 7 || pos == pos_) {
-            return false;
-        }
-        auto piece = board[pos.x][pos.y];
-        if (piece.type != Type::none && piece.color == color_) {
+    bool Knight::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+        auto res = Piece::isLegalMove(board, pos);
+        if (!res) {
             return false;
         }
         if (abs(pos.x - pos_.x) == 2 && abs(pos.y - pos_.y) == 1) {

@@ -9,7 +9,7 @@
 
 namespace logic {
     Rook::Rook(const Coord& pos, Color color) : Piece(pos, color) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < maxBoard; i++) {
             legalMoves_.emplace_back(Coord{i, 0});
             legalMoves_.emplace_back(Coord{0, i});
             legalMoves_.emplace_back(Coord{-i, 0});
@@ -17,12 +17,9 @@ namespace logic {
         }
     }
 
-    bool Rook::isLegalMove(const TypePiece board[8][8], Coord pos) {
-        if (pos < 0 || pos > 7 || pos == pos_) {
-            return false;
-        }
-        auto piece = board[pos.x][pos.y];
-        if (piece.type != Type::none && piece.color == color_) {
+    bool Rook::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+        auto res = Piece::isLegalMove(board, pos);
+        if (!res) {
             return false;
         }
         if (pos.x != pos_.x && pos.y != pos_.y) {
@@ -44,7 +41,7 @@ namespace logic {
         return true;
     }
 
-    bool Rook::move(const TypePiece board[8][8], const Coord& pos) {
+    bool Rook::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (res)
             first_ = false;

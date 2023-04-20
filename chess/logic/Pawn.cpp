@@ -10,7 +10,7 @@
 namespace logic {
     Pawn::Pawn(const Coord& pos, Color color) : Piece(pos, color) {
         int direction = color == Color::white ? 1 : -1;
-        int pawnLine = color == Color::white ? 1 : 6;
+        int pawnLine = color == Color::white ? 1 : yBoard - 2;
         first_ = pos.y == pawnLine ? 0 : -1;
         legalMoves_.emplace_back(Coord{0, direction});
         legalMoves_.emplace_back(Coord{0, direction * 2});
@@ -18,10 +18,11 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, direction});
     }
 
-    bool Pawn::isLegalMove(const TypePiece board[8][8], Coord pos) {
+    bool Pawn::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
         int direction = color_ == Color::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
-        if (pos < 0 || pos > 7 || pos == pos_) {
+        auto res = Piece::isLegalMove(board, pos);
+        if (!res) {
             return false;
         }
         if (pos.x == pos_.x && pos.y == pos_.y + direction) {
@@ -40,7 +41,7 @@ namespace logic {
         return false;
     }
 
-    bool Pawn::move(const TypePiece board[8][8], const Coord& pos) {
+    bool Pawn::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
@@ -50,7 +51,7 @@ namespace logic {
         return true;
     }
 
-    void Pawn::update(const TypePiece board[8][8]) {
+    void Pawn::update(const TypePiece board[xBoard][yBoard]) {
         Piece::update(board);
         first_ = (first_ == 1 | first_ == -1) ? -1 : 0;
     }
