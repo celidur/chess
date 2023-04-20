@@ -1,6 +1,9 @@
-//
-// Created by Gaetan on 2023-04-18.
-//
+/**
+* \file   Piece.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 18 avril 2022
+*/
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
@@ -14,7 +17,7 @@ namespace view {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ getPos WRITE setPos)
     public:
-        Piece(QPointF pos, QImage image);
+        Piece(QPointF pos, const QImage& image);
 
         void move(QPointF pos);
 

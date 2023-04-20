@@ -1,12 +1,16 @@
-//
-// Created by Gaetan on 2023-04-18.
-//
+/**
+* \file   Piece.cpp
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2022
+* Créé le 18 avril 2022
+*/
 
 #include "Piece.h"
 
-view::Piece::Piece(QPointF pos, QImage image) {
+view::Piece::Piece(QPointF pos, const QImage& image) {
     setPos(pos);
     setPixmap(QPixmap::fromImage(image));
+    animation = nullptr;
 }
 
 void view::Piece::setPos(QPointF pos) {
