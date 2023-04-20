@@ -131,6 +131,7 @@ namespace view {
 
         std::unique_ptr<Piece> board_[xBoard][yBoard];
         QGraphicsPixmapItem* case_[4];
+        Coord selection_[4];
         QImageReader textureLoader_;
         bool side_;
         TypePiece selectedPiece_;

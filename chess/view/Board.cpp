@@ -124,6 +124,7 @@ namespace view {
             removeLayer(ZLayer::move);
             return;
         }
+        selection_[0] = pos;
         if (case_[0] == nullptr) {
             auto selectedImg = getImage({7, 1});
             case_[0] = addImage(selectedImg, pos, ZLayer::caseSelected);
@@ -383,6 +384,8 @@ namespace view {
         board_[newer.x][newer.y] = std::move(board_[older.x][older.y]);
         board_[older.x][older.y] = nullptr;
         auto piece = board_[newer.x][newer.y].get();
+        selection_[1] = newer;
+        selection_[2] = older;
         if (case_[1] != nullptr) {
             if (side_)
                 newer = Coord{xBoard - 1 - newer.x, yBoard - 1 - newer.y};
@@ -418,10 +421,8 @@ namespace view {
     void Board::updatePiece() {
         for (int i = 0; i < 4; i++) {
             if (case_[i] != nullptr) {
-                auto pos = !side_ ? Coord{xBoard - 1 - (int) (case_[i]->pos().x() / tileSize_.x),
-                                          yBoard - 1 - (int) (case_[i]->pos().y() / tileSize_.y)}
-                                  : Coord{(int) (case_[i]->pos().x() / tileSize_.x),
-                                          (int) (case_[i]->pos().y() / tileSize_.y)};
+                auto pos = side_ ? Coord{xBoard - 1 - selection_[i].x, yBoard - 1 - selection_[i].y}
+                                  : selection_[i];
                 case_[i]->setPos((float) pos.x * tileSize_.x, (float) pos.y * tileSize_.y);
             }
         }
@@ -429,7 +430,7 @@ namespace view {
             for (int j = 0; j < yBoard; ++j) {
                 if (board_[i][j] != nullptr) {
                     auto pos = side_ ? Coord{xBoard - 1 - i, yBoard - 1 - j} : Coord{i, j};
-                    board_[i][j]->setPos(QPointF((float) pos.x * tileSize_.x, (float) pos.y * tileSize_.y));
+                    board_[i][j]->move(QPointF((float) pos.x * tileSize_.x, (float) pos.y * tileSize_.y));
                 }
             }
         }
@@ -468,6 +469,7 @@ namespace view {
         QPainter red(&checkImg);
         auto r = QColor::fromRgb(224, 78, 74);
         red.fillRect(0, 0, checkImg.width(), checkImg.height(), r);
+        selection_[3] = pos;
         case_[3] = addImage(checkImg, pos, ZLayer::check);
         case_[3]->setOpacity(0.85);
     }
