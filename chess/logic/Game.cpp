@@ -15,36 +15,24 @@ namespace logic {
             rotation_(false),
             mode_(Mode::personalisation),
             selection_{{-1, -1},
-                      {-1, -1},
-                      {-1, -1},
-                      {-1, -1}} {
+                       {-1, -1},
+                       {-1, -1},
+                       {-1, -1}} {
         setDefaultBoard(board_);
         if (Mode::game == mode_) {
-            ajoutPlayers();
-
-            if (!player_.empty())
-                update();
-        }
-    }
-
-    void Game::ajoutPlayers() {
-        try {
             player_.emplace_back(Color::black, board_);
             player_.emplace_back(Color::white, board_);
-        } catch (std::runtime_error& error){
-            player_.clear();
-            displayMessage(error.what());
         }
     }
 
     void Game::selectionCase(Coord pos) {
-        if (pos < 0 || pos >= Coord{xBoard,yBoard})
+        if (pos < 0 || pos >= Coord{xBoard, yBoard})
             return;
 
         if (board_[pos.x][pos.y].type != Type::none && board_[pos.x][pos.y].color == playerRound_) {
             selection_[0] = pos;
             auto moves = player_[(int) playerRound_].getPossibleMoves(pos);
-            updateSelection(pos,moves);
+            updateSelection(pos, moves);
         } else if (selection_[0] != Coord{-1, -1}) {
             if (player_[(int) playerRound_].move(board_, selection_[0], pos)) {
                 promotionPos_ = {};
@@ -58,15 +46,14 @@ namespace logic {
                     Coord rookNewPos = {pos.x == 5 ? 4 : 2, pos.y};
                     player_[(int) playerRound_].move(board_, rookPos, rookNewPos);
                     movePiece(rookPos, rookNewPos);
-                }
-                else if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
-                    board_[pos.x][pos.y].type == Type::none) {
+                } else if (piece.type == Type::pawn && abs(pos.x - selection_[0].x) == 1 &&
+                           board_[pos.x][pos.y].type == Type::none) {
                     auto pos_ = Coord{pos.x, selection_[0].y};
                     player_[(int) other].removePiece(pos_);
                     killPiece(pos_);
                 }
                 playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
-                if (piece.type == Type::pawn && (pos.y == 0 || pos.y == yBoard-1)) {
+                if (piece.type == Type::pawn && (pos.y == 0 || pos.y == yBoard - 1)) {
                     promotionPos_ = pos;
                     playerRound_ = (playerRound_ == Color::white ? Color::black : Color::white);
                     showPromotion();
@@ -84,6 +71,9 @@ namespace logic {
 
 
     void Game::update() {
+        if (Mode::game != mode_) {
+            return;
+        }
         clearTypePieceBoard();
         player_[0].updateBoard(board_);
         player_[1].updateBoard(board_);
@@ -115,7 +105,6 @@ namespace logic {
                 displayMessage("Pat");
                 break;
             case State::check:
-                // displayMessage("Echec");
                 selection_[3] = kingPos;
                 break;
             case State::normal:
@@ -137,19 +126,20 @@ namespace logic {
     }
 
     void Game::loadGame() {
-//        if (!isKingDefined()) {
-//            displayMessage("There is too much kings!");
-//            return;
-//        }
+        if (!isKingDefined()) {
+            displayMessage("There is too much kings!");
+            return;
+        }
         auto lastMode = mode_;
         auto last_players = player_;
 
         mode_ = Mode::game;
         Piece::reset();
         player_.clear();
-        ajoutPlayers();
+        player_.emplace_back(Color::black, board_);
+        player_.emplace_back(Color::white, board_);
 
-        if(player_.empty()){
+        if (player_.empty()) {
             player_ = last_players;
             mode_ = lastMode;
         } else
@@ -169,25 +159,26 @@ namespace logic {
         resetBoard(board);
         for (int i = 0; i < xBoard; ++i) {
             board[i][1] = {Color::white, Type::pawn};
-            board[i][yBoard-2] = {Color::black, Type::pawn};
+            board[i][yBoard - 2] = {Color::black, Type::pawn};
         }
-        int queenX = xBoard/2;
+        int queenX = xBoard / 2;
         board[0][0] = {Color::white, Type::rook};
         board[1][0] = {Color::white, Type::knight};
         board[2][0] = {Color::white, Type::bishop};
-        board[queenX-1][0] = {Color::white, Type::king};
+        board[4][4] = {Color::black, Type::king};
+        board[queenX - 1][0] = {Color::white, Type::king};
         board[queenX][0] = {Color::white, Type::queen};
-        board[xBoard-3][0] = {Color::white, Type::bishop};
-        board[xBoard-2][0] = {Color::white, Type::knight};
-        board[xBoard-1][0] = {Color::white, Type::rook};
-        board[0][yBoard-1] = {Color::black, Type::rook};
-        board[1][yBoard-1] = {Color::black, Type::knight};
-        board[2][yBoard-1] = {Color::black, Type::bishop};
-        board[queenX-1][yBoard-1] = {Color::black, Type::king};
-        board[queenX][yBoard-1] = {Color::black, Type::queen};
-        board[xBoard-3][yBoard-1] = {Color::black, Type::bishop};
-        board[xBoard-2][yBoard-1] = {Color::black, Type::knight};
-        board[xBoard-1][yBoard-1] = {Color::black, Type::rook};
+        board[xBoard - 3][0] = {Color::white, Type::bishop};
+        board[xBoard - 2][0] = {Color::white, Type::knight};
+        board[xBoard - 1][0] = {Color::white, Type::rook};
+        board[0][yBoard - 1] = {Color::black, Type::rook};
+        board[1][yBoard - 1] = {Color::black, Type::knight};
+        board[2][yBoard - 1] = {Color::black, Type::bishop};
+        board[queenX - 1][yBoard - 1] = {Color::black, Type::king};
+        board[queenX][yBoard - 1] = {Color::black, Type::queen};
+        board[xBoard - 3][yBoard - 1] = {Color::black, Type::bishop};
+        board[xBoard - 2][yBoard - 1] = {Color::black, Type::knight};
+        board[xBoard - 1][yBoard - 1] = {Color::black, Type::rook};
     }
 
     bool Game::isKingDefined() {

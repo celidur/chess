@@ -119,6 +119,7 @@ void connectSignals(controller::QtGame& game, view::Board& board) {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     controller::QtGame game;
+    game.update();
     view::Board board(tileSize,"../res/chess.png", game.getMode(), nullptr);
 
     connectSignals(game, board);

@@ -72,8 +72,6 @@ namespace logic {
         bool rotation_;
         Coord promotionPos_;
         Mode mode_;
-
-        void ajoutPlayers();
     };
 }
 

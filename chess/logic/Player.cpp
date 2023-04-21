@@ -17,8 +17,13 @@ namespace logic {
                                                                    kingPos_({-1, -1}) {
         for (int i = 0; i < xBoard; ++i)
             for (int j = 0; j < yBoard; ++j)
-                if (board[i][j].color == color)
-                    addPiece(board[i][j].type, Coord{i, j});
+                if (board[i][j].color == color) {
+                    try {
+                        addPiece(board[i][j].type, Coord{i, j});
+                    } catch (std::exception& e) {
+                        std::cerr << e.what() << std::endl;
+                    }
+                }
     }
 
     State Player::getState() const {
@@ -38,16 +43,15 @@ namespace logic {
             auto moves = piece->getPossibleMoves();
 
 
-
             std::vector<Coord> checkMove;
             for (auto&& move: moves) {
                 Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
                 auto pos = piece->getPos();
-                if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_, pos,move).isCheck())
+                if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_, pos, move).isCheck())
                     continue;
                 if (kingPos == move && abs(pos.x - move.x) == 2) {
                     auto m = pos.x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
-                    if (CheckChess(&board, playerColor_, m, opponent.pieces_,pos, m).isCheck())
+                    if (CheckChess(&board, playerColor_, m, opponent.pieces_, pos, m).isCheck())
                         continue;
                 }
                 checkMove.push_back(move);
