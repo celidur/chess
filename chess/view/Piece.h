@@ -1,8 +1,8 @@
 /**
 * \file   Piece.h
 * \author Charles Khoury et Gaëtan Florio
-* \date   5 mai 2022
-* Créé le 18 avril 2022
+* \date   5 mai 2023
+* Créé le 18 avril 2023
 */
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>

@@ -127,10 +127,12 @@ namespace view {
 
         void handlePersonalizationMode(Coord& pos);
 
+        void resetBoard(std::unique_ptr<Piece>[xBoard][yBoard]);
+
         [[nodiscard]] TypePiece getPieceToPromote(const Coord& pos) const;
 
         std::unique_ptr<Piece> board_[xBoard][yBoard];
-        QGraphicsPixmapItem* case_[4];
+        QGraphicsPixmapItem* case_[4]{};
         Coord selection_[4];
         QImageReader textureLoader_;
         bool side_;

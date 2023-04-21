@@ -13,13 +13,7 @@
 constexpr CoordF tileSize{72, 72};
 constexpr CoordF screenSize{tileSize.x * (xBoard+2), tileSize.y * yBoard};
 
-int main(int argc, char* argv[]) {
-    QApplication app(argc, argv);
-    controller::QtGame game;
-
-
-    view::Board board(tileSize, "res/chess.png", game.getMode(), nullptr);
-
+void connectSignals(controller::QtGame& game, view::Board& board) {
     QWidget::connect(
             &board,
             &view::Board::caseClicked,
@@ -120,6 +114,14 @@ int main(int argc, char* argv[]) {
                      &controller::QtGame::showPromotionQt,
                      &board,
                      &view::Board::promote);
+}
+
+int main(int argc, char* argv[]) {
+    QApplication app(argc, argv);
+    controller::QtGame game;
+    view::Board board(tileSize,"../res/chess.png", game.getMode(), nullptr);
+
+    connectSignals(game, board);
 
     game.updateBoard();
 

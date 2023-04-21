@@ -1,8 +1,8 @@
 /**
 * \file   Game.cpp
 * \author Charles Khoury et Gaëtan Florio
-* \date   5 mai 2022
-* Créé le 27 mars 2022
+* \date   5 mai 2023
+* Créé le 27 mars 2023
 */
 
 #include "Game.h"
@@ -10,10 +10,14 @@
 
 namespace logic {
 
-    Game::Game() : playerRound_(Color::white), rotation_(false), mode_(Mode::personalisation), selection_{{-1, -1},
-                                                                                                         {-1, -1},
-                                                                                                         {-1, -1},
-                                                                                                         {-1, -1}} {
+    Game::Game() :
+            playerRound_(Color::white),
+            rotation_(false),
+            mode_(Mode::personalisation),
+            selection_{{-1, -1},
+                      {-1, -1},
+                      {-1, -1},
+                      {-1, -1}} {
         setDefaultBoard(board_);
         if (Mode::game == mode_) {
             player_.emplace_back(Color::black, board_);

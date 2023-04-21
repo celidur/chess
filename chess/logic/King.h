@@ -1,8 +1,8 @@
 /**
 * \file   King.cpp
 * \author Charles Khoury et Gaëtan Florio
-* \date   5 mai 2022
-* Créé le 27 mars 2022
+* \date   5 mai 2023
+* Créé le 27 mars 2023
 */
 
 #ifndef CHESS_KING_H

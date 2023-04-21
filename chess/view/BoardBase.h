@@ -1,6 +1,9 @@
-//
-// Created by Gaetan on 2023-04-15.
-//
+/**
+* \file   BoardBase.h
+* \author Charles Khoury et Gaëtan Florio
+* \date   5 mai 2023
+* Créé le 27 mars 2023
+*/
 
 #ifndef CHESS_BOARDBASE_H
 #define CHESS_BOARDBASE_H
