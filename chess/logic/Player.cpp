@@ -47,7 +47,7 @@ namespace logic {
                     continue;
                 if (kingPos == move && abs(pos.x - move.x) == 2) {
                     auto m = pos.x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
-                    if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_,pos, m).isCheck())
+                    if (CheckChess(&board, playerColor_, m, opponent.pieces_,pos, m).isCheck())
                         continue;
                 }
                 checkMove.push_back(move);
