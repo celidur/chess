@@ -13,16 +13,27 @@ namespace logic {
     Game::Game() :
             playerRound_(Color::white),
             rotation_(false),
-            mode_(Mode::game),
+            mode_(Mode::personalisation),
             selection_{{-1, -1},
                       {-1, -1},
                       {-1, -1},
                       {-1, -1}} {
         setDefaultBoard(board_);
         if (Mode::game == mode_) {
+            ajoutPlayers();
+
+            if (!player_.empty())
+                update();
+        }
+    }
+
+    void Game::ajoutPlayers() {
+        try {
             player_.emplace_back(Color::black, board_);
             player_.emplace_back(Color::white, board_);
-            update();
+        } catch (std::runtime_error& error){
+            player_.clear();
+            displayMessage(error.what());
         }
     }
 
@@ -126,16 +137,23 @@ namespace logic {
     }
 
     void Game::loadGame() {
-        if (!isKingDefined()) {
-            displayMessage("There is too much kings!");
-            return;
-        }
+//        if (!isKingDefined()) {
+//            displayMessage("There is too much kings!");
+//            return;
+//        }
+        auto lastMode = mode_;
+        auto last_players = player_;
+
         mode_ = Mode::game;
         Piece::reset();
         player_.clear();
-        player_.emplace_back(Color::black, board_);
-        player_.emplace_back(Color::white, board_);
-        update();
+        ajoutPlayers();
+
+        if(player_.empty()){
+            player_ = last_players;
+            mode_ = lastMode;
+        } else
+            update();
     }
 
     void Game::resetBoard(TypePiece board[xBoard][yBoard]) {
@@ -154,7 +172,6 @@ namespace logic {
             board[i][yBoard-2] = {Color::black, Type::pawn};
         }
         int queenX = xBoard/2;
-        board[4][4] = {Color::white, Type::king};
         board[0][0] = {Color::white, Type::rook};
         board[1][0] = {Color::white, Type::knight};
         board[2][0] = {Color::white, Type::bishop};
