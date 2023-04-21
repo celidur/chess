@@ -36,7 +36,7 @@ add_executable(${PROJECT_NAME}
         logic/Knight.cpp
         logic/Knight.h
         common/function.cpp
-        view/BoardBase.h view/Piece.h view/Piece.cpp)
+        view/BoardBase.h view/Piece.h view/Piece.cpp logic/CheckChess.h logic/CheckChess.cpp)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
 target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.

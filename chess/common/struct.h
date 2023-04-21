@@ -82,7 +82,33 @@ struct TypePiece {
     Color color = Color::none;
     Type type = Type::none;
     int first = 0;
-};
 
+    friend std::ostream &operator<<(std::ostream &os, const TypePiece &typePiece){
+        switch (typePiece.type) {
+            case Type::pawn:
+                os << (typePiece.color == Color::white ? "P" : "p");
+                break;
+            case Type::rook:
+                os << (typePiece.color == Color::white ? "R" : "r");
+                break;
+            case Type::knight:
+                os << (typePiece.color == Color::white ? "N" : "n");
+                break;
+            case Type::bishop:
+                os << (typePiece.color == Color::white ? "B" : "b");
+                break;
+            case Type::queen:
+                os << (typePiece.color == Color::white ? "Q" : "q");
+                break;
+            case Type::king:
+                os << (typePiece.color == Color::white ? "K" : "k");
+                break;
+            default:
+                os << " ";
+                break;
+        }
+        return os;
+    }
+};
 
 #endif //CHESS_STRUCT_H

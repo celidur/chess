@@ -7,19 +7,6 @@
 
 #include "function.h"
 
-void copyBoard(const TypePiece board[xBoard][yBoard], TypePiece boardCopy[xBoard][yBoard], Coord swap,
-               Coord swap2) {
-    for (int i = 0; i < xBoard; i++) {
-        for (int j = 0; j < yBoard; j++) {
-            boardCopy[i][j] = board[i][j];
-        }
-    }
-    if (swap.x != -1 && swap.y != -1) {
-        boardCopy[swap.x][swap.y] = board[swap2.x][swap2.y];
-        boardCopy[swap2.x][swap2.y] = {};
-    }
-}
-
 int getPieceValue(TypePiece piece) {
     switch (piece.type) {
         case Type::pawn:

@@ -9,10 +9,7 @@
 #define PLAYER
 
 #include "algorithm"
-#include "Queen.h"
-#include "Pawn.h"
-#include "Knight.h"
-#include "King.h"
+#include "CheckChess.h"
 
 
 namespace logic {
@@ -31,7 +28,7 @@ namespace logic {
 
         Player(Color color, TypePiece board[xBoard][yBoard]);
 
-        void update(const TypePiece board[xBoard][yBoard], Player& opponent);
+        void update(TypePiece board[xBoard][yBoard], Player& opponent);
 
         void addPiece(Type type, const Coord& pos, bool isPromotion = false);
 
@@ -50,7 +47,6 @@ namespace logic {
         [[nodiscard]] Coord getKingPos() const;
 
     private:
-        bool isCheck(const TypePiece board[xBoard][yBoard], Coord kingPos, Player& opponent);
 
         std::vector<std::shared_ptr<Piece>> pieces_;
         std::vector<TypePiece> deadPieces_;

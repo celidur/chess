@@ -14,7 +14,7 @@ namespace logic {
 
 
     Player::Player(Color color, TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0), playerColor_(color),
-                                                         kingPos_({-1, -1}) {
+                                                                   kingPos_({-1, -1}) {
         for (int i = 0; i < xBoard; ++i)
             for (int j = 0; j < yBoard; ++j)
                 if (board[i][j].color == color)
@@ -31,33 +31,33 @@ namespace logic {
         return State::normal;
     }
 
-    void Player::update(const TypePiece board[xBoard][yBoard], Player& opponent) {
+    void Player::update(TypePiece board[xBoard][yBoard], Player& opponent) {
         nbMove_ = 0;
         for (auto&& piece: pieces_) {
             piece->update(board);
             auto moves = piece->getPossibleMoves();
+
+
+
             std::vector<Coord> checkMove;
             for (auto&& move: moves) {
-                // verify if the move is valid
-                TypePiece tmpBoard[xBoard][yBoard];
-                copyBoard(board, tmpBoard, move, piece->getPos());
                 Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
-                if (!isCheck(tmpBoard, kingPos, opponent)) {
-                    if (kingPos == move && abs(piece->getPos().x - move.x) == 2) {
-                        auto m = piece->getPos().x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1,
-                                                                                                       kingPos.y};
-                        copyBoard(board, tmpBoard, m, piece->getPos());
-                        if (isCheck(tmpBoard, m, opponent))
-                            continue;
-                    }
-                    checkMove.push_back(move);
+                auto pos = piece->getPos();
+                if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_, pos,move).isCheck())
+                    continue;
+                if (kingPos == move && abs(pos.x - move.x) == 2) {
+                    auto m = pos.x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
+                    if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_,pos, m).isCheck())
+                        continue;
                 }
+                checkMove.push_back(move);
+
             }
             nbMove_ += checkMove.size();
             piece->setMove(checkMove);
             auto king = dynamic_cast<King*>(piece.get());
             if (king != nullptr) {
-                isCheck_ = isCheck(board, king->getPos(), opponent);
+                isCheck_ = CheckChess(&board, playerColor_, kingPos_, opponent.pieces_).isCheck();
                 kingPos_ = king->getPos();
             }
         }
@@ -103,15 +103,6 @@ namespace logic {
         }
         if (isPromotion)
             pieces_[pieces_.size() - 1]->setPromotion();
-    }
-
-    bool Player::isCheck(const TypePiece board[xBoard][yBoard], Coord kingPos, Player& opponent) {
-        for (auto&& piece: opponent.pieces_) {
-            auto pos = piece->getPos();
-            if (piece->isLegalMove(board, kingPos) && board[pos.x][pos.y].color != playerColor_)
-                return true;
-        }
-        return false;
     }
 
     bool Player::move(const TypePiece board[xBoard][yBoard], const Coord& pos, const Coord& newPos) {

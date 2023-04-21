@@ -10,9 +10,6 @@
 
 #include "struct.h"
 
- void copyBoard(const TypePiece board[xBoard][yBoard], TypePiece boardCopy[xBoard][yBoard], Coord swap = Coord{-1, -1},
-               Coord swap2 = Coord{-1, -1});
-
 int getPieceValue(TypePiece piece);
 
 int getPieceValue(std::vector<TypePiece>& pieces);
