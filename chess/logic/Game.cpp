@@ -13,7 +13,7 @@ namespace logic {
     Game::Game() :
             playerRound_(Color::white),
             rotation_(false),
-            mode_(Mode::personalisation),
+            mode_(Mode::game),
             selection_{{-1, -1},
                       {-1, -1},
                       {-1, -1},
@@ -154,6 +154,7 @@ namespace logic {
             board[i][yBoard-2] = {Color::black, Type::pawn};
         }
         int queenX = xBoard/2;
+        board[4][4] = {Color::white, Type::king};
         board[0][0] = {Color::white, Type::rook};
         board[1][0] = {Color::white, Type::knight};
         board[2][0] = {Color::white, Type::bishop};
