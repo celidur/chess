@@ -127,7 +127,7 @@ namespace logic {
 
     void Game::loadGame() {
         if (!isKingDefined()) {
-            displayMessage("There is too much kings!");
+            displayMessage("There is too many kings!");
             return;
         }
         auto lastMode = mode_;
@@ -165,7 +165,6 @@ namespace logic {
         board[0][0] = {Color::white, Type::rook};
         board[1][0] = {Color::white, Type::knight};
         board[2][0] = {Color::white, Type::bishop};
-        board[4][4] = {Color::black, Type::king};
         board[queenX - 1][0] = {Color::white, Type::king};
         board[queenX][0] = {Color::white, Type::queen};
         board[xBoard - 3][0] = {Color::white, Type::bishop};
