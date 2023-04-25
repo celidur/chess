@@ -5,7 +5,6 @@
 * Créé le 27 mars 2023
 */
 
-#pragma once
 #ifndef PIECE_H
 #define PIECE_H
 
