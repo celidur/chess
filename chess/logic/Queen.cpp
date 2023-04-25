@@ -8,13 +8,9 @@
 #include "Queen.h"
 
 namespace logic {
-    Queen::Queen(const Coord& pos, Color color) : Piece(pos, color), Rook(pos, color), Bishop(pos, color) {}
+    Queen::Queen(const Coord& pos, const TypePiece type) : Piece(pos, type), Rook(pos, type), Bishop(pos, type) {}
 
     bool Queen::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
         return Rook::isLegalMove(board, pos) || Bishop::isLegalMove(board, pos);
-    }
-
-    TypePiece Queen::getType() {
-        return {color_, Type::queen};
     }
 }

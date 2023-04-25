@@ -14,16 +14,11 @@
 namespace logic {
     class Rook : virtual public Piece {
     public:
-        Rook(const Coord& pos, Color color);
+        Rook(const Coord& pos, const TypePiece type);
 
         bool move(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
 
         bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
-
-        [[nodiscard]] TypePiece getType() override;
-
-    private:
-        bool first_ = true;
     };
 }
 

@@ -8,7 +8,7 @@
 #include "Bishop.h"
 
 namespace logic {
-    Bishop::Bishop(const Coord& pos, Color color) : Piece(pos, color) {
+    Bishop::Bishop(const Coord& pos, const TypePiece type) : Piece(pos, type) {
         for (int i = 0; i < maxBoard; i++) {
             legalMoves_.emplace_back(Coord{i, i});
             legalMoves_.emplace_back(Coord{-i, i});
@@ -32,9 +32,5 @@ namespace logic {
                 return false;
         }
         return true;
-    }
-
-    TypePiece Bishop::getType() {
-        return {color_, Type::bishop};
     }
 }

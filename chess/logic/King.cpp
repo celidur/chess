@@ -9,8 +9,8 @@
 
 namespace logic {
 
-    King::King(const Coord& pos, Color color) : Piece(pos, color) {
-        if (color == Color::white) {
+    King::King(const Coord& pos, const TypePiece type) : Piece(pos, type) {
+        if (type.color == Color::white) {
             if (whiteKing != nullptr)
                 throw std::runtime_error("White king already exists");
             whiteKing = this;
@@ -28,8 +28,8 @@ namespace logic {
         }
         legalMoves_.emplace_back(Coord{2, 0});
         legalMoves_.emplace_back(Coord{-2, 0});
-        int kingLine = color == Color::white ? 0 : yBoard - 1;
-        first_ = pos == Coord{3, kingLine};
+        int kingLine = type.color == Color::white ? 0 : yBoard - 1;
+        type_.first = pos == Coord{3, kingLine};
     }
 
     bool King::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
@@ -42,7 +42,7 @@ namespace logic {
             return false;
         }
         if (abs(pos.x - pos_.x) == 2) {
-            if (!first_ || piece.type != Type::none || pos.y != pos_.y)
+            if (!type_.first || piece.type != Type::none || pos.y != pos_.y)
                 return false;
             int direction = pos.x - pos_.x == 2 ? -1 : 1;
             if (board[pos.x + direction][pos.y].type != Type::none)
@@ -50,7 +50,7 @@ namespace logic {
             if (direction == -1 && board[pos_.x + 2][pos.y].type != Type::none)
                 return false;
             auto rook = board[(direction == -1 ? 4 : -3) + pos_.x][pos.y];
-            if (rook.type != Type::rook || rook.color != color_ || !rook.first)
+            if (rook.type != Type::rook || rook.color != type_.color || !rook.first)
                 return false;
         }
         return true;
@@ -60,7 +60,7 @@ namespace logic {
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
-        first_ = false;
+        type_.first = false;
         return true;
     }
 
@@ -72,9 +72,5 @@ namespace logic {
                 possibleMoves_.emplace_back(pos);
             }
         }
-    }
-
-    TypePiece King::getType() {
-        return {color_, Type::king};
     }
 }

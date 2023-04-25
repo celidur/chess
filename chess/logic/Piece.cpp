@@ -9,7 +9,7 @@
 
 namespace logic {
 
-    Piece::Piece(const Coord& pos, Color color) : pos_(pos), color_(color), isAlive_(true), promotion_(false) {}
+    Piece::Piece(const Coord& pos, const TypePiece type) : pos_(pos), type_(type), promotion_(false) {}
 
     bool Piece::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         for (auto move: possibleMoves_) {
@@ -46,13 +46,17 @@ namespace logic {
     bool Piece::getPromotion() const { return promotion_; }
 
     bool Piece::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
-        if (pos < 0 || pos >= Coord{xBoard,yBoard} || pos == pos_) {
+        if (pos < 0 || pos >= Coord{xBoard, yBoard} || pos == pos_) {
             return false;
         }
         auto piece = board[pos.x][pos.y];
-        if (piece.type != Type::none && piece.color == color_) {
+        if (piece.type != Type::none && piece.color == type_.color) {
             return false;
         }
         return true;
+    }
+
+    TypePiece Piece::getType() {
+        return type_;
     }
 }
