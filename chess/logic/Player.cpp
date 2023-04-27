@@ -84,22 +84,22 @@ namespace logic {
     void Player::addPiece(const Type type, const Coord& pos, bool isPromotion) {
         switch (type) {
             case Type::pawn:
-                pieces_.emplace_back(std::make_unique<Pawn>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<Pawn>(pos, playerColor_));
                 break;
             case Type::rook:
-                pieces_.emplace_back(std::make_unique<Rook>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<Rook>(pos, playerColor_));
                 break;
             case Type::knight:
-                pieces_.emplace_back(std::make_unique<Knight>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<Knight>(pos, playerColor_));
                 break;
             case Type::bishop:
-                pieces_.emplace_back(std::make_unique<Bishop>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<Bishop>(pos, playerColor_));
                 break;
             case Type::queen:
-                pieces_.emplace_back(std::make_unique<Queen>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<Queen>(pos, playerColor_));
                 break;
             case Type::king:
-                pieces_.emplace_back(std::make_unique<King>(pos, TypePiece{playerColor_, type}));
+                pieces_.emplace_back(std::make_unique<King>(pos,playerColor_));
                 kingPos_ = pos;
                 break;
             case Type::none:

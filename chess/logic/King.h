@@ -14,7 +14,7 @@ namespace logic {
 
     class King : public Piece {
     public:
-        King(const Coord& pos, const TypePiece type);
+        King(const Coord& pos, Color color);
 
         void update(const TypePiece board[xBoard][yBoard]) override;
 

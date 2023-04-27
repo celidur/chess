@@ -8,9 +8,9 @@
 #include "Pawn.h"
 
 namespace logic {
-    Pawn::Pawn(const Coord& pos, const TypePiece type) : Piece(pos, type) {
-        int direction = type.color == Color::white ? 1 : -1;
-        int pawnLine = type.color == Color::white ? 1 : yBoard - 2;
+    Pawn::Pawn(const Coord& pos, Color color) : Piece(pos, {color, Type::pawn}) {
+        int direction = color == Color::white ? 1 : -1;
+        int pawnLine = color == Color::white ? 1 : yBoard - 2;
         type_.first = pos.y == pawnLine ? 0 : -1;
         legalMoves_.emplace_back(Coord{0, direction});
         legalMoves_.emplace_back(Coord{0, direction * 2});

@@ -8,7 +8,7 @@
 #include "Bishop.h"
 
 namespace logic {
-    Bishop::Bishop(const Coord& pos, const TypePiece type) : Piece(pos, type) {
+    Bishop::Bishop(const Coord& pos, Color color) : Piece(pos, {color, Type::bishop}) {
         for (int i = 0; i < maxBoard; i++) {
             legalMoves_.emplace_back(Coord{i, i});
             legalMoves_.emplace_back(Coord{-i, i});

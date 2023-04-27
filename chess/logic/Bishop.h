@@ -13,7 +13,7 @@
 namespace logic {
     class Bishop : virtual public Piece {
     public:
-        Bishop(const Coord& pos, const TypePiece type);
+        Bishop(const Coord& pos, Color color);
 
         bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
     };
