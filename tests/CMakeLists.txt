@@ -58,7 +58,9 @@ add_executable(${PROJECT_NAME}
         ../chess/logic/Bishop.h
         ../chess/logic/Knight.cpp
         ../chess/logic/Knight.h
-        ../chess/common/function.cpp)
+        ../chess/common/function.cpp
+        ../chess/logic/CheckChess.cpp
+        ../chess/logic/CheckChess.h)
 target_link_libraries(${PROJECT_NAME} gtest_main)
 add_test(NAME BaseTests COMMAND base)
 

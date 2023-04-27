@@ -17,11 +17,19 @@ protected:
         logic::Game::setDefaultBoard(board);
     }
 
+    void expectIllegalMove(logic::Piece& piece, int x, int y){
+        EXPECT_FALSE(piece.isLegalMove(this->board, {x, y})) << "Illegal move detected at position " << x << ", " << y << "for piece " << colorToStr(piece.getType().color) << std::endl;
+    }
+
+    void expectLegalMove(logic::Piece& piece, int x, int y){
+        EXPECT_TRUE(piece.isLegalMove(this->board, {x, y})) << "Legal move not detected at position " << x << ", " << y << "for piece " << colorToStr(piece.getType().color) << std::endl;
+    }
+
     void testBishop(logic::Bishop& bishop, const Coord &pos) {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (pos.x != i && pos.y != j) {
-                    EXPECT_FALSE(bishop.isLegalMove(this->board, {i, j})) << "Illegal move detected at position " << i << ", " << j << "for bishop " << colorToStr(bishop.getType().color) << std::endl;
+                    expectIllegalMove(bishop, i, j);
                 }
             }
         }
@@ -31,9 +39,9 @@ protected:
             for (int j = 0; j < 8; ++j) {
                 if (pos.x != i && pos.y != j) {
                     if((pos.y == j) || (abs(pos.y - j) != abs(pos.x - i)))
-                        EXPECT_FALSE(bishop.isLegalMove(this->board, {i, j})) << "Illegal move detected at position " << i << ", " << j << "for bishop " << colorToStr(bishop.getType().color) << std::endl;
+                        expectIllegalMove(bishop, i, j);
                     else
-                        EXPECT_TRUE(bishop.isLegalMove(this->board, {i, j})) << "Legal move not detected at position " << i << ", " << j << "for bishop " << colorToStr(bishop.getType().color) << std::endl;
+                        expectLegalMove(bishop, i, j);
                 }
             }
         }
