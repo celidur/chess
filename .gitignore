@@ -34,3 +34,7 @@
 # Other
 .idea
 cmake-build-*
+docs/venv
+docs/code-doc
+docs/html
+docs/xml-dir
