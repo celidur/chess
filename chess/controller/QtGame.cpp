@@ -20,13 +20,13 @@ namespace controller {
         }
     }
 
-    void QtGame::doPromotePiece(TypePiece& promotePiece) {
+    void QtGame::doPromotePiece(const TypePiece& promotePiece) {
         auto pos = promotionPos_;
         promotion(promotePiece.type);
         emit addPieceQt(promotePiece, pos);
     }
 
-    void QtGame::doAddPiece(TypePiece& typePiece, Coord& pos) {
+    void QtGame::doAddPiece(const TypePiece& typePiece, const Coord& pos) {
         addPiece(pos, typePiece);
         emit addPieceQt(typePiece, pos);
     }
@@ -36,19 +36,19 @@ namespace controller {
         updateBoard();
     }
 
-    void QtGame::doSwitchPlayer(Color color) {
+    void QtGame::doSwitchPlayer(const Color& color) {
         setPlayerRound(color);
         emit updatePiece();
         emit updatePersonalizationMenu();
     }
 
     void QtGame::doSetDefaultBoard() {
-        setDefaultBoard(board_);
+        setDefaultBoard();
         updateBoard();
     }
 
     void QtGame::doResetBoard() {
-        resetBoard(board_);
+        resetBoard();
         updateBoard();
     }
 
@@ -67,11 +67,11 @@ namespace controller {
         emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
 
-    void QtGame::viewBoard(Color color) {
+    void QtGame::viewBoard(const Color& color) {
         emit viewBoardQt(color);
     }
 
-    void QtGame::updatePersonalizationBoard(TypePiece boardGame[xBoard][yBoard]) {
+    void QtGame::updatePersonalizationBoard(const TypePiece boardGame[xBoard][yBoard]) {
         emit updatePersonalizationQt(boardGame);
     }
 
@@ -90,7 +90,7 @@ namespace controller {
         }
     }
 
-    void QtGame::killPiece(Coord& pos) {
+    void QtGame::killPiece(const Coord& pos) {
         updatePanel();
         emit killPieceQt(pos);
     }
@@ -100,7 +100,7 @@ namespace controller {
         emit movePieceQt(pos1, pos2);
     }
 
-    void QtGame::updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) {
+    void QtGame::updateSelection(const Coord& pos, const std::vector<Coord>& piecePossibleMove) {
         emit updateSelectionQt(pos, piecePossibleMove);
     }
 
@@ -116,5 +116,108 @@ namespace controller {
 
     void QtGame::showPromotion() {
         emit showPromotionQt(playerRound_);
+    }
+
+    void QtGame::connectSignals(const view::Board& board) const {
+        QWidget::connect(
+                &board,
+                &view::Board::caseClicked,
+                this,
+                &QtGame::doUpdateGame);
+        //add promotion menu
+        QWidget::connect(
+                &board,
+                &view::Board::promoteClicked,
+                this,
+                &QtGame::doPromotePiece);
+        QWidget::connect(
+                &board,
+                &view::Board::pieceAdded,
+                this,
+                &QtGame::doAddPiece);
+        QWidget::connect(&board,
+                         &view::Board::gameStarted,
+                         this,
+                         &QtGame::doLoadGame);
+        QWidget::connect(&board,
+                         &view::Board::playerSwitched,
+                         this,
+                         &QtGame::doSwitchPlayer);
+        QWidget::connect(&board,
+                         &view::Board::boardDefaulted,
+                         this,
+                         &QtGame::doSetDefaultBoard);
+        QWidget::connect(&board,
+                         &view::Board::boardReset,
+                         this,
+                         &QtGame::doResetBoard);
+        QWidget::connect(&board,
+                         &view::Board::rotationSwitched,
+                         this,
+                         &QtGame::doSwitchRotation);
+        QWidget::connect(this,
+                         &QtGame::displayQtMessage,
+                         &board,
+                         &view::Board::displayMessage);
+
+        QWidget::connect(this,
+                         &QtGame::updateGameQt,
+                         &board,
+                         &view::Board::updateGame);
+
+        QWidget::connect(this,
+                         &QtGame::updatePersonalizationQt,
+                         &board,
+                         &view::Board::updatePersonalization);
+
+        QWidget::connect(this,
+                         &QtGame::viewBoardQt,
+                         &board,
+                         &view::Board::viewBoard);
+
+        QWidget::connect(this,
+                         &QtGame::updatePersonalizationMenu,
+                         &board,
+                         &view::Board::updatePersonalizationMenu);
+
+        QWidget::connect(this,
+                         &QtGame::updatePiece,
+                         &board,
+                         &view::Board::updatePiece);
+
+        QWidget::connect(this,
+                         &QtGame::addPieceQt,
+                         &board,
+                         &view::Board::addPiece);
+
+        QWidget::connect(this,
+                         &QtGame::killPieceQt,
+                         &board,
+                         &view::Board::killPiece);
+
+        QWidget::connect(this,
+                         &QtGame::movePieceQt,
+                         &board,
+                         &view::Board::movePiece);
+
+        QWidget::connect(this,
+                         &QtGame::updateSelectionQt,
+                         &board,
+                         &view::Board::selectPiece);
+
+        QWidget::connect(this,
+                         &QtGame::updateCheckStateQt,
+                         &board,
+                         &view::Board::updateCheckState);
+
+        QWidget::connect(this,
+                         &QtGame::updatePanelQt,
+                         &board,
+                         &view::Board::updatePanel);
+
+        QWidget::connect(this,
+                         &QtGame::showPromotionQt,
+                         &board,
+                         &view::Board::promote);
     }
 }

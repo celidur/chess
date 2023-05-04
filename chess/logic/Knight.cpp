@@ -8,7 +8,7 @@
 #include "Knight.h"
 
 namespace logic {
-    Knight::Knight(const Coord& pos, Color color) : Piece(pos, {color, Type::knight}) {
+    Knight::Knight(const Coord& pos, const Color& color) : Piece(pos, {color, Type::knight}) {
         legalMoves_.emplace_back(Coord{2, 1});
         legalMoves_.emplace_back(Coord{2, -1});
         legalMoves_.emplace_back(Coord{-2, 1});
@@ -19,7 +19,7 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, -2});
     }
 
-    bool Knight::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+    bool Knight::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;

@@ -14,13 +14,13 @@ namespace logic {
 
     class King : public Piece {
     public:
-        King(const Coord& pos, Color color);
+        King(const Coord& pos, const Color& color);
 
         void update(const TypePiece board[xBoard][yBoard]) override;
 
         bool move(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
 
-        bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
+        bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
     };
 
 }

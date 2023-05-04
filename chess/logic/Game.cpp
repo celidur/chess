@@ -18,14 +18,14 @@ namespace logic {
                        {-1, -1},
                        {-1, -1},
                        {-1, -1}} {
-        setDefaultBoard(board_);
+        setDefaultBoard();
         if (Mode::game == mode_) {
             player_.emplace_back(Color::black, board_);
             player_.emplace_back(Color::white, board_);
         }
     }
 
-    void Game::selectionCase(Coord pos) {
+    void Game::selectionCase(Coord& pos) {
         if (pos < 0 || pos >= Coord{xBoard, yBoard})
             return;
 
@@ -146,38 +146,38 @@ namespace logic {
             update();
     }
 
-    void Game::resetBoard(TypePiece board[xBoard][yBoard]) {
-        for (int i = 0; i < xBoard; ++i) {
-            for (int j = 0; j < yBoard; ++j) {
-                board[i][j].color = Color::none;
-                board[i][j].type = Type::none;
+    void Game::resetBoard() {
+        for (auto& i: board_) {
+            for (auto& j: i) {
+                j.color = Color::none;
+                j.type = Type::none;
             }
         }
     }
 
-    void Game::setDefaultBoard(TypePiece board[xBoard][yBoard]) {
-        resetBoard(board);
-        for (int i = 0; i < xBoard; ++i) {
-            board[i][1] = {Color::white, Type::pawn};
-            board[i][yBoard - 2] = {Color::black, Type::pawn};
+    void Game::setDefaultBoard() {
+        resetBoard();
+        for (auto& i: board_) {
+            i[1] = {Color::white, Type::pawn};
+            i[yBoard - 2] = {Color::black, Type::pawn};
         }
         int queenX = xBoard / 2;
-        board[0][0] = {Color::white, Type::rook};
-        board[1][0] = {Color::white, Type::knight};
-        board[2][0] = {Color::white, Type::bishop};
-        board[queenX - 1][0] = {Color::white, Type::king};
-        board[queenX][0] = {Color::white, Type::queen};
-        board[xBoard - 3][0] = {Color::white, Type::bishop};
-        board[xBoard - 2][0] = {Color::white, Type::knight};
-        board[xBoard - 1][0] = {Color::white, Type::rook};
-        board[0][yBoard - 1] = {Color::black, Type::rook};
-        board[1][yBoard - 1] = {Color::black, Type::knight};
-        board[2][yBoard - 1] = {Color::black, Type::bishop};
-        board[queenX - 1][yBoard - 1] = {Color::black, Type::king};
-        board[queenX][yBoard - 1] = {Color::black, Type::queen};
-        board[xBoard - 3][yBoard - 1] = {Color::black, Type::bishop};
-        board[xBoard - 2][yBoard - 1] = {Color::black, Type::knight};
-        board[xBoard - 1][yBoard - 1] = {Color::black, Type::rook};
+        board_[0][0] = {Color::white, Type::rook};
+        board_[1][0] = {Color::white, Type::knight};
+        board_[2][0] = {Color::white, Type::bishop};
+        board_[queenX - 1][0] = {Color::white, Type::king};
+        board_[queenX][0] = {Color::white, Type::queen};
+        board_[xBoard - 3][0] = {Color::white, Type::bishop};
+        board_[xBoard - 2][0] = {Color::white, Type::knight};
+        board_[xBoard - 1][0] = {Color::white, Type::rook};
+        board_[0][yBoard - 1] = {Color::black, Type::rook};
+        board_[1][yBoard - 1] = {Color::black, Type::knight};
+        board_[2][yBoard - 1] = {Color::black, Type::bishop};
+        board_[queenX - 1][yBoard - 1] = {Color::black, Type::king};
+        board_[queenX][yBoard - 1] = {Color::black, Type::queen};
+        board_[xBoard - 3][yBoard - 1] = {Color::black, Type::bishop};
+        board_[xBoard - 2][yBoard - 1] = {Color::black, Type::knight};
+        board_[xBoard - 1][yBoard - 1] = {Color::black, Type::rook};
     }
 
     bool Game::isKingDefined() {
@@ -200,7 +200,7 @@ namespace logic {
         return mode_;
     }
 
-    void Game::addPiece(Coord& pos, TypePiece& type) {
+    void Game::addPiece(const Coord& pos, const TypePiece& type) {
         board_[pos.x][pos.y] = type;
     }
 
@@ -212,7 +212,7 @@ namespace logic {
         rotation_ = rotation;
     }
 
-    void Game::setPlayerRound(Color playerRound) {
+    void Game::setPlayerRound(const Color& playerRound) {
         playerRound_ = playerRound;
     }
 

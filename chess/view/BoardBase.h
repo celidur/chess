@@ -17,34 +17,34 @@ namespace view {
         virtual ~BoardBase() = default;
 
         virtual void updateGame(
-                Coord selection[4],
-                TypePiece boardGame[xBoard][yBoard],
-                std::vector<Coord>& piecePossibleMove,
-                Color color, std::vector<TypePiece> deadPieces[2], int point) = 0;
+                const Coord selection[4],
+                const TypePiece boardGame[xBoard][yBoard],
+                const std::vector<Coord>& piecePossibleMove,
+                const Color& color, const std::vector<TypePiece> deadPieces[2], int point) = 0;
 
-        virtual void updatePersonalization(TypePiece boardGame[xBoard][yBoard]) = 0;
+        virtual void updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) = 0;
 
-        virtual void viewBoard(Color color) = 0;
+        virtual void viewBoard(const Color& color) = 0;
 
-        virtual void updateDeadPieces(std::vector<TypePiece> deadPieces[2], int point) = 0;
+        virtual void updateDeadPieces(const std::vector<TypePiece> deadPieces[2], int point) = 0;
 
         virtual void movePiece(Coord& older, Coord& newer) = 0;
 
-        virtual void selectPiece(Coord& pos, std::vector<Coord>& piecePossibleMove) = 0;
+        virtual void selectPiece(const Coord& pos, const std::vector<Coord>& piecePossibleMove) = 0;
 
         virtual void updatePersonalizationMenu() = 0;
 
         virtual void updatePiece() = 0;
 
-        virtual void addPiece(TypePiece& typePiece, Coord& pos) = 0;
+        virtual void addPiece(const TypePiece& typePiece, const Coord& pos) = 0;
 
-        virtual void killPiece(Coord& pos) = 0;
+        virtual void killPiece(const Coord& pos) = 0;
 
-        virtual void updateCheckState(Coord& pos) = 0;
+        virtual void updateCheckState(const Coord& pos) = 0;
 
-        virtual void updatePanel(std::vector<TypePiece> deadPieces[2], int point) = 0;
+        virtual void updatePanel(const std::vector<TypePiece> deadPieces[2], int point) = 0;
 
-        virtual void promote(Color color) = 0;
+        virtual void promote(const Color& color) = 0;
     };
 }
 

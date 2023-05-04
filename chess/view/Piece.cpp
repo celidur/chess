@@ -13,7 +13,7 @@ view::Piece::Piece(QPointF pos, const QImage& image) {
     animation = nullptr;
 }
 
-void view::Piece::setPos(QPointF pos) {
+void view::Piece::setPos(const QPointF& pos) {
     QGraphicsPixmapItem::setPos(pos);
 }
 
@@ -21,7 +21,7 @@ QPointF view::Piece::getPos() {
     return QGraphicsPixmapItem::pos();
 }
 
-void view::Piece::move(QPointF pos) {
+void view::Piece::move(const QPointF& pos) {
     animation = new QPropertyAnimation(this, "pos");
     animation->setStartValue(getPos());
     animation->setDuration(200);

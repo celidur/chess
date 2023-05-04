@@ -25,12 +25,6 @@
 #include "Piece.h"
 
 namespace view {
-    enum class Sound {
-        move,
-        kill,
-        check,
-        none
-    };
 
     enum class ZLayer {
         board,
@@ -45,13 +39,9 @@ namespace view {
     class Board : public QGraphicsScene, public BoardBase {
     Q_OBJECT
     public:
-        explicit Board(CoordF tileSize,const std::string& resFile, Mode mode, QWidget* parent = nullptr);
+        explicit Board(CoordF tileSize, const std::string& resFile, Mode mode, QWidget* parent = nullptr);
 
         ~Board() override = default;
-
-        QImage getImage(Coord pos);
-
-        void drawRect(QColor color, Coord pos, ZLayer zLayer, bool isPromote, const std::string& text = "");
 
     signals:
 
@@ -76,58 +66,64 @@ namespace view {
         static void displayMessage(const QString& s);
 
         void updateGame(
-                Coord selection[4],
-                TypePiece boardGame[xBoard][yBoard],
-                std::vector<Coord>& piecePossibleMove,
-                Color color, std::vector<TypePiece> deadPieces[2], int point) override;
+                const Coord selection[4],
+                const TypePiece boardGame[xBoard][yBoard],
+                const std::vector<Coord>& piecePossibleMove,
+                const Color& color, const std::vector<TypePiece> deadPieces[2], int point) override;
 
-        void updateDeadPieces(std::vector<TypePiece> deadPieces[2], int point) override;
+        void updateDeadPieces(const std::vector<TypePiece> deadPieces[2], int point) override;
 
-        void movePiece(Coord& older,Coord& newer) override;
+        void movePiece(Coord& older, Coord& newer) override;
 
-        void selectPiece(Coord& pos, std::vector<Coord>& piecePossibleMove) override;
+        void selectPiece(const Coord& pos, const std::vector<Coord>& piecePossibleMove) override;
 
-        void viewBoard(Color color) override;
+        void viewBoard(const Color& color) override;
 
-        void updatePersonalization(TypePiece boardGame[xBoard][yBoard]) override;
+        void updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) override;
 
         void updatePersonalizationMenu() override;
 
         void updatePiece() override;
 
-        void killPiece(Coord& pos) override;
+        void killPiece(const Coord& pos) override;
 
-        void addPiece(TypePiece& typePiece, Coord& pos) override;
+        void addPiece(const TypePiece& typePiece, const Coord& pos) override;
 
-        void updateCheckState(Coord& pos) override;
+        void updateCheckState(const Coord& pos) override;
 
-        void updatePanel(std::vector<TypePiece> deadPieces[2], int point) override;
+        void updatePanel(const std::vector<TypePiece> deadPieces[2], int point) override;
 
-        void promote(Color color) override;
+        void promote(const Color& color) override;
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
     private:
-        QImage getPieceImg(const QRect& pieceRect);
 
-        QGraphicsPixmapItem* addImage(QImage& img, Coord coord, ZLayer zLayer, bool isPromote = false);
+        QImage getImage(const Coord& pos);
 
-        QGraphicsPixmapItem* addImage(QImage& img, CoordF coord, ZLayer zLayer, bool isPromote = false);
+        void drawRect(const QColor& color, const Coord& pos, const ZLayer& zLayer, bool isPromote,
+                      const std::string& text = "");
+
+        QGraphicsPixmapItem*
+        addImage(const QImage& img, const Coord& coord, const ZLayer& zLayer, bool isPromote = false);
+
+        QGraphicsPixmapItem*
+        addImage(const QImage& img, const CoordF& coord, const ZLayer& zLayer, bool isPromote = false);
 
         void setLayer1();
 
-        void removeLayer(ZLayer zLayer);
+        void removeLayer(const ZLayer& zLayer);
 
-        void setLayer2(TypePiece board[xBoard][yBoard]);
+        void setLayer2(const TypePiece board[xBoard][yBoard]);
 
-        QGraphicsPixmapItem* addCase(Coord pos, ZLayer zLayer);
+        QGraphicsPixmapItem* addCase(const Coord& pos, const ZLayer& zLayer);
 
-        void handleGameMode(Coord& pos);
+        void handleGameMode(const Coord& pos);
 
-        void handlePersonalizationMode(Coord& pos);
+        void handlePersonalizationMode(const Coord& pos);
 
-        void resetBoard(std::unique_ptr<Piece>[xBoard][yBoard]);
+        void resetBoard();
 
         [[nodiscard]] TypePiece getPieceToPromote(const Coord& pos) const;
 
@@ -141,7 +137,6 @@ namespace view {
         Color promoteColor_;
         Mode mode_;
         bool rotation_;
-        Sound sound_;
         CoordF tileSize_;
     };
 

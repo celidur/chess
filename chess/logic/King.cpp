@@ -9,7 +9,7 @@
 
 namespace logic {
 
-    King::King(const Coord& pos, Color color) : Piece(pos, {color, Type::king}) {
+    King::King(const Coord& pos, const Color& color) : Piece(pos, {color, Type::king}) {
         if (color == Color::white) {
             if (whiteKing != nullptr)
                 throw std::runtime_error("White king already exists");
@@ -32,7 +32,7 @@ namespace logic {
         type_.first = pos == Coord{3, kingLine};
     }
 
-    bool King::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+    bool King::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;

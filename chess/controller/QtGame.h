@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QMessageBox>
 #include "logic/Game.h"
+#include "view/Board.h"
 
 
 namespace controller {
@@ -24,15 +25,15 @@ namespace controller {
         updateGameBoard(Coord selection[4], TypePiece boardGame[xBoard][yBoard], std::vector<Coord>& piecePossibleMove,
                         Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        void viewBoard(Color color) override;
+        void viewBoard(const Color& color) override;
 
-        void updatePersonalizationBoard(TypePiece boardGame[xBoard][yBoard]);
+        void updatePersonalizationBoard(const TypePiece boardGame[xBoard][yBoard]);
 
-        void killPiece(Coord& pos) override;
+        void killPiece(const Coord& pos) override;
 
         void movePiece(Coord& pos1, Coord& pos2) override;
 
-        void updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) override;
+        void updateSelection(const Coord& pos, const std::vector<Coord>& piecePossibleMove) override;
 
         void updateCheck() override;
 
@@ -47,6 +48,8 @@ namespace controller {
 
         void updateBoard();
 
+        void connectSignals(const view::Board& board) const;
+
     signals:
 
         QEvent* displayQtMessage(const QString& s);
@@ -56,7 +59,7 @@ namespace controller {
                              std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        QEvent* updatePersonalizationQt(TypePiece boardGame[xBoard][yBoard]);
+        QEvent* updatePersonalizationQt(const TypePiece boardGame[xBoard][yBoard]);
 
         QEvent* viewBoardQt(Color color);
 
@@ -64,31 +67,31 @@ namespace controller {
 
         QEvent* updatePiece();
 
-        QEvent* addPieceQt(TypePiece& typePiece, Coord& pos);
+        QEvent* addPieceQt(const TypePiece& typePiece, const Coord& pos);
 
         QEvent* movePieceQt(Coord& pos1, Coord& pos2);
 
-        QEvent* killPieceQt(Coord& pos);
+        QEvent* killPieceQt(const Coord& pos);
 
-        QEvent* updateSelectionQt(Coord& pos, std::vector<Coord>& piecePossibleMove);
+        QEvent* updateSelectionQt(const Coord& pos, const std::vector<Coord>& piecePossibleMove);
 
-        QEvent* updateCheckStateQt(Coord& pos);
+        QEvent* updateCheckStateQt(const Coord& pos);
 
-        QEvent* updatePanelQt(std::vector<TypePiece> deadPieces[2], int point);
+        QEvent* updatePanelQt(const std::vector<TypePiece> deadPieces[2], int point);
 
-        QEvent* showPromotionQt(Color color);
+        QEvent* showPromotionQt(const Color& color);
 
     public slots:
 
         void doUpdateGame(Coord& coord);
 
-        void doPromotePiece(TypePiece& promotePiece);
+        void doPromotePiece(const TypePiece& promotePiece);
 
-        void doAddPiece(TypePiece& typePiece, Coord& pos);
+        void doAddPiece(const TypePiece& typePiece, const Coord& pos);
 
         void doLoadGame();
 
-        void doSwitchPlayer(Color color);
+        void doSwitchPlayer(const Color& color);
 
         void doSetDefaultBoard();
 

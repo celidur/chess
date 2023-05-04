@@ -8,14 +8,18 @@
 #include "CheckChess.h"
 
 namespace logic {
-    CheckChess::CheckChess(TypePiece (** board)[yBoard], Color color, Coord kingPos,
-                           std::vector<std::shared_ptr<Piece>>& pieces, Coord oldPos, Coord newPos)
+    CheckChess::CheckChess(TypePiece (** board)[yBoard], const Color& color, const Coord& kingPos,
+                           const std::vector<std::shared_ptr<Piece>>& pieces, const Coord& oldPos, const Coord &newPos)
             : oldPos_(oldPos), newPos_(newPos), kingPos_(kingPos), board_(board),
               color_(color), pieces_(pieces) {
         // swap the piece
+        if (newPos_ != Coord{-1, -1}) {
+            newPos_ = kingPos_;
+            oldPos_ = kingPos_;
+        }
         piece_ = (*board_)[newPos_.x][newPos_.y];
-        (*board_)[newPos_.x][newPos_.y] = (*board_)[oldPos_.x][oldPos_.y];
         (*board_)[oldPos_.x][oldPos_.y] = {};
+        (*board_)[newPos_.x][newPos_.y] = (*board_)[oldPos_.x][oldPos_.y];
     }
 
     bool CheckChess::isCheck() {

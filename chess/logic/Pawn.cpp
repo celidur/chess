@@ -8,7 +8,7 @@
 #include "Pawn.h"
 
 namespace logic {
-    Pawn::Pawn(const Coord& pos, Color color) : Piece(pos, {color, Type::pawn}) {
+    Pawn::Pawn(const Coord& pos, const Color& color) : Piece(pos, {color, Type::pawn}) {
         int direction = color == Color::white ? 1 : -1;
         int pawnLine = color == Color::white ? 1 : yBoard - 2;
         type_.first = pos.y == pawnLine ? 0 : -1;
@@ -18,7 +18,7 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, direction});
     }
 
-    bool Pawn::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+    bool Pawn::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         int direction = type_.color == Color::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
         auto res = Piece::isLegalMove(board, pos);

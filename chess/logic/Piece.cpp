@@ -39,13 +39,13 @@ namespace logic {
 
     Coord Piece::getPos() const { return pos_; }
 
-    void Piece::setMove(std::vector<Coord>& move) { possibleMoves_ = move; }
+    void Piece::setMove(const std::vector<Coord>& move) { possibleMoves_ = move; }
 
     void Piece::setPromotion() { promotion_ = true; }
 
     bool Piece::getPromotion() const { return promotion_; }
 
-    bool Piece::isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) {
+    bool Piece::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
         if (pos < 0 || pos >= Coord{xBoard, yBoard} || pos == pos_) {
             return false;
         }

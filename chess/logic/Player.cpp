@@ -9,12 +9,13 @@
 
 namespace logic {
 
-    Player::Player(Color color) : isCheck_(false), nbMove_(0), playerColor_(color) {
+    Player::Player(const Color& color) : isCheck_(false), nbMove_(0), playerColor_(color) {
     }
 
 
-    Player::Player(Color color, TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0), playerColor_(color),
-                                                                   kingPos_({-1, -1}) {
+    Player::Player(const Color& color, const TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0),
+                                                                                playerColor_(color),
+                                                                                kingPos_({-1, -1}) {
         for (int i = 0; i < xBoard; ++i)
             for (int j = 0; j < yBoard; ++j)
                 if (board[i][j].color == color) {
@@ -36,7 +37,7 @@ namespace logic {
         return State::normal;
     }
 
-    void Player::update(TypePiece board[xBoard][yBoard], Player& opponent) {
+    void Player::update(TypePiece board[xBoard][yBoard], const Player& opponent) {
         nbMove_ = 0;
         for (auto&& piece: pieces_) {
             piece->update(board);
@@ -99,7 +100,7 @@ namespace logic {
                 pieces_.emplace_back(std::make_unique<Queen>(pos, playerColor_));
                 break;
             case Type::king:
-                pieces_.emplace_back(std::make_unique<King>(pos,playerColor_));
+                pieces_.emplace_back(std::make_unique<King>(pos, playerColor_));
                 kingPos_ = pos;
                 break;
             case Type::none:

@@ -23,11 +23,11 @@ namespace logic {
 
         virtual void loadGame();
 
-        void selectionCase(Coord pos);
+        void selectionCase(Coord& pos);
 
-        static void resetBoard(TypePiece board[xBoard][yBoard]);
+        void resetBoard();
 
-        static void setDefaultBoard(TypePiece board[xBoard][yBoard]);
+        void setDefaultBoard();
 
         [[nodiscard]] Mode getMode();
 
@@ -35,9 +35,9 @@ namespace logic {
 
         void setRotation(bool rotation);
 
-        void setPlayerRound(Color playerRound);
+        void setPlayerRound(const Color& playerRound);
 
-        virtual void viewBoard(Color color) = 0;
+        virtual void viewBoard(const Color& color) = 0;
 
         virtual void updateCheck() = 0;
 
@@ -46,7 +46,7 @@ namespace logic {
     protected:
         virtual void displayMessage(const std::string& msg);
 
-        virtual void killPiece(Coord& pos) = 0;
+        virtual void killPiece(const Coord& pos) = 0;
 
         virtual void movePiece(Coord& pos1, Coord& pos2) = 0;
 
@@ -54,9 +54,9 @@ namespace logic {
 
         void promotion(Type type);
 
-        void addPiece(Coord& pos, TypePiece& type);
+        void addPiece(const Coord& pos, const TypePiece& type);
 
-        virtual void updateSelection(Coord& pos, std::vector<Coord>& piecePossibleMove) = 0;
+        virtual void updateSelection(const Coord& pos, const std::vector<Coord>& piecePossibleMove) = 0;
 
     protected:
         bool isKingDefined();

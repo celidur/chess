@@ -17,7 +17,7 @@ namespace logic {
 
     class Piece {
     public:
-        Piece(const Coord& pos, const TypePiece type);
+        Piece(const Coord& pos, TypePiece type);
 
         static void reset();
 
@@ -25,7 +25,7 @@ namespace logic {
 
         virtual void update(const TypePiece board[xBoard][yBoard]);
 
-        virtual bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos);
+        virtual bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos);
 
         [[nodiscard]] TypePiece getType();
 
@@ -33,7 +33,7 @@ namespace logic {
 
         [[nodiscard]] std::vector<Coord> getPossibleMoves() const;
 
-        void setMove(std::vector<Coord>& move);
+        void setMove(const std::vector<Coord>& move);
 
         void setPromotion();
 

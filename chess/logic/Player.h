@@ -24,11 +24,11 @@ namespace logic {
 
     class Player {
     public:
-        explicit Player(Color color = Color::white);
+        explicit Player(const Color& color = Color::white);
 
-        Player(Color color, TypePiece board[xBoard][yBoard]);
+        Player(const Color& color, const TypePiece board[xBoard][yBoard]);
 
-        void update(TypePiece board[xBoard][yBoard], Player& opponent);
+        void update(TypePiece board[xBoard][yBoard], const Player& opponent);
 
         void addPiece(const Type type, const Coord& pos, bool isPromotion = false);
 

@@ -13,9 +13,9 @@
 namespace logic {
     class Bishop : virtual public Piece {
     public:
-        Bishop(const Coord& pos, Color color);
+        Bishop(const Coord& pos, const Color& color);
 
-        bool isLegalMove(const TypePiece board[xBoard][yBoard], Coord pos) override;
+        bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
     };
 }
 

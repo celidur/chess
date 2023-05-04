@@ -19,11 +19,11 @@ namespace view {
     public:
         Piece(QPointF pos, const QImage& image);
 
-        void move(QPointF pos);
+        void move(const QPointF& pos);
 
     public slots:
 
-        void setPos(QPointF pos);
+        void setPos(const QPointF& pos);
 
         QPointF getPos();
 
