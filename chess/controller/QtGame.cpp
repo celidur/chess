@@ -27,8 +27,12 @@ namespace controller {
     }
 
     void QtGame::doAddPiece(const TypePiece& typePiece, const Coord& pos) {
-        addPiece(pos, typePiece);
-        emit addPieceQt(typePiece, pos);
+        try {
+            addPiece(pos, typePiece);
+            emit addPieceQt(typePiece, pos);
+        }catch (std::runtime_error& e) {
+            displayMessage(e.what());
+        }
     }
 
     void QtGame::doLoadGame() {

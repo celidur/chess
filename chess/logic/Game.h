@@ -59,7 +59,6 @@ namespace logic {
         virtual void updateSelection(const Coord& pos, const std::vector<Coord>& piecePossibleMove) = 0;
 
     protected:
-        bool isKingDefined();
 
         void checkGameState();
 

@@ -19,10 +19,6 @@ namespace logic {
                        {-1, -1},
                        {-1, -1}} {
         setDefaultBoard();
-        if (Mode::game == mode_) {
-            player_.emplace_back(Color::black, board_);
-            player_.emplace_back(Color::white, board_);
-        }
     }
 
     void Game::selectionCase(Coord& pos) {
@@ -126,24 +122,8 @@ namespace logic {
     }
 
     void Game::loadGame() {
-        if (!isKingDefined()) {
-            displayMessage("There is too many kings!");
-            return;
-        }
-        auto lastMode = mode_;
-        auto last_players = player_;
-
         mode_ = Mode::game;
-        Piece::reset();
-        player_.clear();
-        player_.emplace_back(Color::black, board_);
-        player_.emplace_back(Color::white, board_);
-
-        if (player_.empty()) {
-            player_ = last_players;
-            mode_ = lastMode;
-        } else
-            update();
+        update();
     }
 
     void Game::resetBoard() {
@@ -153,6 +133,10 @@ namespace logic {
                 j.type = Type::none;
             }
         }
+        Piece::reset();
+        player_.clear();
+        player_.emplace_back(Color::white, board_);
+        player_.emplace_back(Color::black, board_);
     }
 
     void Game::setDefaultBoard() {
@@ -178,22 +162,10 @@ namespace logic {
         board_[xBoard - 3][yBoard - 1] = {Color::black, Type::bishop};
         board_[xBoard - 2][yBoard - 1] = {Color::black, Type::knight};
         board_[xBoard - 1][yBoard - 1] = {Color::black, Type::rook};
-    }
-
-    bool Game::isKingDefined() {
-        int white = 0;
-        int black = 0;
-        for (auto&& col: board_) {
-            for (auto&& boardCase: col) {
-                if (boardCase.type == Type::king) {
-                    if (boardCase.color == Color::white)
-                        ++white;
-                    else
-                        ++black;
-                }
-            }
-        }
-        return white <= 1 && black <= 1;
+        Piece::reset();
+        player_.clear();
+        player_.emplace_back(Color::white, board_);
+        player_.emplace_back(Color::black, board_);
     }
 
     Mode Game::getMode() {
@@ -201,6 +173,8 @@ namespace logic {
     }
 
     void Game::addPiece(const Coord& pos, const TypePiece& type) {
+        int player = (type.color == Color::white ? 0 : 1);
+        player_[player].addPiece(type.type, pos);
         board_[pos.x][pos.y] = type;
     }
 
