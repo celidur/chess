@@ -23,7 +23,7 @@ namespace view {
 
     public slots:
 
-        void setPos(const QPointF& pos);
+//        void setNewPos(const QPointF& pos);
 
         QPointF getPos();
 

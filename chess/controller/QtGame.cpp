@@ -182,7 +182,7 @@ namespace controller {
         QWidget::connect(this,
                          &QtGame::updatePersonalizationMenu,
                          &board,
-                         &view::Board::updatePersonalizationMenu);
+                         &view::Board::updatePanelP);
 
         QWidget::connect(this,
                          &QtGame::updatePiece,

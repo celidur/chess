@@ -11,14 +11,8 @@
 namespace view {
 
     Board::Board(const CoordF tileSize, const std::string& resFile, Mode mode, QWidget* parent) :
-            tileSize_(tileSize),
-            QGraphicsScene(parent),
-            textureLoader_(),
-            mode_(mode),
-            side_(true),
-            rotation_(false),
-            selectedColor_(Color::white),
-            promoteColor_(Color::none) {
+            IBoard(tileSize, resFile, parent) {
+        mode_ = StateFactory::getModeInstance(mode);
         textureLoader_.setFileName(QString::fromStdString(resFile));
         resetBoard();
         for (auto&& i: case_) {
@@ -26,11 +20,6 @@ namespace view {
         }
     }
 
-    void Board::resetBoard() {
-        for (auto& i: board_)
-            for (auto& j: i)
-                j = nullptr;
-    }
 
     void Board::setLayer1() {
         // Cases grises-blanches
@@ -42,7 +31,7 @@ namespace view {
         for (int i = 0; i < xBoard; ++i) {
             bool tmp = w;
             for (int j = 0; j < yBoard; ++j) {
-                addImage(w ? whiteImg : greyImg, Coord{i, j}, ZLayer::board);
+                addImage(w ? whiteImg : greyImg, Coord{i, j}, ZLayer::board, false);
                 w = !w;
             }
             w = !tmp;
@@ -78,32 +67,13 @@ namespace view {
                            const std::vector<Coord>& piecePossibleMove, const Color& color,
                            const std::vector<TypePiece> deadPieces[2],
                            const int point) {
-        mode_ = Mode::game;
-        for (auto&& i: case_) {
-            i = nullptr;
-        }
-        resetBoard();
-        clear(); // Clear all items
-        setLayer1();
-        setLayer2(boardGame);
-        selectPiece(selection[0], piecePossibleMove);
-        updatePanel(deadPieces, point);
-        if (color != Color::none) {
-            promote(color);
-        }
-
+        mode_ = StateFactory::getModeInstance(Mode::game);
+        mode_->handleUpdateEvent(*this, selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
 
     void Board::updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) {
-        mode_ = Mode::personalisation;
-        for (auto&& i: case_) {
-            i = nullptr;
-        }
-        resetBoard();
-        this->clear(); // Clear all items
-        setLayer1();
-        setLayer2(boardGame);
-        updatePersonalizationMenu();
+        mode_ = StateFactory::getModeInstance(Mode::personalisation);
+        mode_->handleUpdateEvent(*this, boardGame);
     }
 
     void Board::selectPiece(const Coord& pos, const std::vector<Coord>& piecePossibleMove) {
@@ -118,7 +88,7 @@ namespace view {
         selection_[0] = pos;
         if (case_[0] == nullptr) {
             auto selectedImg = getImage({7, 1});
-            case_[0] = addImage(selectedImg, pos, ZLayer::caseSelected);
+            case_[0] = addImage(selectedImg, pos, ZLayer::caseSelected, false);
         } else {
             if (side_)
                 selection = {xBoard - 1 - pos.x, yBoard - 1 - pos.y};
@@ -127,7 +97,7 @@ namespace view {
         removeLayer(ZLayer::move);
         auto possibleMoveImg = getImage({7, 0});
         for (auto& possibleCoord: piecePossibleMove)
-            addImage(possibleMoveImg, possibleCoord, ZLayer::move);
+            addImage(possibleMoveImg, possibleCoord, ZLayer::move, false);
     }
 
     void Board::promote(const Color& color) {
@@ -142,7 +112,7 @@ namespace view {
         QImage img;
         for (auto&& [promotablePiece, coord]: promotablePieces) {
             img = getImage({(int) promotablePiece, (int) promoteColor_});
-            drawRect(r, coord, ZLayer::promote, true);
+            drawRect(r, coord, ZLayer::promote, true, "");
             addImage(img, coord, ZLayer::promote, true);
         }
     }
@@ -158,120 +128,6 @@ namespace view {
         return pix;
     }
 
-    void Board::mousePressEvent(QGraphicsSceneMouseEvent* event) {
-        auto item = this->itemAt(event->scenePos(), QTransform());
-        if (item == nullptr)
-            return;
-        auto itemPos = item->pos();
-        Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
-
-        switch (mode_) {
-            case Mode::game:
-                handleGameMode(pos);
-                break;
-            case Mode::personalisation:
-                handlePersonalizationMode(pos);
-                break;
-        }
-    }
-
-
-    void Board::handleGameMode(const Coord& pos) {
-        Coord selection = (side_ && promoteColor_ == Color::none) ? Coord{xBoard - 1 - pos.x, yBoard - 1 - pos.y}
-                                                                  : pos;
-        if (promoteColor_ != Color::none) {
-            TypePiece type = getPieceToPromote(selection);
-            if (type.type != Type::none) {
-                emit promoteClicked(type, *this);
-                promoteColor_ = Color::none;
-                removeLayer(ZLayer::promote);
-            } else
-                return;
-        }
-        emit caseClicked(selection, *this);
-    }
-
-    TypePiece Board::getPieceToPromote(const Coord& pos) const {
-        TypePiece type = {promoteColor_, Type::none};
-        if (pos.x == 3 && pos.y == 3)
-            type.type = Type::queen;
-        else if (pos.x == 4 && pos.y == 3)
-            type.type = Type::rook;
-        else if (pos.x == 3 && pos.y == 4)
-            type.type = Type::bishop;
-        else if (pos.x == 4 && pos.y == 4)
-            type.type = Type::knight;
-        return type;
-    }
-
-    void Board::handlePersonalizationMode(const Coord& pos) {
-        Coord selection = pos;
-        if (0 <= pos.x && pos.x < xBoard && 0 <= pos.y && pos.y < yBoard) {
-            if (side_)
-                selection = {xBoard - 1 - pos.x, yBoard - 1 - pos.y};
-            emit pieceAdded(selectedPiece_, selection, *this);
-        } else if (pos.x == xBoard && 1 <= pos.y && pos.y < 8) {
-            selectedPiece_ = {selectedColor_, (Type) (pos.y - 1)};
-            emit caseClicked(selection, *this);
-        } else if (pos.x == xBoard && pos.y == 0) {
-            selectedColor_ = selectedColor_ == Color::white ? Color::black : Color::white;
-            selectedPiece_.color = selectedColor_;
-            emit caseClicked(selection, *this);
-        } else if (pos.x == xBoard + 1 && pos.y == 0) {
-            emit gameStarted(*this);
-        } else if (pos.x == xBoard + 1 && pos.y == 1) {
-            emit boardDefaulted(*this);
-        } else if (pos.x == xBoard + 1 && pos.y == 2) {
-            emit boardReset(*this);
-        } else if (pos.x == xBoard + 1 && pos.y == 3) {
-            side_ = !side_;
-            emit playerSwitched(side_ ? Color::white : Color::black, *this);
-        } else if (pos.x == xBoard + 1 && pos.y == 4) {
-            rotation_ = !rotation_;
-            emit rotationSwitched(*this);
-        }
-    }
-
-    void Board::viewBoard(const Color& color) {
-        side_ = color == Color::white;
-        updatePiece();
-    }
-
-    void Board::updatePersonalizationMenu() {
-        removeLayer(ZLayer::top);
-        for (int i = 0; i < 7; i++) {
-            auto r = ((int) selectedPiece_.type == i) ?
-                     QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
-            drawRect(r, Coord{xBoard, i + 1}, ZLayer::top, true);
-            if (i == 6)
-                continue;
-            QImage img = getImage({i, (int) selectedColor_});
-            addImage(img, Coord{xBoard, i + 1}, ZLayer::top, true);
-        }
-        drawRect(QColor::fromRgb(70, 100, 130), {xBoard, 0},
-                 ZLayer::top, true);
-
-        QImage img = getImage({6, (int) selectedColor_});
-        float size = 17;
-        img = img.scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
-                         Qt::KeepAspectRatio);
-        addImage(img, CoordF{xBoard + size / tileSize_.x, size / tileSize_.y},
-                 ZLayer::top, true);
-        drawRect(
-                QColor::fromRgb(100, 70, 80), Coord{xBoard + 1, 0},
-                ZLayer::top, true, "Play");
-        drawRect(QColor::fromRgb(180, 150, 140), Coord{xBoard + 1, 1},
-                 ZLayer::top, true, "Default");
-        drawRect(QColor::fromRgb(100, 200, 80), Coord{xBoard + 1, 2},
-                 ZLayer::top, true, "Reset");
-        drawRect(QColor::fromRgb(100, 70, 200), Coord{xBoard + 1, 3},
-                 ZLayer::top, true,
-                 side_ ? "Set\nblack\nfirst" : "Set\nwhite\nfirst");
-        drawRect(QColor::fromRgb(150, 20, 200), Coord{xBoard + 1, 4},
-                 ZLayer::top, true,
-                 rotation_ ? "Disable\nrotation" : "Enable\nrotation");
-    }
-
     QGraphicsPixmapItem*
     Board::addImage(const QImage& img, const CoordF& coord, const ZLayer& zLayer, const bool isPromote) {
         CoordF pos = (side_ && !isPromote) ?
@@ -282,6 +138,21 @@ namespace view {
                 (float) pos.x * tileSize_.x,
                 (float) pos.y * tileSize_.y);
         return pix;
+    }
+
+    void Board::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+        auto item = this->itemAt(event->scenePos(), QTransform());
+        if (item == nullptr)
+            return;
+        auto itemPos = item->pos();
+        Coord pos = {(int) itemPos.x() / (int) tileSize_.x, (int) itemPos.y() / (int) tileSize_.y};
+
+        mode_->handleMouseEvent(*this, pos);
+    }
+
+    void Board::viewBoard(const Color& color) {
+        side_ = color == Color::white;
+        updatePiece();
     }
 
     void Board::displayMessage(const QString& s) {
@@ -309,58 +180,10 @@ namespace view {
         addImage(interfaceImg, pos, zLayer, isPromote);
     }
 
-    void Board::updatePanel(const std::vector<TypePiece> deadPieces[2], const int point) {
-        QImage interfaceImg((int) (tileSize_.x) * 2, (int) (tileSize_.y) * 8, QImage::Format::Format_ARGB32);
-        QPainter interface(&interfaceImg);
-        interface.fillRect(0, 0, interfaceImg.width(), interfaceImg.height(),
-                           QColor::fromRgb(209, 207, 206));
-        interface.drawText(QRectF{50, (float) (side_ ? 0 : 1) * 6 * tileSize_.y + 15,
-                                  tileSize_.x * 2, tileSize_.y}, Qt::AlignLeft, "player 2");
-        interface.drawText(QRectF{50, (float) (side_ ? 1 : 0) * 6 * tileSize_.y + 15,
-                                  tileSize_.x * 2, tileSize_.y}, Qt::AlignLeft, "player 1");
-        auto p = (point <= 0 ? "+" : "") + std::to_string(point * -1);
-        interface.drawText(QRectF{110, (float) (side_ ? 0 : 1) * 6 * tileSize_.y + 15,
-                                  tileSize_.x * 2, tileSize_.y}, Qt::AlignLeft, p.c_str());
-        p = (point >= 0 ? "+" : "") + std::to_string(point);
-        interface.drawText(QRectF{110, (float) (side_ ? 1 : 0) * 6 * tileSize_.y + 15,
-                                  tileSize_.x * 2, tileSize_.y}, Qt::AlignLeft, p.c_str());
-        addImage(interfaceImg, Coord{xBoard, 0}, ZLayer::top, true);
-        float size = 17;
-        QImage img = getImage({5, side_ ? 0 : 1})
-                .scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
-                        Qt::KeepAspectRatio);
-        addImage(img, CoordF{xBoard, 0}, ZLayer::top, true);
-        img = getImage({5, side_ ? 1 : 0})
-                .scaled((int) (tileSize_.x - size * 2), (int) (tileSize_.y - size * 2),
-                        Qt::KeepAspectRatio);
-        addImage(img, CoordF{xBoard, 6}, ZLayer::top, true);
-        for (int i = 0; i < 2; ++i) {
-            float x = 0;
-            float y = 0;
-            size = 26;
-            for (auto&& piece: deadPieces[i]) {
-                img = getImage({(int) piece.type, i}).scaled((int) (tileSize_.x - size * 2),
-                                                             (int) (tileSize_.y - size * 2),
-                                                             Qt::KeepAspectRatio);
-                if (x == 8) {
-                    x = 0;
-                    y++;
-                }
-                if (y == 4)
-                    break;
-                addImage(img, CoordF{xBoard + (x * (size * 0.67f)) / tileSize_.x,
-                                     (float) ((i == 0 == side_ ? 1 : 0) * 6) + (y * size * 0.9f + 40) / tileSize_.y},
-                         ZLayer::top,
-                         true);
-                x++;
-            }
-
-        }
-    }
 
     void Board::updateDeadPieces(const std::vector<TypePiece>* deadPieces, const int point) {
         removeLayer(ZLayer::top);
-        updatePanel(deadPieces, point);
+        mode_->handleUpdatePanel(*this, deadPieces, point);
     }
 
     void Board::movePiece(Coord& older, Coord& newer) {
@@ -394,7 +217,7 @@ namespace view {
 
     QGraphicsPixmapItem* Board::addCase(const Coord& pos, const ZLayer& zLayer) {
         auto selectedImg = getImage({7, 1});
-        return addImage(selectedImg, pos, zLayer);
+        return addImage(selectedImg, pos, zLayer, false);
     }
 
     void Board::removeLayer(const ZLayer& zLayer) {
@@ -458,7 +281,15 @@ namespace view {
         auto r = QColor::fromRgb(224, 78, 74);
         red.fillRect(0, 0, checkImg.width(), checkImg.height(), r);
         selection_[3] = pos;
-        case_[3] = addImage(checkImg, pos, ZLayer::check);
+        case_[3] = addImage(checkImg, pos, ZLayer::check, false);
         case_[3]->setOpacity(0.85);
+    }
+
+    void Board::updatePanel(const std::vector<TypePiece> *deadPieces, int point) {
+        mode_->handleUpdatePanel(*this, deadPieces, point);
+    }
+
+    void Board::updatePanelP() {
+        mode_->handleUpdatePanel(*this);
     }
 }

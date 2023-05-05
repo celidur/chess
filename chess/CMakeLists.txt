@@ -16,13 +16,22 @@ add_executable(${PROJECT_NAME}
         main.cpp
         view/Board.h
         view/Board.cpp
+        view/BoardBase.h
+        view/Piece.h
+        view/Piece.cpp
+        view/InterfaceModeState.hpp
+        view/GameMode.cpp
+        view/GameMode.hpp
+        view/PersonnalisationMode.cpp
+        view/PersonnalisationMode.hpp
+        common/struct.h
+        common/function.cpp
+        controller/QtGame.cpp
+        controller/QtGame.h
         logic/Piece.cpp
         logic/Player.cpp
         logic/Game.h
         logic/Game.cpp
-        common/struct.h
-        controller/QtGame.cpp
-        controller/QtGame.h
         logic/King.cpp
         logic/King.h
         logic/Queen.cpp
@@ -35,8 +44,9 @@ add_executable(${PROJECT_NAME}
         logic/Bishop.h
         logic/Knight.cpp
         logic/Knight.h
-        common/function.cpp
-        view/BoardBase.h view/Piece.h view/Piece.cpp logic/CheckChess.h logic/CheckChess.cpp)
+        logic/CheckChess.h
+        logic/CheckChess.cpp
+        view/StateFactory.hpp view/IBoard.cpp view/IBoard.hpp)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)  # Mettre ici ce qui est requis de Qt (et mettre Qt5 ou Qt6 selon la version que vous avez).
-target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)  # Doit être après le "add_executable" et lui passer le même nom.  Mettre encore ici ce qui est requis de Qt.
+find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)
