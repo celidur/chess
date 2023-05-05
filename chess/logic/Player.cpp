@@ -9,11 +9,11 @@
 
 namespace logic {
 
-    Player::Player(const Color& color) : isCheck_(false), nbMove_(0), playerColor_(color) {
+    Player::Player(const Color &color) : isCheck_(false), nbMove_(0), playerColor_(color) {
     }
 
 
-    Player::Player(const Color& color, const TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0),
+    Player::Player(const Color &color, const TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0),
                                                                                 playerColor_(color),
                                                                                 kingPos_({-1, -1}) {
         for (int i = 0; i < xBoard; ++i)
@@ -21,7 +21,7 @@ namespace logic {
                 if (board[i][j].color == color) {
                     try {
                         addPiece(board[i][j].type, Coord{i, j});
-                    } catch (std::exception& e) {
+                    } catch (std::exception &e) {
                         std::cerr << e.what() << std::endl;
                     }
                 }
@@ -37,15 +37,15 @@ namespace logic {
         return State::normal;
     }
 
-    void Player::update(TypePiece board[xBoard][yBoard], const Player& opponent) {
+    void Player::update(TypePiece board[xBoard][yBoard], const Player &opponent) {
         nbMove_ = 0;
-        for (auto&& piece: pieces_) {
+        for (auto &&piece: pieces_) {
             piece->update(board);
             auto moves = piece->getPossibleMoves();
 
 
             std::vector<Coord> checkMove;
-            for (auto&& move: moves) {
+            for (auto &&move: moves) {
                 Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
                 auto pos = piece->getPos();
                 if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_, pos, move).isCheck())
@@ -60,7 +60,7 @@ namespace logic {
             }
             nbMove_ += checkMove.size();
             piece->setMove(checkMove);
-            auto king = dynamic_cast<King*>(piece.get());
+            auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
                 isCheck_ = CheckChess(&board, playerColor_, kingPos_, opponent.pieces_).isCheck();
                 kingPos_ = king->getPos();
@@ -82,7 +82,7 @@ namespace logic {
         return pos;
     }
 
-    void Player::addPiece(const Type type, const Coord& pos, bool isPromotion) {
+    void Player::addPiece(const Type type, const Coord &pos, bool isPromotion) {
         switch (type) {
             case Type::pawn:
                 pieces_.emplace_back(std::make_unique<Pawn>(pos, playerColor_));
@@ -104,14 +104,16 @@ namespace logic {
                 kingPos_ = pos;
                 break;
             case Type::none:
-                return;
+                pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(),
+                                             [&](std::shared_ptr<Piece> &p) { return p->getPos() == pos; }),
+                              pieces_.end());
         }
         if (isPromotion)
             pieces_[pieces_.size() - 1]->setPromotion();
     }
 
-    bool Player::move(const TypePiece board[xBoard][yBoard], const Coord& pos, const Coord& newPos) {
-        for (auto&& piece: pieces_) {
+    bool Player::move(const TypePiece board[xBoard][yBoard], const Coord &pos, const Coord &newPos) {
+        for (auto &&piece: pieces_) {
             if (piece->getPos() == pos) {
                 return piece->move(board, newPos);
             }
@@ -119,8 +121,8 @@ namespace logic {
         return false;
     }
 
-    void Player::removePiece(const Coord& pos) {
-        for (auto&& piece: pieces_) {
+    void Player::removePiece(const Coord &pos) {
+        for (auto &&piece: pieces_) {
             if (piece->getPos() == pos) {
                 TypePiece type = piece->getPromotion() ? TypePiece{playerColor_, Type::pawn} : piece->getType();
                 deadPieces_.push_back(type);
@@ -130,12 +132,14 @@ namespace logic {
         }
     }
 
-    std::vector<Coord> Player::getPossibleMoves(const Coord& pos) {
-        for (auto&& piece: pieces_) {
+    std::vector<Coord> Player::getPossibleMoves(const Coord &pos) {
+        for (auto &&piece: pieces_) {
+            std::cout << piece->getPos() << std::endl;
             if (piece->getPos() == pos) {
                 return piece->getPossibleMoves();
             }
         }
+        std::cout << "should not be here " << pos << std::endl;
         return {};
     }
 
