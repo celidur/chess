@@ -134,12 +134,10 @@ namespace logic {
 
     std::vector<Coord> Player::getPossibleMoves(const Coord &pos) {
         for (auto &&piece: pieces_) {
-            std::cout << piece->getPos() << std::endl;
             if (piece->getPos() == pos) {
                 return piece->getPossibleMoves();
             }
         }
-        std::cout << "should not be here " << pos << std::endl;
         return {};
     }
 
