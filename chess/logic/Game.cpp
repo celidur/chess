@@ -173,7 +173,7 @@ namespace logic {
     }
 
     void Game::addPiece(const Coord& pos, const TypePiece& type) {
-        int player = (type.color == Color::white ? 0 : 1);
+        int player = (type.color == Color::black ? 0 : 1);
         player_[player].addPiece(type.type, pos);
         board_[pos.x][pos.y] = type;
     }
