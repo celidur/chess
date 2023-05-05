@@ -135,8 +135,8 @@ namespace logic {
         }
         Piece::reset();
         player_.clear();
-        player_.emplace_back(Color::white, board_);
         player_.emplace_back(Color::black, board_);
+        player_.emplace_back(Color::white, board_);
     }
 
     void Game::setDefaultBoard() {
@@ -164,8 +164,8 @@ namespace logic {
         board_[xBoard - 1][yBoard - 1] = {Color::black, Type::rook};
         Piece::reset();
         player_.clear();
-        player_.emplace_back(Color::white, board_);
         player_.emplace_back(Color::black, board_);
+        player_.emplace_back(Color::white, board_);
     }
 
     Mode Game::getMode() {
