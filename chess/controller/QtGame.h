@@ -22,12 +22,12 @@ namespace controller {
         void displayMessage(const std::string& msg) override; // Addition to display the message in a system box
 
         void
-        updateGameBoard(Coord selection[4], TypePiece boardGame[xBoard][yBoard], std::vector<Coord>& piecePossibleMove,
+        updateGameBoard(Coord selection[4], std::array<std::array<TypePiece, xBoard>, yBoard>&, std::vector<Coord>& piecePossibleMove,
                         Color color, std::vector<TypePiece> deadPieces[2], int point);
 
         void viewBoard(const Color& color) override;
 
-        void updatePersonalizationBoard(const TypePiece boardGame[xBoard][yBoard]);
+        void updatePersonalizationBoard(const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 
         void killPiece(const Coord& pos) override;
 
@@ -55,11 +55,11 @@ namespace controller {
         QEvent* displayQtMessage(const QString& s);
 
         QEvent* updateGameQt(Coord selection[4],
-                             TypePiece boardGame[xBoard][yBoard],
+                             std::array<std::array<TypePiece, xBoard>, yBoard>& board,
                              std::vector<Coord>& piecePossibleMove,
                              Color color, std::vector<TypePiece> deadPieces[2], int point);
 
-        QEvent* updatePersonalizationQt(const TypePiece boardGame[xBoard][yBoard]);
+        QEvent* updatePersonalizationQt(const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 
         QEvent* viewBoardQt(Color color);
 

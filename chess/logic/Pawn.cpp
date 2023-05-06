@@ -18,7 +18,7 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, direction});
     }
 
-    bool Pawn::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Pawn::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         int direction = type_.color == Color::white ? 1 : -1;
         auto piece = board[pos.x][pos.y];
         auto res = Piece::isLegalMove(board, pos);
@@ -41,7 +41,7 @@ namespace logic {
         return false;
     }
 
-    bool Pawn::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Pawn::move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         Coord posCopy = pos_;
         bool res = Piece::move(board, pos);
         if (!res)
@@ -51,7 +51,7 @@ namespace logic {
         return true;
     }
 
-    void Pawn::update(const TypePiece board[xBoard][yBoard]) {
+    void Pawn::update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
         Piece::update(board);
         type_.first = (type_.first == 1 | type_.first == -1) ? -1 : 0;
     }

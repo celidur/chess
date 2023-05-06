@@ -17,7 +17,7 @@ namespace logic {
         }
     }
 
-    bool Bishop::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Bishop::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;

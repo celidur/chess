@@ -13,7 +13,7 @@ namespace logic {
     }
 
 
-    Player::Player(const Color &color, const TypePiece board[xBoard][yBoard]) : isCheck_(false), nbMove_(0),
+    Player::Player(const Color &color, const std::array<std::array<TypePiece, xBoard>, yBoard>& board) : isCheck_(false), nbMove_(0),
                                                                                 playerColor_(color),
                                                                                 kingPos_({-1, -1}) {
         for (int i = 0; i < xBoard; ++i)
@@ -37,7 +37,7 @@ namespace logic {
         return State::normal;
     }
 
-    void Player::update(TypePiece board[xBoard][yBoard], const Player &opponent) {
+    void Player::update(std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Player &opponent) {
         nbMove_ = 0;
         for (auto &&piece: pieces_) {
             piece->update(board);
@@ -61,13 +61,13 @@ namespace logic {
             nbMove_ += moves.size();
             auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
-                isCheck_ = CheckChess(&board, playerColor_, kingPos_, opponent.pieces_).isCheck();
+                isCheck_ = CheckChess(board, playerColor_, kingPos_, opponent.pieces_).isCheck();
                 kingPos_ = king->getPos();
             }
         }
     }
 
-    Coord Player::updateBoard(TypePiece board[xBoard][yBoard]) {
+    Coord Player::updateBoard(std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
         Coord pos;
         for (auto it = pieces_.begin(); it != pieces_.end(); ++it) {
             auto posPiece = (*it)->getPos();
@@ -111,7 +111,7 @@ namespace logic {
             pieces_[pieces_.size() - 1]->setPromotion();
     }
 
-    bool Player::move(const TypePiece board[xBoard][yBoard], const Coord &pos, const Coord &newPos) {
+    bool Player::move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord &pos, const Coord &newPos) {
         for (auto &&piece: pieces_) {
             if (piece->getPos() == pos) {
                 return piece->move(board, newPos);

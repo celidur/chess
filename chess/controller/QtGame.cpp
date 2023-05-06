@@ -76,7 +76,7 @@ namespace controller {
         emit viewBoardQt(color);
     }
 
-    void QtGame::updatePersonalizationBoard(const TypePiece boardGame[xBoard][yBoard]) {
+    void QtGame::updatePersonalizationBoard(const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) {
         emit updatePersonalizationQt(boardGame);
     }
 

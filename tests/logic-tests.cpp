@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "common/struct.h"
 #include "logic/Game.h"
+#include "controller/QtGame.h"
 
 
 class BoardTestFixture: public ::testing::Test {
@@ -10,11 +11,11 @@ protected:
     }
 
     void resetBoard(){
-        logic::Game::resetBoard(board);
+        game.resetBoard();
     }
 
     void setDefaultBoard(){
-        logic::Game::setDefaultBoard(board);
+        game.setDefaultBoard();
     }
 
     static std::string errorMsg(logic::Piece& piece, int x, int y){
@@ -24,11 +25,11 @@ protected:
     }
 
     void expectIllegalMove(logic::Piece& piece, int x, int y){
-        EXPECT_FALSE(piece.isLegalMove(this->board, {x, y})) << "Illegal " << errorMsg(piece, x, y) << std::endl;
+        EXPECT_FALSE(piece.isLegalMove(game.boar(), {x, y})) << "Illegal " << errorMsg(piece, x, y) << std::endl;
     }
 
     void expectLegalMove(logic::Piece& piece, int x, int y){
-        EXPECT_TRUE(piece.isLegalMove(this->board, {x, y})) << "Legal " << errorMsg(piece, x, y) << std::endl;
+        EXPECT_TRUE(piece.isLegalMove(game.getBoard(), {x, y})) << "Legal " << errorMsg(piece, x, y) << std::endl;
     }
 
     static void checkAllCasesExceptPos(Coord pos, const std::function<void (int, int)>& func){
@@ -96,7 +97,8 @@ protected:
     }
 
 
-  TypePiece board[8][8];
+private:
+    controller::QtGame game;
 };
 
 TEST (BaseTest, base) {

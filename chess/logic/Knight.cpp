@@ -19,7 +19,7 @@ namespace logic {
         legalMoves_.emplace_back(Coord{-1, -2});
     }
 
-    bool Knight::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Knight::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;

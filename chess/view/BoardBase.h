@@ -28,11 +28,11 @@ namespace view {
 
         virtual void updateGame(
                 const Coord selection[4],
-                const TypePiece boardGame[xBoard][yBoard],
+                const std::array<std::array<TypePiece, xBoard>, yBoard>& board,
                 const std::vector<Coord> &piecePossibleMove,
                 const Color &color, const std::vector<TypePiece> deadPieces[2], int point) = 0;
 
-        virtual void updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) = 0;
+        virtual void updatePersonalization(const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) = 0;
 
         virtual void viewBoard(const Color &color) = 0;
 

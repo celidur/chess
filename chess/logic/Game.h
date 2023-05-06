@@ -33,6 +33,8 @@ namespace logic {
 
         [[nodiscard]] bool isRotation() const;
 
+        [[nodiscard]] std::array<std::array<TypePiece, xBoard>, yBoard>& getBoard();
+
         void setRotation(bool rotation);
 
         void setPlayerRound(const Color& playerRound);
@@ -65,7 +67,7 @@ namespace logic {
         void clearTypePieceBoard();
 
         std::vector<Player> player_;
-        TypePiece board_[xBoard][yBoard];
+        std::array<std::array<TypePiece, xBoard>, yBoard> board_;
         Color playerRound_;
         Coord selection_[4];
         bool rotation_;

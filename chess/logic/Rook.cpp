@@ -18,7 +18,7 @@ namespace logic {
         }
     }
 
-    bool Rook::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Rook::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;
@@ -42,7 +42,7 @@ namespace logic {
         return true;
     }
 
-    bool Rook::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Rook::move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (res)
             type_.first = false;

@@ -32,7 +32,7 @@ namespace logic {
         type_.first = pos == Coord{3, kingLine};
     }
 
-    bool King::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool King::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         auto res = Piece::isLegalMove(board, pos);
         if (!res) {
             return false;
@@ -56,7 +56,7 @@ namespace logic {
         return true;
     }
 
-    bool King::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool King::move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         bool res = Piece::move(board, pos);
         if (!res)
             return false;
@@ -64,7 +64,7 @@ namespace logic {
         return true;
     }
 
-    void King::update(const TypePiece board[xBoard][yBoard]) {
+    void King::update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
         possibleMoves_.clear();
         for (auto& move: legalMoves_) {
             auto pos = Coord{pos_.x + move.x, pos_.y + move.y};

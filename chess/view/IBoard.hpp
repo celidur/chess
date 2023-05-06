@@ -32,7 +32,7 @@ namespace view{
 
         virtual void setLayer1() = 0;
 
-        virtual void setLayer2(const TypePiece board[xBoard][yBoard]) = 0;
+        virtual void setLayer2(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) = 0;
 
         void resetBoard();
 

@@ -10,7 +10,7 @@
 namespace logic {
     Queen::Queen(const Coord& pos, const Color& color) : Piece(pos, {color, Type::queen}), Rook(pos, color), Bishop(pos, color) {}
 
-    bool Queen::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Queen::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         return Rook::isLegalMove(board, pos) || Bishop::isLegalMove(board, pos);
     }
 }

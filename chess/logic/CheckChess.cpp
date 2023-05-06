@@ -17,9 +17,9 @@ namespace logic {
             newPos_ = kingPos_;
             oldPos_ = kingPos_;
         }
-        piece_ = (*board_)[newPos_.x][newPos_.y];
-        (*board_)[oldPos_.x][oldPos_.y] = {};
-        (*board_)[newPos_.x][newPos_.y] = (*board_)[oldPos_.x][oldPos_.y];
+        piece_ = board_[newPos_.x][newPos_.y];
+        board_[oldPos_.x][oldPos_.y] = {};
+        board_[newPos_.x][newPos_.y] = board_[oldPos_.x][oldPos_.y];
     }
 
     bool CheckChess::isCheck() {
@@ -30,8 +30,8 @@ namespace logic {
 
     CheckChess::~CheckChess() {
         // swap the piece
-        (*board_)[oldPos_.x][oldPos_.y] = (*board_)[newPos_.x][newPos_.y];
-        (*board_)[newPos_.x][newPos_.y] = piece_;
+        board_[oldPos_.x][oldPos_.y] = board_[newPos_.x][newPos_.y];
+        board_[newPos_.x][newPos_.y] = piece_;
     }
 
 }

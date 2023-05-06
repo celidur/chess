@@ -29,7 +29,7 @@ namespace view {
 
         void setLayer1() override;
 
-        void setLayer2(const TypePiece board[xBoard][yBoard]) override;
+        void setLayer2(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) override;
 
         QImage getImage(const Coord& pos) override;
 
@@ -66,7 +66,7 @@ namespace view {
 
         void updateGame(
                 const Coord selection[4],
-                const TypePiece boardGame[xBoard][yBoard],
+                const std::array<std::array<TypePiece, xBoard>, yBoard>& board,
                 const std::vector<Coord>& piecePossibleMove,
                 const Color& color, const std::vector<TypePiece> deadPieces[2], int point) override;
 
@@ -78,7 +78,7 @@ namespace view {
 
         void viewBoard(const Color& color) override;
 
-        void updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) override;
+        void updatePersonalization(const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) override;
 
         void updatePiece() override;
 

@@ -190,4 +190,5 @@ namespace logic {
         playerRound_ = playerRound;
     }
 
+    std::array<std::array<TypePiece, xBoard>, yBoard>& getBoard(){return boa}
 }

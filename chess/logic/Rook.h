@@ -16,9 +16,9 @@ namespace logic {
     public:
         Rook(const Coord& pos, const Color& color);
 
-        bool move(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
+        bool move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) override;
 
-        bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
+        bool isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) override;
     };
 }
 

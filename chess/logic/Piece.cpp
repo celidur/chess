@@ -11,7 +11,7 @@ namespace logic {
 
     Piece::Piece(const Coord& pos, const TypePiece type) : pos_(pos), type_(type), promotion_(false) {}
 
-    bool Piece::move(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Piece::move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         for (auto move: possibleMoves_) {
             if (move == pos) {
                 pos_ = pos;
@@ -21,7 +21,7 @@ namespace logic {
         return false;
     }
 
-    void Piece::update(const TypePiece board[xBoard][yBoard]) {
+    void Piece::update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
         possibleMoves_.clear();
         for (const auto& move: legalMoves_) {
             Coord pos = pos_ + move;
@@ -43,7 +43,7 @@ namespace logic {
 
     bool Piece::getPromotion() const { return promotion_; }
 
-    bool Piece::isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) {
+    bool Piece::isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) {
         if (pos < 0 || pos >= Coord{xBoard, yBoard} || pos == pos_) {
             return false;
         }

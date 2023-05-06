@@ -39,6 +39,10 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 add_executable(${PROJECT_NAME}
         logic-tests.cpp
         ../chess/logic/Piece.cpp
@@ -60,7 +64,9 @@ add_executable(${PROJECT_NAME}
         ../chess/logic/Knight.h
         ../chess/common/function.cpp
         ../chess/logic/CheckChess.cpp
-        ../chess/logic/CheckChess.h)
+        ../chess/logic/CheckChess.h
+        ../chess/controller/QtGame.h
+        ../chess/controller/QtGame.cpp)
 target_link_libraries(${PROJECT_NAME} gtest_main)
 add_test(NAME BaseTests COMMAND base)
 
@@ -69,3 +75,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} Threads::Threads)
 add_compile_definitions(_POSIX_C_SOURCE=200809L)  # Requis pour compiler GoogleTest sous Cygiwin, voir https://github.com/google/googletest/issues/813
+
+find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)

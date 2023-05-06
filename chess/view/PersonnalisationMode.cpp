@@ -29,11 +29,11 @@ namespace view {
         }
     }
 
-    void PersonnalisationMode::handleUpdateEvent(IBoard &board, const Coord *selection, const TypePiece (*boardGame)[8],
+    void PersonnalisationMode::handleUpdateEvent(IBoard &board, const Coord *selection, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame,
                                                  const std::vector<Coord> &piecePossibleMove, Color color,
                                                  const std::vector<TypePiece> *deadPieces, int point) {}
 
-    void PersonnalisationMode::handleUpdateEvent(IBoard &board, const TypePiece (*boardGame)[8]) {
+    void PersonnalisationMode::handleUpdateEvent(IBoard &board, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) {
         for (auto&& i: board.getACase()) {
             i = nullptr;
         }

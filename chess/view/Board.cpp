@@ -39,7 +39,7 @@ namespace view {
     }
 
 
-    void Board::setLayer2(const TypePiece board[xBoard][yBoard]) {
+    void Board::setLayer2(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
         removeLayer(ZLayer::piece);
         for (int i = 0; i < xBoard; ++i) {
             for (int j = 0; j < yBoard; ++j) {
@@ -63,7 +63,7 @@ namespace view {
         }
     }
 
-    void Board::updateGame(const Coord selection[4], const TypePiece boardGame[xBoard][yBoard],
+    void Board::updateGame(const Coord selection[4], const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame,
                            const std::vector<Coord>& piecePossibleMove, const Color& color,
                            const std::vector<TypePiece> deadPieces[2],
                            const int point) {
@@ -71,7 +71,7 @@ namespace view {
         mode_->handleUpdateEvent(*this, selection, boardGame, piecePossibleMove, color, deadPieces, point);
     }
 
-    void Board::updatePersonalization(const TypePiece boardGame[xBoard][yBoard]) {
+    void Board::updatePersonalization(const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) {
         mode_ = StateFactory::getModeInstance(Mode::personalisation);
         mode_->handleUpdateEvent(*this, boardGame);
     }

@@ -16,7 +16,7 @@ namespace view {
         emit board.caseClicked(pos, board);
     }
 
-    void GameMode::handleUpdateEvent(IBoard &board, const Coord *selection, const TypePiece (*boardGame)[8],
+    void GameMode::handleUpdateEvent(IBoard &board, const Coord *selection, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame,
                                      const std::vector<Coord> &piecePossibleMove, Color color,
                                      const std::vector<TypePiece> *deadPieces, int point) {
         for (auto &&i: board.getACase()) {
@@ -33,7 +33,7 @@ namespace view {
         }
     }
 
-    void GameMode::handleUpdateEvent(IBoard &, const TypePiece (*boardGame)[8]) {}
+    void GameMode::handleUpdateEvent(IBoard & board, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) {}
 
     void GameMode::handleUpdatePanel(IBoard &board) {}
 

@@ -18,7 +18,7 @@
 namespace logic {
     class CheckChess {
     public:
-        CheckChess(TypePiece (** board)[yBoard], const Color& color, const Coord& kingPos,
+        CheckChess(std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Color& color, const Coord& kingPos,
                    const std::vector<std::shared_ptr<Piece>>& pieces, const Coord& oldPos = Coord{-1, -1},
                    const Coord& newPos = Coord{-1, -1});
 
@@ -30,7 +30,7 @@ namespace logic {
         Coord oldPos_;
         Coord newPos_;
         const Coord kingPos_;
-        TypePiece(** board_)[yBoard];
+        std::array<std::array<TypePiece, xBoard>, yBoard>& board_;
         const Color color_;
         TypePiece piece_;
         const std::vector<std::shared_ptr<Piece>>& pieces_;

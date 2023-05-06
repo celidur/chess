@@ -26,11 +26,11 @@ namespace logic {
     public:
         explicit Player(const Color& color = Color::white);
 
-        Player(const Color& color, const TypePiece board[xBoard][yBoard]);
+        Player(const Color& color, const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 
-        void update(TypePiece board[xBoard][yBoard], const Player& opponent);
+        void update(std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Player& opponent);
 
-        void addPiece(const Type type, const Coord& pos, bool isPromotion = false);
+        void addPiece(Type type, const Coord& pos, bool isPromotion = false);
 
         Coord updateBoard(std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 

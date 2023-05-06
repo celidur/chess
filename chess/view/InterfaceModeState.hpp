@@ -15,12 +15,12 @@ namespace view {
         virtual void handleMouseEvent(view::IBoard &, Coord &) = 0;
 
         virtual void
-        handleUpdateEvent(view::IBoard &, const Coord selection[4], const TypePiece boardGame[xBoard][yBoard],
+        handleUpdateEvent(view::IBoard &, const Coord selection[4], const std::array<std::array<TypePiece, xBoard>, yBoard>& board,
                           const std::vector<Coord> &piecePossibleMove, Color color,
                           const std::vector<TypePiece> deadPieces[2],
                           int point) = 0;
 
-        virtual void handleUpdateEvent(view::IBoard &, const TypePiece boardGame[xBoard][yBoard]) = 0;
+        virtual void handleUpdateEvent(view::IBoard &, const std::array<std::array<TypePiece, xBoard>, yBoard>& board) = 0;
 
         virtual void handleUpdatePanel(IBoard &board) = 0;
 

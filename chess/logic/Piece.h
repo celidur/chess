@@ -21,11 +21,11 @@ namespace logic {
 
         static void reset();
 
-        virtual bool move(const TypePiece board[xBoard][yBoard], const Coord& pos);
+        virtual bool move(const std::array<std::array<TypePiece, xBoard>, yBoard>&, const Coord& pos);
 
-        virtual void update(const TypePiece board[xBoard][yBoard]);
+        virtual void update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 
-        virtual bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos);
+        virtual bool isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos);
 
         [[nodiscard]] TypePiece getType();
 

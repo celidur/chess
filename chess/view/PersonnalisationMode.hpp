@@ -11,11 +11,11 @@ namespace view {
 
         void handleMouseEvent(IBoard &board, Coord &coord) override;
 
-        void handleUpdateEvent(IBoard &board, const Coord *selection, const TypePiece (*boardGame)[8],
+        void handleUpdateEvent(IBoard &board, const Coord *selection, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame,
                                const std::vector<Coord> &piecePossibleMove, Color color,
                                const std::vector<TypePiece> *deadPieces, int point) override;
 
-        void handleUpdateEvent(IBoard &board, const TypePiece (*boardGame)[8]) override;
+        void handleUpdateEvent(IBoard &board, const std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame) override;
 
         void handleUpdatePanel(IBoard& board) override;
 

@@ -16,11 +16,11 @@ namespace logic {
     public:
         King(const Coord& pos, const Color& color);
 
-        void update(const TypePiece board[xBoard][yBoard]) override;
+        void update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) override;
 
-        bool move(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
+        bool move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) override;
 
-        bool isLegalMove(const TypePiece board[xBoard][yBoard], const Coord& pos) override;
+        bool isLegalMove(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos) override;
     };
 
 }
