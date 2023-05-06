@@ -48,14 +48,14 @@ namespace view {
         board.removeLayer(ZLayer::top);
         for (int i = 0; i < 7; i++) {
             auto r = ((int) selectedPiece_.type == i) ?
-                     QColor::fromRgb(180, 150, 140) : QColor::fromRgb(209, 207, 206);
+                     selectedPieceColor : inactivePieceColor;
             board.drawRect(r, Coord{xBoard, i + 1}, ZLayer::top, true, "");
             if (i == 6)
                 continue;
             QImage img = board.getImage({i, (int) selectedColor_});
             board.addImage(img, Coord{xBoard, i + 1}, ZLayer::top, true);
         }
-        board.drawRect(QColor::fromRgb(70, 100, 130), {xBoard, 0},
+        board.drawRect(switchBtnColor, {xBoard, 0},
                  ZLayer::top, true, "");
 
         QImage img = board.getImage({6, (int) selectedColor_});
@@ -65,16 +65,16 @@ namespace view {
         board.addImage(img, CoordF{xBoard + size / board.getTileSize().x, size / board.getTileSize().y},
                  ZLayer::top, true);
         board.drawRect(
-                QColor::fromRgb(100, 70, 80), Coord{xBoard + 1, 0},
+                playBtnColor, Coord{xBoard + 1, 0},
                 ZLayer::top, true, "Play");
-        board.drawRect(QColor::fromRgb(180, 150, 140), Coord{xBoard + 1, 1},
+        board.drawRect(defaultBtnColor, Coord{xBoard + 1, 1},
                  ZLayer::top, true, "Default");
-        board.drawRect(QColor::fromRgb(100, 200, 80), Coord{xBoard + 1, 2},
+        board.drawRect(resetBtnColor, Coord{xBoard + 1, 2},
                  ZLayer::top, true, "Reset");
-        board.drawRect(QColor::fromRgb(100, 70, 200), Coord{xBoard + 1, 3},
+        board.drawRect(firstPlayerBtnColor, Coord{xBoard + 1, 3},
                  ZLayer::top, true,
                  board.isSide() ? "Set\nblack\nfirst" : "Set\nwhite\nfirst");
-        board.drawRect(QColor::fromRgb(150, 20, 200), Coord{xBoard + 1, 4},
+        board.drawRect(rotationBtnColor, Coord{xBoard + 1, 4},
                  ZLayer::top, true,
                  board.isRotation() ? "Disable\nrotation" : "Enable\nrotation");
     }

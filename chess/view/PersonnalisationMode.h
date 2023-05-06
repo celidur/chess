@@ -5,6 +5,15 @@
 
 namespace view {
 
+    static const auto selectedPieceColor = QColor::fromRgb(180, 150, 140);
+    static const auto inactivePieceColor = QColor::fromRgb(209, 207, 206);
+    static const auto switchBtnColor = QColor::fromRgb(70, 100, 130);
+    static const auto playBtnColor = QColor::fromRgb(100, 70, 80);
+    static const auto defaultBtnColor = QColor::fromRgb(180, 150, 140);
+    static const auto resetBtnColor = QColor::fromRgb(100, 200, 80);
+    static const auto firstPlayerBtnColor = QColor::fromRgb(100, 70, 200);
+    static const auto rotationBtnColor  = QColor::fromRgb(150, 20, 200);
+
     class PersonnalisationMode : public InterfaceModeState{
     public:
         explicit PersonnalisationMode();
