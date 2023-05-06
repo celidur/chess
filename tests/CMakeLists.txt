@@ -43,6 +43,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+include_directories(../chess)
+
 add_executable(${PROJECT_NAME}
         logic-tests.cpp
         ../chess/logic/Piece.cpp
@@ -66,15 +68,29 @@ add_executable(${PROJECT_NAME}
         ../chess/logic/CheckChess.cpp
         ../chess/logic/CheckChess.h
         ../chess/controller/QtGame.h
-        ../chess/controller/QtGame.cpp)
+        ../chess/controller/QtGame.cpp
+        ../chess/view/Board.cpp
+        ../chess/view/Board.h
+        ../chess/view/BoardBase.h
+        ../chess/view/GameMode.cpp
+        ../chess/view/GameMode.h
+        ../chess/view/IBoard.cpp
+        ../chess/view/IBoard.h
+        ../chess/view/InterfaceModeState.h
+        ../chess/view/PersonnalisationMode.cpp
+        ../chess/view/Piece.cpp
+        ../chess/view/Piece.h
+        ../chess/view/PersonnalisationMode.h
+        ../chess/view/StateFactory.h
+        )
 target_link_libraries(${PROJECT_NAME} gtest_main)
 add_test(NAME BaseTests COMMAND base)
 
-# Pour Google Test (basé sur https://stackoverflow.com/questions/1620918/cmake-and-libpthread )
+# Pour Google Test (basé sur https:://stackoverflow.com/questions/1620918/cmake-and-libpthread )
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} Threads::Threads)
-add_compile_definitions(_POSIX_C_SOURCE=200809L)  # Requis pour compiler GoogleTest sous Cygiwin, voir https://github.com/google/googletest/issues/813
+add_compile_definitions(_POSIX_C_SOURCE=200809L)  # Requis pour compiler GoogleTest sous Cygiwin, voir https::/chess/github.com/google/googletest/issues/813
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)

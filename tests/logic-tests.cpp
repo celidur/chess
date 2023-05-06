@@ -64,14 +64,13 @@ protected:
         this->resetBoard();
         checkAllCasesExceptPos(pos, [&](int i, int j){
             if ((pos.y == j) || (pos.x == i)) {
-                std::cout << "testing rook with " << i << "," << j << std::endl;
                 expectLegalMove(rook, i, j);
             }else
                 expectIllegalMove(rook, i, j);
         });
     }
 
-    void testPawn(logic::Pawn& pawn){ // To come back so we make sure it test the right thing + test en passant
+    void testPawn(logic::Pawn& pawn){
         Coord pos = pawn.getPos();
         int modif = pawn.getType().color == Color::white ? 1 : -1;
 
@@ -83,14 +82,20 @@ protected:
         });
     }
 
+    void testRAI(){
+        auto board = game.getBoard();
+        auto whitePlayer = logic::Player(Color::white);
+        auto blackPlayer = logic::Player(Color::black);
 
-//    void testKnight(logic::Knight& knight){
-//        Coord pos = knight.getPos();
-//
-//        checkAllCasesExceptPos(pos, [&](int i, int j){
-//            if(i == )
-//        })
-//    }
+        whitePlayer.addPiece(Type::king, {4, 0});
+        blackPlayer.addPiece(Type::king, {4, 7});
+        whitePlayer.addPiece(Type::rook, {0, 0});
+
+        whitePlayer.updateBoard(board);
+        blackPlayer.updateBoard(board);
+
+
+    }
 
     static std::string colorToStr(Color color){
         return color == Color::white ? "white" : "black";
@@ -104,14 +109,6 @@ private:
 TEST (BaseTest, base) {
     EXPECT_EQ (1 + 1, (2));
 }
-
-//TEST(INIT_GAME, initNormal) {
-//    logic::Game game;
-//    EXPECT_EQ(game.getMode(), (Mode::personalisation));
-//
-//    game.loadGame();
-//    EXPECT_EQ(game.getMode(), (Mode::game));
-//}
 
 
 TEST_F(BoardTestFixture, BlackBishop) {
