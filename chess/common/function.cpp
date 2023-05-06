@@ -32,3 +32,13 @@ int getPieceValue(std::vector<TypePiece>& pieces) {
     }
     return value;
 }
+
+void printBoard(const std::array<std::array<TypePiece, xBoard>, yBoard>& board) {
+    for (int i = 0; i < yBoard; ++i) {
+        for (int j = 0; j < xBoard; ++j) {
+            std::cout << board[j][i] << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}

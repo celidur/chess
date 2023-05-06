@@ -57,4 +57,12 @@ namespace logic {
     TypePiece Piece::getType() {
         return type_;
     }
+
+    void Piece::resetBlackKing() {
+        blackKing = nullptr;
+    }
+
+    void Piece::resetWhiteKing() {
+        whiteKing = nullptr;
+    }
 }

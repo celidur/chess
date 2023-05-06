@@ -39,31 +39,32 @@ namespace logic {
 
     void Player::update(std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Player &opponent) {
         nbMove_ = 0;
+        for (auto&&piece:pieces_){
+            auto king = dynamic_cast<King *>(piece.get());
+            if (king != nullptr) {
+                kingPos_ = king->getPos();
+                isCheck_ = CheckChess(board, playerColor_, kingPos_, opponent.pieces_).isCheck();
+            }
+        }
         for (auto &&piece: pieces_) {
             piece->update(board);
-            auto moves = piece->getPossibleMoves();
-
-            for (auto &&move: moves) {
-                Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
+            auto& moves = piece->getPossibleMoves();
+            for (auto it = moves.begin(); it != moves.end(); ++it) {
+                Coord kingPos = piece->getType().type == Type::king ? (*it) : kingPos_;
                 auto pos = piece->getPos();
-                if (CheckChess(board, playerColor_, kingPos, opponent.pieces_, pos, move).isCheck()) {
-                    moves.erase(std::find(moves.begin(), moves.end(), move));
-                    continue;
+                if (CheckChess(board, playerColor_, kingPos, opponent.pieces_, pos, (*it)).isCheck()) {
+                    moves.erase(it);
+                    --it;
                 }
-                if (kingPos == move && abs(pos.x - move.x) == 2) {
-                    auto m = pos.x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
+                else if (kingPos == (*it) && abs(pos.x - (*it).x) == 2) {
+                    auto m = pos.x < (*it).x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
                     if (CheckChess(board, playerColor_, m, opponent.pieces_, pos, m).isCheck()) {
-                        moves.erase(std::find(moves.begin(), moves.end(), move));
-                        continue;
+                        moves.erase(it);
+                        --it;
                     }
                 }
             }
             nbMove_ += moves.size();
-            auto king = dynamic_cast<King *>(piece.get());
-            if (king != nullptr) {
-                isCheck_ = CheckChess(board, playerColor_, kingPos_, opponent.pieces_).isCheck();
-                kingPos_ = king->getPos();
-            }
         }
     }
 
@@ -106,6 +107,8 @@ namespace logic {
                 pieces_.erase(std::remove_if(pieces_.begin(), pieces_.end(),
                                              [&](std::shared_ptr<Piece> &p) { return p->getPos() == pos; }),
                               pieces_.end());
+                if (kingPos_ == pos)
+                    playerColor_ == Color::white ? Piece::resetWhiteKing() : Piece::resetBlackKing();
         }
         if (isPromotion)
             pieces_[pieces_.size() - 1]->setPromotion();

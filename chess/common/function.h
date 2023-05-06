@@ -14,4 +14,6 @@ int getPieceValue(TypePiece piece);
 
 int getPieceValue(std::vector<TypePiece>& pieces);
 
+void printBoard(const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
+
 #endif //CHESS_FUNCTION_H

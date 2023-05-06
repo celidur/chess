@@ -21,6 +21,10 @@ namespace logic {
 
         static void reset();
 
+        static void resetWhiteKing();
+
+        static void resetBlackKing();
+
         virtual bool move(const std::array<std::array<TypePiece, xBoard>, yBoard>&, const Coord& pos);
 
         virtual void update(const std::array<std::array<TypePiece, xBoard>, yBoard>& board);
