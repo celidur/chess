@@ -25,7 +25,7 @@ protected:
     }
 
     void expectIllegalMove(logic::Piece& piece, int x, int y){
-        EXPECT_FALSE(piece.isLegalMove(game.boar(), {x, y})) << "Illegal " << errorMsg(piece, x, y) << std::endl;
+        EXPECT_FALSE(piece.isLegalMove(game.getBoard(), {x, y})) << "Illegal " << errorMsg(piece, x, y) << std::endl;
     }
 
     void expectLegalMove(logic::Piece& piece, int x, int y){
