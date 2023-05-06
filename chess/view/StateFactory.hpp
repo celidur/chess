@@ -13,15 +13,11 @@ namespace view {
                 case Mode::game:
                     if (gameMode == nullptr) {
                         gameMode = std::make_unique<GameMode>();
-                        if (personnalisationMode != nullptr)
-                            delete personnalisationMode.get();
                     }
                     return gameMode.get();
                 case Mode::personalisation:
                     if (personnalisationMode == nullptr) {
                         personnalisationMode = std::make_unique<PersonnalisationMode>();
-                        if (gameMode != nullptr)
-                            delete gameMode.get();
                     }
                     return personnalisationMode.get();
             }
