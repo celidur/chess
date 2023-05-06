@@ -8,6 +8,7 @@
 #ifndef CHESS_FUNCTION_H
 #define CHESS_FUNCTION_H
 
+#include "array"
 #include "struct.h"
 
 int getPieceValue(TypePiece piece);

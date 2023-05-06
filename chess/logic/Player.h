@@ -9,6 +9,7 @@
 #define PLAYER
 
 #include "algorithm"
+#include "array"
 #include "CheckChess.h"
 
 

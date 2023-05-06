@@ -11,6 +11,7 @@
 #include <vector>
 #include <ostream>
 #include <memory>
+#include "array"
 #include "common/function.h"
 
 namespace logic {
