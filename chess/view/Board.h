@@ -9,11 +9,11 @@
 #define BOARD
 
 
-#include "InterfaceModeState.hpp"
-#include "GameMode.hpp"
-#include "PersonnalisationMode.hpp"
-#include "IBoard.hpp"
-#include "StateFactory.hpp"
+#include "InterfaceModeState.h"
+#include "GameMode.h"
+#include "PersonnalisationMode.h"
+#include "IBoard.h"
+#include "StateFactory.h"
 
 namespace view {
 

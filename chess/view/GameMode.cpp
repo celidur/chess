@@ -1,4 +1,4 @@
-#include "GameMode.hpp"
+#include "GameMode.h"
 
 namespace view {
     void GameMode::handleMouseEvent(IBoard &board, Coord &pos) {

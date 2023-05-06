@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 project(chess)
 if (DEFINED ENV{VCPKG_ROOT})
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-endif()
+endif ()
 set(CMAKE_CXX_STANDARD 20)
 
 
@@ -19,11 +19,11 @@ add_executable(${PROJECT_NAME}
         view/BoardBase.h
         view/Piece.h
         view/Piece.cpp
-        view/InterfaceModeState.hpp
+        view/InterfaceModeState.h
         view/GameMode.cpp
-        view/GameMode.hpp
+        view/GameMode.h
         view/PersonnalisationMode.cpp
-        view/PersonnalisationMode.hpp
+        view/PersonnalisationMode.h
         common/struct.h
         common/function.cpp
         controller/QtGame.cpp
@@ -46,7 +46,9 @@ add_executable(${PROJECT_NAME}
         logic/Knight.h
         logic/CheckChess.h
         logic/CheckChess.cpp
-        view/StateFactory.hpp view/IBoard.cpp view/IBoard.hpp)
+        view/StateFactory.h view/IBoard.cpp view/IBoard.h)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 target_link_libraries(${PROJECT_NAME} Qt6::Core Qt6::Widgets)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/chess/res ${CMAKE_BINARY_DIR}/res)

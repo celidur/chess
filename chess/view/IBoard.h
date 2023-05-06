@@ -1,5 +1,5 @@
-#ifndef CHESS_IBOARD_HPP
-#define CHESS_IBOARD_HPP
+#ifndef CHESS_IBOARD_H
+#define CHESS_IBOARD_H
 
 #include "BoardBase.h"
 #include <QMainWindow>
@@ -110,4 +110,4 @@ namespace view{
 
 }
 
-#endif //CHESS_IBOARD_HPP
+#endif //CHESS_IBOARD_H

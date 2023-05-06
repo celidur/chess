@@ -1,4 +1,4 @@
-#include "PersonnalisationMode.hpp"
+#include "PersonnalisationMode.h"
 
 namespace view {
     void PersonnalisationMode::handleMouseEvent(IBoard &board, Coord &pos) {

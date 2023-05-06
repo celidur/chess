@@ -1,7 +1,7 @@
-#ifndef CHESS_INTERFACEMODESTATE_HPP
-#define CHESS_INTERFACEMODESTATE_HPP
+#ifndef CHESS_INTERFACEMODESTATE_H
+#define CHESS_INTERFACEMODESTATE_H
 
-#include "IBoard.hpp"
+#include "IBoard.h"
 #include "common/struct.h"
 
 
@@ -38,4 +38,4 @@ namespace view {
 } // view
 
 
-#endif //CHESS_INTERFACEMODESTATE_HPP
+#endif //CHESS_INTERFACEMODESTATE_H

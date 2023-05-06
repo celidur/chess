@@ -1,9 +1,9 @@
-#ifndef CHESS_STATEFACTORY_HPP
-#define CHESS_STATEFACTORY_HPP
+#ifndef CHESS_STATEFACTORY_H
+#define CHESS_STATEFACTORY_H
 #include "memory"
-#include "InterfaceModeState.hpp"
-#include "GameMode.hpp"
-#include "PersonnalisationMode.hpp"
+#include "InterfaceModeState.h"
+#include "GameMode.h"
+#include "PersonnalisationMode.h"
 
 namespace view {
     class StateFactory {
@@ -31,4 +31,4 @@ namespace view {
 
 }
 
-#endif //CHESS_STATEFACTORY_HPP
+#endif //CHESS_STATEFACTORY_H

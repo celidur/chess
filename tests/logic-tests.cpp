@@ -145,3 +145,7 @@ TEST_F(BoardTestFixture, WhitePawn){
         testPawn(pawnWhite);
     }
 }
+
+TEST_F(BoardTestFixture, RAI){
+    testRAI();
+}

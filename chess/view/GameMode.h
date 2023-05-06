@@ -1,7 +1,7 @@
-#ifndef CHESS_GAMEMODE_HPP
-#define CHESS_GAMEMODE_HPP
+#ifndef CHESS_GAMEMODE_H
+#define CHESS_GAMEMODE_H
 
-#include "InterfaceModeState.hpp"
+#include "InterfaceModeState.h"
 
 namespace view {
     class GameMode : public InterfaceModeState {
@@ -23,4 +23,4 @@ namespace view {
     };
 }
 
-#endif //CHESS_GAMEMODE_HPP
+#endif //CHESS_GAMEMODE_H

@@ -1,7 +1,7 @@
-#ifndef CHESS_PERSONNALISATIONMODE_HPP
-#define CHESS_PERSONNALISATIONMODE_HPP
+#ifndef CHESS_PERSONNALISATIONMODE_H
+#define CHESS_PERSONNALISATIONMODE_H
 
-#include "InterfaceModeState.hpp"
+#include "InterfaceModeState.h"
 
 namespace view {
 
@@ -29,4 +29,4 @@ namespace view {
 
 } // view
 
-#endif //CHESS_PERSONNALISATIONMODE_HPP
+#endif //CHESS_PERSONNALISATIONMODE_H
