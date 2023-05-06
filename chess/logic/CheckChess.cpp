@@ -8,8 +8,8 @@
 #include "CheckChess.h"
 
 namespace logic {
-    CheckChess::CheckChess(TypePiece (** board)[yBoard], const Color& color, const Coord& kingPos,
-                           const std::vector<std::shared_ptr<Piece>>& pieces, const Coord& oldPos, const Coord &newPos)
+    CheckChess::CheckChess(std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Color& color, const Coord& kingPos,
+                           const std::vector<std::shared_ptr<Piece>>& pieces, const Coord& oldPos, const Coord& newPos)
             : oldPos_(oldPos), newPos_(newPos), kingPos_(kingPos), board_(board),
               color_(color), pieces_(pieces) {
         // swap the piece
@@ -23,11 +23,8 @@ namespace logic {
     }
 
     bool CheckChess::isCheck() {
-        for (auto&& piece: pieces_) {
-            auto pos = piece->getPos();
-            if (piece->isLegalMove(*board_, kingPos_) && (*board_)[pos.x][pos.y].color != color_)
-                return true;
-        }
+
+
         return false;
     }
 

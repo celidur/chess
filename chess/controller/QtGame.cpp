@@ -28,9 +28,10 @@ namespace controller {
 
     void QtGame::doAddPiece(const TypePiece& typePiece, const Coord& pos) {
         try {
-            addPiece(pos, typePiece);
+            auto type = (typePiece.type == Type::none) ? TypePiece{board_[pos.x][pos.y].color, Type::none} : typePiece;
+            addPiece(pos, type);
             emit addPieceQt(typePiece, pos);
-        }catch (std::runtime_error& e) {
+        } catch (std::runtime_error& e) {
             displayMessage(e.what());
         }
     }
@@ -65,7 +66,7 @@ namespace controller {
         emit updatePersonalizationMenu();
     }
 
-    void QtGame::updateGameBoard(Coord* selection, TypePiece boardGame[xBoard][yBoard],
+    void QtGame::updateGameBoard(Coord* selection, std::array<std::array<TypePiece, xBoard>, yBoard>& boardGame,
                                  std::vector<Coord>& piecePossibleMove,
                                  Color color, std::vector<TypePiece>* deadPieces, int point) {
         emit updateGameQt(selection, boardGame, piecePossibleMove, color, deadPieces, point);

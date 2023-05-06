@@ -32,9 +32,10 @@ namespace logic {
 
         void addPiece(const Type type, const Coord& pos, bool isPromotion = false);
 
-        Coord updateBoard(TypePiece board[xBoard][yBoard]);
+        Coord updateBoard(std::array<std::array<TypePiece, xBoard>, yBoard>& board);
 
-        bool move(const TypePiece board[xBoard][yBoard], const Coord& pos, const Coord& newPos);
+        bool
+        move(const std::array<std::array<TypePiece, xBoard>, yBoard>& board, const Coord& pos, const Coord& newPos);
 
         void removePiece(const Coord& pos);
 

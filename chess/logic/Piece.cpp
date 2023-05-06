@@ -35,11 +35,9 @@ namespace logic {
         blackKing = nullptr;
     }
 
-    std::vector<Coord> Piece::getPossibleMoves() const { return possibleMoves_; }
+    std::vector<Coord>& Piece::getPossibleMoves() { return possibleMoves_; }
 
     Coord Piece::getPos() const { return pos_; }
-
-    void Piece::setMove(const std::vector<Coord>& move) { possibleMoves_ = move; }
 
     void Piece::setPromotion() { promotion_ = true; }
 

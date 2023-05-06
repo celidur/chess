@@ -43,23 +43,22 @@ namespace logic {
             piece->update(board);
             auto moves = piece->getPossibleMoves();
 
-
-            std::vector<Coord> checkMove;
             for (auto &&move: moves) {
                 Coord kingPos = piece->getType().type == Type::king ? move : kingPos_;
                 auto pos = piece->getPos();
-                if (CheckChess(&board, playerColor_, kingPos, opponent.pieces_, pos, move).isCheck())
+                if (CheckChess(board, playerColor_, kingPos, opponent.pieces_, pos, move).isCheck()) {
+                    moves.erase(std::find(moves.begin(), moves.end(), move));
                     continue;
+                }
                 if (kingPos == move && abs(pos.x - move.x) == 2) {
                     auto m = pos.x < move.x ? Coord{kingPos_.x + 1, kingPos.y} : Coord{kingPos_.x - 1, kingPos.y};
-                    if (CheckChess(&board, playerColor_, m, opponent.pieces_, pos, m).isCheck())
+                    if (CheckChess(board, playerColor_, m, opponent.pieces_, pos, m).isCheck()) {
+                        moves.erase(std::find(moves.begin(), moves.end(), move));
                         continue;
+                    }
                 }
-                checkMove.push_back(move);
-
             }
-            nbMove_ += checkMove.size();
-            piece->setMove(checkMove);
+            nbMove_ += moves.size();
             auto king = dynamic_cast<King *>(piece.get());
             if (king != nullptr) {
                 isCheck_ = CheckChess(&board, playerColor_, kingPos_, opponent.pieces_).isCheck();

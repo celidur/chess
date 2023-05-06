@@ -31,9 +31,7 @@ namespace logic {
 
         [[nodiscard]] Coord getPos() const;
 
-        [[nodiscard]] std::vector<Coord> getPossibleMoves() const;
-
-        void setMove(const std::vector<Coord>& move);
+        std::vector<Coord>& getPossibleMoves() ;
 
         void setPromotion();
 

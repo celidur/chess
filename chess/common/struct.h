@@ -109,6 +109,10 @@ struct TypePiece {
         }
         return os;
     }
+
+    bool operator==(const TypePiece& b) const {
+        return color == b.color && type == b.type;
+    }
 };
 
 #endif //CHESS_STRUCT_H
