@@ -82,20 +82,20 @@ protected:
         });
     }
 
-    void testRAI(){
-        auto board = game.getBoard();
-        auto whitePlayer = logic::Player(Color::white);
-        auto blackPlayer = logic::Player(Color::black);
-
-        whitePlayer.addPiece(Type::king, {4, 0});
-        blackPlayer.addPiece(Type::king, {4, 7});
-        whitePlayer.addPiece(Type::rook, {0, 0});
-
-        whitePlayer.updateBoard(board);
-        blackPlayer.updateBoard(board);
-
-
-    }
+//    void testRAI(){
+//        auto board = game.getBoard();
+//        auto whitePlayer = logic::Player(Color::white);
+//        auto blackPlayer = logic::Player(Color::black);
+//
+//        whitePlayer.addPiece(Type::king, {4, 0});
+//        blackPlayer.addPiece(Type::king, {4, 7});
+//        whitePlayer.addPiece(Type::rook, {0, 0});
+//
+//        whitePlayer.updateBoard(board);
+//        blackPlayer.updateBoard(board);
+//
+//
+//    }
 
     static std::string colorToStr(Color color){
         return color == Color::white ? "white" : "black";
@@ -146,6 +146,6 @@ TEST_F(BoardTestFixture, WhitePawn){
     }
 }
 
-TEST_F(BoardTestFixture, RAI){
-    testRAI();
-}
+//TEST_F(BoardTestFixture, RAI){
+//    testRAI();
+//}
